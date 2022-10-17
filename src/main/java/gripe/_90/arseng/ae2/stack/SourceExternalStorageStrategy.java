@@ -57,7 +57,7 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
 
             @Override
             public GenericStack getStackInSlot(int slot) {
-                return new GenericStack(SourceKey.KEY, tile.getSource());
+                return tile.getSource() > 0 ? new GenericStack(SourceKey.KEY, tile.getSource()): null;
             }
 
             @Override
