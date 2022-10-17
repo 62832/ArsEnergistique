@@ -32,20 +32,4 @@ public class SourceKeyType extends AEKeyType {
     public AEKey loadKeyFromTag(CompoundTag compoundTag) {
         return SourceKey.KEY;
     }
-
-    @Override
-    public int getAmountPerOperation() {
-        return 5;
-    }
-
-    @Override
-    public int getAmountPerUnit() {
-        return 1;
-    }
-
-    @Nullable
-    @Override
-    public String getUnitSymbol() {
-        return null;
-    }
 }

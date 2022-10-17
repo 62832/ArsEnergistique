@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.cells.CellState;
@@ -20,7 +19,7 @@ import gripe._90.arseng.ae2.SourceKey;
 public class SourceCellInventory implements StorageCell {
 
     private static final String AMOUNT = "amount";
-    protected static final long MAX_SOURCE = 4096;
+    protected static final long MAX_SOURCE = 5000;
 
     private final ItemStack i;
     private final ISaveProvider container;
@@ -74,16 +73,8 @@ public class SourceCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount == 0 || this.sourceAmount == MAX_SOURCE) {
+        if (amount == 0 || !(what instanceof SourceKey) || this.sourceAmount == MAX_SOURCE) {
             return 0;
-        }
-
-        // still whatever hacky read-only thing BasicStorageCell currently does
-        if (what instanceof AEItemKey itemKey) {
-            var meInventory = new SourceCellInventory(itemKey.toStack(), null);
-            if (!meInventory.getAvailableStacks().isEmpty()) {
-                return 0;
-            }
         }
 
         long remainingAmount = Math.max(0, MAX_SOURCE - this.sourceAmount);

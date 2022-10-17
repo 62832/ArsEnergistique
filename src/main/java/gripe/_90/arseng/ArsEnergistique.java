@@ -20,9 +20,13 @@ import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
 import appeng.items.storage.BasicStorageCell;
+import appeng.parts.automation.StackWorldBehaviors;
 
 import gripe._90.arseng.ae2.SourceKeyType;
 import gripe._90.arseng.ae2.client.SourceRenderer;
+import gripe._90.arseng.ae2.stack.SourceExportStrategy;
+import gripe._90.arseng.ae2.stack.SourceExternalStorageStrategy;
+import gripe._90.arseng.ae2.stack.SourceImportStrategy;
 import gripe._90.arseng.data.ArsEngDataGenerator;
 import gripe._90.arseng.item.ArsEngItems;
 import gripe._90.arseng.item.cell.SourceCellGuiHandler;
@@ -55,6 +59,10 @@ public class ArsEnergistique {
 
         bus.addGenericListener(AEKeyType.class, (RegistryEvent.Register<AEKeyType> event) -> AEKeyTypes.register(SourceKeyType.TYPE));
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(this::registerCell));
+
+        StackWorldBehaviors.registerImportStrategy(SourceKeyType.TYPE, SourceImportStrategy::new);
+        StackWorldBehaviors.registerExportStrategy(SourceKeyType.TYPE, SourceExportStrategy::new);
+        StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
 
         GenericSlotCapacities.register(SourceKeyType.TYPE, GenericSlotCapacities.getMap().get(AEKeyType.fluids()));
 
