@@ -1,0 +1,193 @@
+buildscript {
+    repositories {
+        maven {
+            name = "MinecraftForge"
+            url = uri("https://files.minecraftforge.net/maven/")
+        }
+
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath(group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "5.1.+", changing: true)
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
+}
+
+plugins {
+    id("com.matthewprenger.cursegradle") version "1.4.0"
+    id("com.diffplug.spotless") version "6.4.1"
+}
+
+apply(plugin: "net.minecraftforge.gradle")
+apply plugin: 'org.spongepowered.mixin'
+
+group = "gripe.90"
+version = "${arseng_version}-${minecraft_version}"
+archivesBaseName = "arseng"
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri("https://modmaven.dev/")
+        content {
+            includeGroup("appeng")
+            includeGroup("top.theillusivec4.curios")
+        }
+    }
+
+    maven {
+        url = uri("https://maven.blamejared.com")
+        content {
+            includeGroup("com.hollingsworth.ars_nouveau")
+            includeGroup("vazkii.patchouli")
+        }
+    }
+
+    maven {
+        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
+
+    maven {
+        url = uri("https://cursemaven.com")
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        url = uri("https://dvs1.progwml6.com/files/maven/")
+        content {
+            includeGroup("mezz.jei")
+        }
+    }
+}
+
+dependencies {
+    minecraft("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
+
+    implementation(fg.deobf("appeng:appliedenergistics2:${ae2_version}"))
+    implementation(fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-${minecraft_version}:${ars_version}"))
+
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+
+    runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}"))
+    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}"))
+    runtimeOnly(fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version_major}:${gecko_version}"))
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir("src/generated/resources")
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+minecraft {
+    mappings(channel: "official", version: "${minecraft_version}")
+
+    /**
+     * Configures properties common to all run configurations
+     */
+    def commonRunProperties = {
+        workingDirectory(project.file("run"))
+
+        property("forge.logging.console.level", "debug")
+        property("fml.earlyprogresswindow", "false")
+        jvmArgs("--add-opens", "java.base/sun.security.util=ALL-UNNAMED")
+        jvmArgs("--add-opens", "java.base/java.util.jar=ALL-UNNAMED")
+
+        // See https://github.com/Vazkii/Patchouli#mixin-troubleshooting
+        property("mixin.env.remapRefMap", "true")
+        property("mixin.env.refMapRemappingFile", "${projectDir}/build/createSrgToMcp/output.srg")
+        // property "mixin.debug.export", "true"
+
+        mods {
+            arseng {
+                source(sourceSets.main)
+            }
+        }
+    }
+
+    runs {
+        client {
+            with(commonRunProperties)
+        }
+
+        server {
+            with(commonRunProperties)
+        }
+
+        data {
+            with(commonRunProperties)
+            // ForgeGradle will just force-exit the Gradle Daemon which fails our builds in case
+            // a daemon is used for any reason.
+            forceExit false
+            args("--mod", "arseng", "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources"))
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.release.set(17)
+}
+
+processResources {
+    inputs.property("version", project.version)
+
+    exclude(".cache")
+
+    filesMatching("META-INF/mods.toml") {
+        expand("version": project.version)
+    }
+}
+
+jar {
+    finalizedBy("reobfJar")
+
+    from(sourceSets.main.output.classesDirs)
+    from(sourceSets.main.output.resourcesDir)
+
+    manifest {
+        attributes([
+                "Specification-Title"     : "Ars Énergique",
+                "Specification-Vendor"    : "90",
+                "Specification-Version"   : "${project.version}",
+                "Implementation-Title"    : "${project.name}",
+                "Implementation-Version"  : "${project.version}",
+                "Implementation-Vendor"   : "90",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+spotless {
+    java {
+        target("src/main/java/**/*.java")
+
+        endWithNewline()
+        indentWithSpaces()
+        removeUnusedImports()
+        toggleOffOn()
+        eclipse().configFile("codeformat/codeformat.xml")
+        importOrderFile("codeformat/arseng.importorder")
+    }
+
+    format("json") {
+        target("src/*/resources/**/*.json")
+        targetExclude("src/generated/resources/**")
+        prettier().config(parser: "json")
+    }
+}

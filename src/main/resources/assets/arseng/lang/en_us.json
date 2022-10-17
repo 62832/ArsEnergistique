@@ -1,0 +1,10 @@
+{
+  "gui.arseng.source": "Source",
+
+  "itemGroup.arseng": "Ars Énergistique",
+
+  "item.arseng.source_cell_component": "ME Source Cell Component",
+  "item.arseng.source_storage_cell": "ME Source Storage Cell",
+
+  "item.arseng.source_p2p_tunnel": "Source P2P Tunnel"
+}

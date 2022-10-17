@@ -1,0 +1,47 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="LGPLv3.0"
+
+issueTrackerURL="https://github.com/62832/ArsEnergique/issues"
+displayURL="https://github.com/62832/ArsEnergique"
+
+[[mods]]
+modId="arseng"
+version="${version}"
+displayName="Ars Énergistique"
+logoFile="logo.png"
+credits=""
+authors="90"
+description='''
+Bringing magic to the digital age.
+
+Adds digital source storage, P2P transport and various other cross-compatibility improvements.
+'''
+
+[[dependencies.arseng]]
+    modId="ae2"
+    mandatory=true
+    versionRange = "(,12.0.0)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.arseng]]
+    modId="ars_nouveau"
+    mandatory=true
+    versionRange = "[2.7.8,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.arseng]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.arseng]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"
