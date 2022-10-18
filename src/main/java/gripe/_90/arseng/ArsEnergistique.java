@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
 import appeng.api.stacks.AEKeyType;
@@ -22,14 +23,15 @@ import appeng.api.storage.StorageCells;
 import appeng.items.storage.BasicStorageCell;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.ae2.SourceKey;
 import gripe._90.arseng.ae2.SourceKeyType;
 import gripe._90.arseng.ae2.client.SourceRenderer;
+import gripe._90.arseng.ae2.stack.SourceContainerItemStrategy;
 import gripe._90.arseng.ae2.stack.SourceExportStrategy;
 import gripe._90.arseng.ae2.stack.SourceExternalStorageStrategy;
 import gripe._90.arseng.ae2.stack.SourceImportStrategy;
 import gripe._90.arseng.data.ArsEngDataGenerator;
 import gripe._90.arseng.item.ArsEngItems;
-import gripe._90.arseng.item.cell.SourceCellGuiHandler;
 import gripe._90.arseng.item.cell.SourceCellHandler;
 
 @Mod(ArsEnergistique.MODID)
@@ -42,7 +44,7 @@ public class ArsEnergistique {
         return new ResourceLocation(MODID, id);
     }
 
-    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab(ArsEnergistique.MODID) {
+    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab(MODID) {
         @Override
         public @NotNull ItemStack makeIcon() {
             return new ItemStack(ArsEngItems.SOURCE_STORAGE_CELL.get());
@@ -50,29 +52,29 @@ public class ArsEnergistique {
     };
 
     public ArsEnergistique() {
-        // spotless:off
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ArsEngItems.init(bus);
 
         bus.addListener(ArsEngDataGenerator::onGatherData);
 
-        bus.addGenericListener(AEKeyType.class, (RegistryEvent.Register<AEKeyType> event) -> AEKeyTypes.register(SourceKeyType.TYPE));
+        bus.addGenericListener(AEKeyType.class, (RegistryEvent.Register<AEKeyType> event) -> {
+            AEKeyTypes.register(SourceKeyType.TYPE);
+        });
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(this::registerCell));
 
         StackWorldBehaviors.registerImportStrategy(SourceKeyType.TYPE, SourceImportStrategy::new);
         StackWorldBehaviors.registerExportStrategy(SourceKeyType.TYPE, SourceExportStrategy::new);
         StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
 
+        ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
         GenericSlotCapacities.register(SourceKeyType.TYPE, GenericSlotCapacities.getMap().get(AEKeyType.fluids()));
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::init);
-        // spotless:on
     }
 
     private void registerCell() {
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
-        StorageCells.addCellGuiHandler(SourceCellGuiHandler.INSTANCE);
         StorageCellModels.registerModel(
                 ArsEngItems.SOURCE_STORAGE_CELL.get(),
                 makeId("block/drive/cells/source_storage_cell"));

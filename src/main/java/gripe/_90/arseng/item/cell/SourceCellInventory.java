@@ -127,7 +127,7 @@ public class SourceCellInventory implements StorageCell {
 
     @Override
     public boolean isPreferredStorageFor(AEKey what, IActionSource source) {
-        return Objects.equals(what, SourceKey.KEY);
+        return what instanceof SourceKey;
     }
 
     @Override

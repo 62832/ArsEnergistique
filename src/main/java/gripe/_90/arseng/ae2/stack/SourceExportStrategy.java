@@ -37,24 +37,14 @@ public class SourceExportStrategy implements StackExportStrategy {
         }
 
         var inv = context.getInternalStorage();
-        var extracted = StorageHelper.poweredExtraction(
-                context.getEnergySource(),
-                inv.getInventory(),
-                what,
-                amount,
-                context.getActionSource(),
-                Actionable.SIMULATE);
+        var extracted = StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, amount,
+                context.getActionSource(), Actionable.SIMULATE);
 
         var wasInserted = tile.addSource((int) extracted) - extracted;
         if (wasInserted > 0) {
             if (mode == Actionable.MODULATE) {
-                StorageHelper.poweredExtraction(
-                        context.getEnergySource(),
-                        inv.getInventory(),
-                        what,
-                        wasInserted,
-                        context.getActionSource(),
-                        Actionable.MODULATE);
+                StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, wasInserted,
+                        context.getActionSource(), Actionable.MODULATE);
             }
             return wasInserted;
         }
