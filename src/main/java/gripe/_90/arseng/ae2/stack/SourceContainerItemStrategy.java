@@ -1,13 +1,17 @@
 package gripe._90.arseng.ae2.stack;
 
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.google.common.primitives.Ints;
+import com.hollingsworth.arsnouveau.common.block.SourceJar;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.config.Actionable;
@@ -19,51 +23,89 @@ import gripe._90.arseng.ae2.SourceKey;
 public class SourceContainerItemStrategy
         implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
 
-    // TODO: Source Bucket is planned for removal in Ars, keep this in mind
-    // This is also really fucking buggy as it stands
+    private boolean isSourceJar(ItemStack stack) {
+        return stack != null && stack.getItem()instanceof BlockItem blockItem
+                && blockItem.getBlock() instanceof SourceJar;
+    }
+
+    private int getSource(ItemStack stack) {
+        if (isSourceJar(stack) && stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
+            return stack.getTag().getCompound("BlockEntityTag").getInt("source");
+        }
+        return 0;
+    }
+
+    private void setSource(ItemStack stack, int source) {
+        if (isSourceJar(stack)) {
+            var tileTag = new CompoundTag();
+            tileTag.putInt("source", source);
+            stack.getOrCreateTag().put("BlockEntityTag", tileTag);
+        }
+    }
 
     @Override
     public @Nullable GenericStack getContainedStack(ItemStack stack) {
-        if (stack.is(ItemsRegistry.BUCKET_OF_SOURCE)) {
-            return new GenericStack(SourceKey.KEY, 1000);
-        }
-        if (stack.is(Items.BUCKET)) {
-            return new GenericStack(SourceKey.KEY, 0);
-        }
-        return null;
+        return isSourceJar(stack) ? new GenericStack(SourceKey.KEY, getSource(stack)) : null;
     }
 
     @Override
     public @Nullable Context findCarriedContext(Player player, AbstractContainerMenu menu) {
-        return menu.getCarried().is(ItemsRegistry.BUCKET_OF_SOURCE) || menu.getCarried().is(Items.BUCKET)
-                ? new Context(player, menu)
-                : null;
+        return isSourceJar(menu.getCarried()) ? new Context(player, menu) : null;
     }
 
     @Override
-    public long extract(Context context, SourceKey what, long amount, Actionable mode) {
-        if (!context.menu.getCarried().is(ItemsRegistry.BUCKET_OF_SOURCE)) {
+    public long extract(@NotNull Context context, SourceKey what, long amount, Actionable mode) {
+        var held = context.menu.getCarried();
+        var copy = held.copy();
+
+        if (!isSourceJar(copy)) {
             return 0;
         }
 
+        var before = getSource(copy);
+        setSource(copy, before - Ints.saturatedCast(amount));
+
         if (mode == Actionable.MODULATE) {
-            context.menu.setCarried(new ItemStack(Items.BUCKET));
+            held.shrink(1);
+
+            if (held.isEmpty()) {
+                context.menu.setCarried(copy);
+            } else {
+                context.player.getInventory().placeItemBackInInventory(copy);
+            }
         }
 
-        return 1000;
+        if (((BlockItem) copy.getItem()).getBlock() == BlockRegistry.CREATIVE_SOURCE_JAR) {
+            return amount;
+        } else {
+            return before - getSource(copy);
+        }
     }
 
     @Override
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
-        if (!context.menu.getCarried().is(Items.BUCKET)) {
+        // FIXME: still bugs out wildly and arbitrarily dupes source for some godforsaken reason
+        var held = context.menu.getCarried();
+        var copy = held.copy();
+
+        if (!isSourceJar(copy)) {
             return 0;
         }
 
+        var before = getSource(copy);
+        setSource(copy, before + Ints.saturatedCast(amount));
+
         if (mode == Actionable.MODULATE) {
-            context.menu.setCarried(new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
+            held.shrink(1);
+
+            if (held.isEmpty()) {
+                context.menu.setCarried(copy);
+            } else {
+                context.player.getInventory().placeItemBackInInventory(copy);
+            }
         }
 
-        return 1000;
+        return getSource(copy) - before;
     }
 
     @Override
