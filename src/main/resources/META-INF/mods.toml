@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[43,)"
 license="LGPLv3.0"
 
 issueTrackerURL="https://github.com/62832/ArsEnergique/issues"
@@ -21,27 +21,27 @@ Adds digital source storage, P2P transport and various other cross-compatibility
 [[dependencies.arseng]]
     modId="ae2"
     mandatory=true
-    versionRange = "(,12.0.0)"
+    versionRange = "(,13.0.0)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.arseng]]
     modId="ars_nouveau"
     mandatory=true
-    versionRange = "[2.7.8,)"
+    versionRange = "[3.4.3.235,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.arseng]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[43,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.arseng]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.19.2,1.20)"
     ordering="NONE"
     side="BOTH"

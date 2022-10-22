@@ -26,7 +26,7 @@ public class SourceExportStrategy implements StackExportStrategy {
     }
 
     @Override
-    public long transfer(StackTransferContext context, AEKey what, long amount, Actionable mode) {
+    public long transfer(StackTransferContext context, AEKey what, long amount) {
         if (!(what instanceof SourceKey)) {
             return 0;
         }
@@ -42,10 +42,9 @@ public class SourceExportStrategy implements StackExportStrategy {
 
         var wasInserted = tile.addSource((int) extracted) - extracted;
         if (wasInserted > 0) {
-            if (mode == Actionable.MODULATE) {
-                StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, wasInserted,
-                        context.getActionSource(), Actionable.MODULATE);
-            }
+            // FIXME?
+            StorageHelper.poweredExtraction(context.getEnergySource(), inv.getInventory(), what, wasInserted,
+                    context.getActionSource(), Actionable.MODULATE);
             return wasInserted;
         }
 

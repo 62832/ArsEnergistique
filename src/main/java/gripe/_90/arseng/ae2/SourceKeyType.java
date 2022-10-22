@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
@@ -14,7 +13,7 @@ import gripe._90.arseng.ArsEnergistique;
 
 public class SourceKeyType extends AEKeyType {
 
-    public static final Component SOURCE = new TranslatableComponent("gui." + ArsEnergistique.MODID + ".source");
+    public static final Component SOURCE = Component.translatable("gui." + ArsEnergistique.MODID + ".source");
     public static final AEKeyType TYPE = new SourceKeyType();
 
     public SourceKeyType() {

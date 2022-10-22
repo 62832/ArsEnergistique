@@ -2,17 +2,18 @@ package gripe._90.arseng;
 
 import org.jetbrains.annotations.NotNull;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegisterEvent;
 
 import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
@@ -58,9 +59,14 @@ public class ArsEnergistique {
 
         bus.addListener(ArsEngDataGenerator::onGatherData);
 
-        bus.addGenericListener(AEKeyType.class, (RegistryEvent.Register<AEKeyType> event) -> {
+        bus.addListener((RegisterEvent event) -> {
+            if (!event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
+                return;
+            }
+
             AEKeyTypes.register(SourceKeyType.TYPE);
         });
+
         bus.addListener((FMLCommonSetupEvent event) -> event.enqueueWork(this::registerCell));
 
         StackWorldBehaviors.registerImportStrategy(SourceKeyType.TYPE, SourceImportStrategy::new);
@@ -88,8 +94,8 @@ public class ArsEnergistique {
             SourceRenderer.init(bus);
         }
 
-        private static void registerItemColors(ColorHandlerEvent.Item event) {
-            event.getItemColors().register(BasicStorageCell::getColor, ArsEngItems.SOURCE_STORAGE_CELL.get());
+        private static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+            event.register(BasicStorageCell::getColor, ArsEngItems.SOURCE_STORAGE_CELL.get());
         }
     }
 }
