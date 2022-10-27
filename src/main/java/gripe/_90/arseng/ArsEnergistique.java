@@ -24,10 +24,10 @@ import appeng.api.storage.StorageCells;
 import appeng.items.storage.BasicStorageCell;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.ae2.SourceContainerItemStrategy;
 import gripe._90.arseng.ae2.SourceKey;
 import gripe._90.arseng.ae2.SourceKeyType;
 import gripe._90.arseng.ae2.client.SourceRenderer;
-import gripe._90.arseng.ae2.stack.SourceContainerItemStrategy;
 import gripe._90.arseng.ae2.stack.SourceExportStrategy;
 import gripe._90.arseng.ae2.stack.SourceExternalStorageStrategy;
 import gripe._90.arseng.ae2.stack.SourceImportStrategy;
