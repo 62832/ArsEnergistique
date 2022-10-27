@@ -10,5 +10,6 @@ public class ArsEngDataGenerator {
         gen.addProvider(true, new RecipeProvider(gen));
         gen.addProvider(true, new ItemModelProvider(gen, efh));
         gen.addProvider(true, new BlockModelProvider(gen, efh));
+        gen.addProvider(true, new ItemTagsProvider(gen, efh));
     }
 }

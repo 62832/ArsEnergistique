@@ -61,7 +61,7 @@ public class SourceContainerItemStrategy
         }
 
         var before = getSource(copy);
-        setSource(copy, before - Ints.saturatedCast(amount));
+        setSource(copy, Math.max(0, before - Ints.saturatedCast(amount)));
 
         if (mode == Actionable.MODULATE) {
             held.shrink(1);
@@ -73,7 +73,7 @@ public class SourceContainerItemStrategy
             }
         }
 
-        if (((BlockItem) copy.getItem()).getBlock() == BlockRegistry.CREATIVE_SOURCE_JAR) {
+        if (copy.getItem() == BlockRegistry.CREATIVE_SOURCE_JAR.asItem()) {
             return amount;
         } else {
             return before - getSource(copy);
@@ -82,7 +82,6 @@ public class SourceContainerItemStrategy
 
     @Override
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
-        // FIXME: still bugs out wildly and arbitrarily dupes source for some godforsaken reason
         var held = context.menu.getCarried();
         var copy = held.copy();
 
@@ -91,7 +90,7 @@ public class SourceContainerItemStrategy
         }
 
         var before = getSource(copy);
-        setSource(copy, before + Ints.saturatedCast(amount));
+        setSource(copy, Math.max(0, before + Ints.saturatedCast(amount)));
 
         if (mode == Actionable.MODULATE) {
             held.shrink(1);

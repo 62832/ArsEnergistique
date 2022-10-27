@@ -6,8 +6,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -31,6 +33,7 @@ import gripe._90.arseng.ae2.client.SourceRenderer;
 import gripe._90.arseng.ae2.stack.SourceExportStrategy;
 import gripe._90.arseng.ae2.stack.SourceExternalStorageStrategy;
 import gripe._90.arseng.ae2.stack.SourceImportStrategy;
+import gripe._90.arseng.capability.ArsEngCapabilities;
 import gripe._90.arseng.data.ArsEngDataGenerator;
 import gripe._90.arseng.item.ArsEngItems;
 import gripe._90.arseng.item.cell.SourceCellHandler;
@@ -75,6 +78,8 @@ public class ArsEnergistique {
 
         ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
         GenericSlotCapacities.register(SourceKeyType.TYPE, GenericSlotCapacities.getMap().get(AEKeyType.fluids()));
+
+        MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, ArsEngCapabilities::init);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::init);
     }
