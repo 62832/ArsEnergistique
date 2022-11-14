@@ -138,13 +138,12 @@ repositories {
 dependencies {
     minecraft("net.minecraftforge:forge:1.19.2-${forge_version}")
 
-    implementation(fg.deobf("appeng:appliedenergistics2:${ae2_version}"))
+    implementation(fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}"))
     implementation(fg.deobf("com.hollingsworth.ars_nouveau:ars_nouveau-${minecraft_version}:${ars_version}"))
-
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+    implementation(fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}"))
 
     runtimeOnly(fg.deobf("vazkii.patchouli:Patchouli:${minecraft_version}-${patchouli_version}"))
-    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${minecraft_version}-${curios_version}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }

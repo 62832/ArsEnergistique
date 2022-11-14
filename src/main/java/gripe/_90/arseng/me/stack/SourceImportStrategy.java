@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2.stack;
+package gripe._90.arseng.me.stack;
 
 import com.google.common.primitives.Ints;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
@@ -11,8 +11,8 @@ import appeng.api.behaviors.StackImportStrategy;
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 
-import gripe._90.arseng.ae2.SourceKey;
-import gripe._90.arseng.ae2.SourceKeyType;
+import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceImportStrategy implements StackImportStrategy {

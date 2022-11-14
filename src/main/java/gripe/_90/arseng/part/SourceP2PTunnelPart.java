@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2;
+package gripe._90.arseng.part;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import appeng.parts.p2p.P2PModels;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.capability.ArsEngCapabilities;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, ISourceTile> {
 

@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2.client;
+package gripe._90.arseng.me.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -17,8 +17,8 @@ import appeng.api.client.AEStackRendering;
 import appeng.api.client.IAEStackRenderHandler;
 import appeng.client.gui.style.Blitter;
 
-import gripe._90.arseng.ae2.SourceKey;
-import gripe._90.arseng.ae2.SourceKeyType;
+import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceRenderer implements IAEStackRenderHandler<SourceKey> {
 

@@ -17,7 +17,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import appeng.capabilities.Capabilities;
 
 import gripe._90.arseng.ArsEnergistique;
-import gripe._90.arseng.ae2.MESourceStorage;
+import gripe._90.arseng.part.MESourceStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class ArsEngCapabilities {

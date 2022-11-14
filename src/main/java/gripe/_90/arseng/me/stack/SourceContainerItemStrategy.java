@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2;
+package gripe._90.arseng.me.stack;
 
 import com.google.common.primitives.Ints;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
@@ -16,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.stacks.GenericStack;
+
+import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceContainerItemStrategy

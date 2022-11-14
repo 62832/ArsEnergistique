@@ -13,8 +13,8 @@ import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
 
 import gripe._90.arseng.ArsEnergistique;
-import gripe._90.arseng.ae2.SourceP2PTunnelPart;
 import gripe._90.arseng.item.cell.SourceCellItem;
+import gripe._90.arseng.part.SourceP2PTunnelPart;
 
 public class ArsEngItems {
 

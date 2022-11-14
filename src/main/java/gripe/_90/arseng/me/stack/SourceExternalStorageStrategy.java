@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2.stack;
+package gripe._90.arseng.me.stack;
 
 import java.util.Set;
 
@@ -19,8 +19,8 @@ import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.me.storage.ExternalStorageFacade;
 
-import gripe._90.arseng.ae2.SourceKey;
-import gripe._90.arseng.ae2.SourceKeyType;
+import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceExternalStorageStrategy implements ExternalStorageStrategy {

@@ -12,7 +12,7 @@ import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
 import appeng.core.localization.Tooltips;
 
-import gripe._90.arseng.ae2.SourceKey;
+import gripe._90.arseng.me.key.SourceKey;
 
 public class SourceCellHandler implements ICellHandler {
     public static final SourceCellHandler INSTANCE = new SourceCellHandler();

@@ -26,17 +26,17 @@ import appeng.api.storage.StorageCells;
 import appeng.items.storage.BasicStorageCell;
 import appeng.parts.automation.StackWorldBehaviors;
 
-import gripe._90.arseng.ae2.SourceContainerItemStrategy;
-import gripe._90.arseng.ae2.SourceKey;
-import gripe._90.arseng.ae2.SourceKeyType;
-import gripe._90.arseng.ae2.client.SourceRenderer;
-import gripe._90.arseng.ae2.stack.SourceExportStrategy;
-import gripe._90.arseng.ae2.stack.SourceExternalStorageStrategy;
-import gripe._90.arseng.ae2.stack.SourceImportStrategy;
 import gripe._90.arseng.capability.ArsEngCapabilities;
 import gripe._90.arseng.data.ArsEngDataGenerator;
 import gripe._90.arseng.item.ArsEngItems;
 import gripe._90.arseng.item.cell.SourceCellHandler;
+import gripe._90.arseng.me.client.SourceRenderer;
+import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
+import gripe._90.arseng.me.stack.SourceContainerItemStrategy;
+import gripe._90.arseng.me.stack.SourceExportStrategy;
+import gripe._90.arseng.me.stack.SourceExternalStorageStrategy;
+import gripe._90.arseng.me.stack.SourceImportStrategy;
 
 @Mod(ArsEnergistique.MODID)
 @SuppressWarnings("UnstableApiUsage")

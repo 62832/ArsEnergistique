@@ -1,4 +1,4 @@
-package gripe._90.arseng.ae2;
+package gripe._90.arseng.part;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
@@ -7,6 +7,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.config.Actionable;
+
+import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
 public record MESourceStorage(BlockPos pos, BlockState state,
