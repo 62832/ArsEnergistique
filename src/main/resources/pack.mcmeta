@@ -1,6 +1,8 @@
 {
-    "pack": {
-        "description": "arseng resources",
-        "pack_format": 9
-    }
+  "pack": {
+    "description": {
+      "text": "arseng resources"
+    },
+    "pack_format": 15
+  }
 }
