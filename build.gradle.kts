@@ -35,7 +35,7 @@ minecraft {
         configureEach {
             workingDirectory(project.file("run"))
             property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
+            property("forge.logging.console.level", "info")
 
             mods {
                 create(modId) {

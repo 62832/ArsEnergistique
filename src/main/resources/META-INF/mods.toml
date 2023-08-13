@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${loaderVersion}"
+loaderVersion="${fmlVersion}"
 license="LGPLv3.0"
 
 issueTrackerURL="https://github.com/62832/ArsEnergique/issues"
