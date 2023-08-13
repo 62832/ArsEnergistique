@@ -6,6 +6,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.AEKeyRendering;
 import appeng.api.client.StorageCellModels;
@@ -18,6 +19,7 @@ import gripe._90.arseng.me.cell.SourceCellHandler;
 import gripe._90.arseng.me.client.SourceRenderer;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
+import gripe._90.arseng.me.strategy.SourceContainerItemStrategy;
 
 @Mod(ArsEngCore.MODID)
 public class ArsEnergistique {
@@ -31,7 +33,8 @@ public class ArsEnergistique {
         bus.addListener(SourceKeyType::register);
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
 
-        GenericSlotCapacities.register(SourceKeyType.TYPE, 10000L);
+        ContainerItemStrategies.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
+        GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Client::new);
     }
@@ -39,6 +42,8 @@ public class ArsEnergistique {
     @OnlyIn(Dist.CLIENT)
     static class Client {
         Client() {
+            FMLJavaModLoadingContext.get().getModEventBus().addListener(SourceCellHandler::initLED);
+
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
             StorageCellModels.registerModel(
                     ArsEngItems.SOURCE_STORAGE_CELL, ArsEngCore.makeId("block/drive/cells/source_storage_cell"));
