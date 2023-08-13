@@ -11,13 +11,13 @@ import gripe._90.arseng.definition.ArsEngCore;
 public class ArsEngDataGenerators {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
-        var gen = event.getGenerator();
-        var efh = event.getExistingFileHelper();
+        var pack = event.getGenerator().getVanillaPack(true);
+        var existing = event.getExistingFileHelper();
 
-        gen.addProvider(true, new ItemModelProvider(gen, efh));
-        gen.addProvider(true, new BlockModelProvider(gen, efh));
+        pack.addProvider(output -> new ItemModelProvider(output, existing));
+        pack.addProvider(output -> new BlockModelProvider(output, existing));
 
-        gen.addProvider(true, new RecipeProvider(gen));
-        gen.addProvider(true, new LocalisationProvider(gen));
+        pack.addProvider(RecipeProvider::new);
+        pack.addProvider(LocalisationProvider::new);
     }
 }

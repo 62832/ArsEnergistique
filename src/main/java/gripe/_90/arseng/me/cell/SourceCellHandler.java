@@ -6,35 +6,18 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-import appeng.api.client.StorageCellModels;
-import appeng.api.storage.StorageCells;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 
-import gripe._90.arseng.definition.ArsEngCore;
-import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.me.key.SourceKey;
 
 public class SourceCellHandler implements ICellHandler {
     public static final SourceCellHandler INSTANCE = new SourceCellHandler();
-
-    public static void register(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> StorageCells.addCellHandler(INSTANCE));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void registerClient(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> StorageCellModels.registerModel(
-                ArsEngItems.SOURCE_STORAGE_CELL, ArsEngCore.makeId("block/drive/cells/source_storage_cell")));
-    }
 
     @Override
     public boolean isCell(ItemStack is) {
@@ -47,6 +30,7 @@ public class SourceCellHandler implements ICellHandler {
         if (!is.isEmpty() && is.getItem() instanceof SourceCellItem) {
             return new SourceCellInventory(is, container);
         }
+
         return null;
     }
 
@@ -60,7 +44,9 @@ public class SourceCellHandler implements ICellHandler {
         lines.add(Tooltips.of(
                 Tooltips.ofUnformattedNumberWithRatioColor(
                         source, (double) source / SourceCellInventory.MAX_SOURCE, false),
-                Tooltips.of(" of "),
+                Tooltips.of(" "),
+                Tooltips.of(GuiText.Of),
+                Tooltips.of(" "),
                 Tooltips.ofUnformattedNumber(SourceCellInventory.MAX_SOURCE),
                 Tooltips.of(" Source Stored")));
     }

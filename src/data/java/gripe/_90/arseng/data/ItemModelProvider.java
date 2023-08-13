@@ -1,6 +1,6 @@
 package gripe._90.arseng.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -19,8 +19,8 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
     private static final ResourceLocation SOURCE_GEM_BLOCK =
             new ResourceLocation("ars_nouveau", "blocks/source_gem_block");
 
-    public ItemModelProvider(DataGenerator gen, ExistingFileHelper efh) {
-        super(gen, ArsEngCore.MODID, efh);
+    public ItemModelProvider(PackOutput output, ExistingFileHelper efh) {
+        super(output, ArsEngCore.MODID, efh);
         efh.trackGenerated(P2P_TUNNEL_BASE_ITEM, MODEL);
         efh.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
         efh.trackGenerated(STORAGE_CELL_LED, TEXTURE);

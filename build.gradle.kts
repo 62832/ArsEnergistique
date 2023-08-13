@@ -81,6 +81,24 @@ repositories {
             includeGroup("vazkii.patchouli")
         }
     }
+
+    maven {
+        name = "CurseMaven"
+        url = uri("https://cursemaven.com")
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+
+    maven {
+        name = "GeckoLib"
+        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+    }
+
+    maven {
+        name = "JitPack"
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
@@ -90,9 +108,13 @@ dependencies {
     implementation(fg.deobf(libs.ae2.get()))
     implementation(fg.deobf(libs.ars.get()))
 
+    runtimeOnly(fg.deobf(libs.geckolib.get()))
+    runtimeOnly(fg.deobf(libs.mixin.extras.get()))
     runtimeOnly(fg.deobf(libs.curios.get()))
     runtimeOnly(fg.deobf(libs.patchouli.get()))
+
     runtimeOnly(fg.deobf(libs.jei.get()))
+    runtimeOnly(fg.deobf(libs.jade.get()))
 }
 
 mixin {

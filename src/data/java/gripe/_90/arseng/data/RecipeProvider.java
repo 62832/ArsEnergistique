@@ -4,10 +4,11 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraftforge.common.Tags;
 
@@ -16,13 +17,13 @@ import appeng.core.definitions.AEBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
-    public RecipeProvider(DataGenerator gen) {
-        super(gen);
+    public RecipeProvider(PackOutput output) {
+        super(output);
     }
 
     @Override
-    protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
-        ShapedRecipeBuilder.shaped(ArsEngItems.SOURCE_STORAGE_CELL)
+    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ArsEngItems.SOURCE_STORAGE_CELL)
                 .pattern("aba")
                 .pattern("bcb")
                 .pattern("ded")
