@@ -14,7 +14,7 @@ import appeng.api.stacks.AEKeyTypes;
 import gripe._90.arseng.definition.ArsEngCore;
 
 public class SourceKeyType extends AEKeyType {
-    public static final Component SOURCE = Component.translatable("gui." + ArsEngCore.MODID + ".source");
+    public static final Component SOURCE = Component.translatable("ars_nouveau.category.source");
     public static final AEKeyType TYPE = new SourceKeyType();
 
     public SourceKeyType() {
