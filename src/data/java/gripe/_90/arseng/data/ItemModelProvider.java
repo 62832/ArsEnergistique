@@ -17,14 +17,14 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
     private static final ResourceLocation STORAGE_CELL_LED = AppEng.makeId("item/storage_cell_led");
 
     private static final ResourceLocation SOURCE_GEM_BLOCK =
-            new ResourceLocation("ars_nouveau", "blocks/source_gem_block");
+            new ResourceLocation("ars_nouveau", "block/source_gem_block");
 
-    public ItemModelProvider(PackOutput output, ExistingFileHelper efh) {
-        super(output, ArsEngCore.MODID, efh);
-        efh.trackGenerated(P2P_TUNNEL_BASE_ITEM, MODEL);
-        efh.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
-        efh.trackGenerated(STORAGE_CELL_LED, TEXTURE);
-        efh.trackGenerated(SOURCE_GEM_BLOCK, TEXTURE);
+    ItemModelProvider(PackOutput output, ExistingFileHelper existing) {
+        super(output, ArsEngCore.MODID, existing);
+        existing.trackGenerated(P2P_TUNNEL_BASE_ITEM, MODEL);
+        existing.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
+        existing.trackGenerated(STORAGE_CELL_LED, TEXTURE);
+        existing.trackGenerated(SOURCE_GEM_BLOCK, TEXTURE);
     }
 
     @Override

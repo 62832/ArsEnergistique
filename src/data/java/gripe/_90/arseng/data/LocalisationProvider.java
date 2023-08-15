@@ -7,7 +7,7 @@ import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class LocalisationProvider extends LanguageProvider {
-    public LocalisationProvider(PackOutput output) {
+    LocalisationProvider(PackOutput output) {
         super(output, ArsEngCore.MODID, "en_us");
     }
 

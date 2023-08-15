@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,7 +16,13 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 
-public class ArsEngCapabilities {
+import appeng.capabilities.Capabilities;
+
+import gripe._90.arseng.me.storage.SourceGenericStackInvStorage;
+
+public final class ArsEngCapabilities {
+    private ArsEngCapabilities() {}
+
     public static final Capability<ISourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static void register(RegisterCapabilitiesEvent event) {
@@ -23,13 +30,15 @@ public class ArsEngCapabilities {
     }
 
     public static void attach(AttachCapabilitiesEvent<BlockEntity> event) {
-        if (event.getObject() instanceof ISourceTile sourceTile) {
+        var be = event.getObject();
+
+        if (be instanceof ISourceTile sourceTile && !(sourceTile instanceof SourcelinkTile)) {
             var provider = new ICapabilityProvider() {
                 private final LazyOptional<ISourceTile> sourceHandler = LazyOptional.of(() -> sourceTile);
 
+                @NotNull
                 @Override
-                public @NotNull <T> LazyOptional<T> getCapability(
-                        @NotNull Capability<T> cap, @Nullable Direction side) {
+                public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                     return SOURCE_TILE.orEmpty(cap, sourceHandler);
                 }
 
@@ -41,5 +50,25 @@ public class ArsEngCapabilities {
             event.addCapability(ArsEngCore.makeId("source_tile"), provider);
             event.addListener(provider::invalidate);
         }
+
+        var genericInvProvider = new ICapabilityProvider() {
+            private LazyOptional<SourceGenericStackInvStorage> genericInvHandler = LazyOptional.empty();
+
+            @SuppressWarnings("UnstableApiUsage")
+            @NotNull
+            @Override
+            public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+                genericInvHandler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                        .lazyMap(SourceGenericStackInvStorage::new);
+                return SOURCE_TILE.orEmpty(cap, genericInvHandler.cast());
+            }
+
+            private void invalidate() {
+                genericInvHandler.invalidate();
+            }
+        };
+
+        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), genericInvProvider);
+        event.addListener(genericInvProvider::invalidate);
     }
 }

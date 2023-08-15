@@ -17,7 +17,7 @@ import appeng.core.definitions.AEBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
-    public RecipeProvider(PackOutput output) {
+    RecipeProvider(PackOutput output) {
         super(output);
     }
 

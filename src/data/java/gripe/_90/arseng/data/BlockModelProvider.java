@@ -12,9 +12,9 @@ class BlockModelProvider extends net.minecraftforge.client.model.generators.Bloc
 
     private static final ResourceLocation DRIVE_CELL = AppEng.makeId("block/drive/drive_cell");
 
-    public BlockModelProvider(PackOutput output, ExistingFileHelper efh) {
-        super(output, ArsEngCore.MODID, efh);
-        efh.trackGenerated(DRIVE_CELL, MODEL);
+    BlockModelProvider(PackOutput output, ExistingFileHelper existing) {
+        super(output, ArsEngCore.MODID, existing);
+        existing.trackGenerated(DRIVE_CELL, MODEL);
     }
 
     @Override
