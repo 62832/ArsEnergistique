@@ -27,6 +27,7 @@ import gripe._90.arseng.me.strategy.SourceContainerItemStrategy;
 import gripe._90.arseng.me.strategy.SourceExternalStorageStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageExportStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageImportStrategy;
+import gripe._90.arseng.part.SourceP2PTunnelPart;
 
 @Mod(ArsEngCore.MODID)
 public class ArsEnergistique {
@@ -49,6 +50,8 @@ public class ArsEnergistique {
 
         ContainerItemStrategies.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
         GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
+
+        bus.addListener(SourceP2PTunnelPart::initAttunement);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Client::new);
     }

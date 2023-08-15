@@ -5,15 +5,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
+import appeng.api.parts.PartModels;
 import appeng.core.definitions.ItemDefinition;
 import appeng.items.materials.MaterialItem;
+import appeng.items.parts.PartItem;
+import appeng.items.parts.PartModelsHelper;
 
 import gripe._90.arseng.item.SourceCellItem;
+import gripe._90.arseng.part.SourceP2PTunnelPart;
 
 public final class ArsEngItems {
     private ArsEngItems() {}
@@ -34,6 +39,14 @@ public final class ArsEngItems {
             item("ME Source Cell Component", "source_cell_component", MaterialItem::new);
     public static final ItemDefinition<SourceCellItem> SOURCE_STORAGE_CELL =
             item("ME Source Storage Cell", "source_storage_cell", p -> new SourceCellItem(p.stacksTo(1)));
+
+    public static final ItemDefinition<PartItem<SourceP2PTunnelPart>> SOURCE_P2P_TUNNEL = Util.make(() -> {
+        PartModels.registerModels(PartModelsHelper.createModels(SourceP2PTunnelPart.class));
+        return item(
+                "ME Source P2P Tunnel",
+                "source_p2p_tunnel",
+                p -> new PartItem<>(p, SourceP2PTunnelPart.class, SourceP2PTunnelPart::new));
+    });
 
     public static <T extends Item> ItemDefinition<T> item(
             String englishName, String id, Function<Item.Properties, T> factory) {
