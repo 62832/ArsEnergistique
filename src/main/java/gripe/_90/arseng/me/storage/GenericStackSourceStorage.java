@@ -9,10 +9,10 @@ import appeng.api.config.Actionable;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public class SourceGenericStackInvStorage implements ISourceTile {
+public class GenericStackSourceStorage implements ISourceTile {
     private final GenericInternalInventory inv;
 
-    public SourceGenericStackInvStorage(GenericInternalInventory inv) {
+    public GenericStackSourceStorage(GenericInternalInventory inv) {
         this.inv = inv;
     }
 
