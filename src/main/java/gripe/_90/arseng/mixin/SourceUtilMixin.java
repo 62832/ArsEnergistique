@@ -29,6 +29,8 @@ public abstract class SourceUtilMixin {
                     if (sourceTile.canAcceptSource()) {
                         var provider = new SourceProvider(sourceTile, b.immutable());
 
+                        // account for the fact that posList isn't a Set and that source jars have the capability
+                        // attached to them but will have already been added as providers
                         if (!posList.contains(provider)) {
                             posList.add(provider);
                         }

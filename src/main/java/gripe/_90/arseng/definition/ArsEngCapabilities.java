@@ -1,13 +1,10 @@
 package gripe._90.arseng.definition;
 
-import java.util.ArrayList;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
-import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,9 +32,9 @@ public final class ArsEngCapabilities {
     public static void attach(AttachCapabilitiesEvent<BlockEntity> event) {
         var be = event.getObject();
 
-        if (be instanceof ISourceTile sourceTile && isNotBlacklistedBE(be)) {
+        if (be instanceof SourceJarTile sourceJar) {
             var provider = new ICapabilityProvider() {
-                private final LazyOptional<ISourceTile> sourceHandler = LazyOptional.of(() -> sourceTile);
+                private final LazyOptional<ISourceTile> sourceHandler = LazyOptional.of(() -> sourceJar);
 
                 @NotNull
                 @Override
@@ -76,14 +73,5 @@ public final class ArsEngCapabilities {
 
         event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), genericInvProvider);
         event.addListener(genericInvProvider::invalidate);
-    }
-
-    // TODO: This really needs a better approach
-    private static boolean isNotBlacklistedBE(BlockEntity be) {
-        var blacklist = new ArrayList<Class<? extends ISourceTile>>();
-        blacklist.add(SourcelinkTile.class);
-        blacklist.add(ImbuementTile.class);
-
-        return blacklist.stream().noneMatch(clazz -> clazz.isInstance(be));
     }
 }
