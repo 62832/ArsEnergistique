@@ -51,24 +51,16 @@ public final class ArsEngCapabilities {
             event.addListener(provider::invalidate);
         }
 
-        var genericInvProvider = new ICapabilityProvider() {
-            private LazyOptional<SourceGenericStackInvStorage> genericInvHandler = LazyOptional.empty();
-
+        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                genericInvHandler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                        .lazyMap(SourceGenericStackInvStorage::new);
-                return SOURCE_TILE.orEmpty(cap, genericInvHandler.cast());
+                return SOURCE_TILE.orEmpty(
+                        cap,
+                        be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                                .lazyMap(SourceGenericStackInvStorage::new));
             }
-
-            private void invalidate() {
-                genericInvHandler.invalidate();
-            }
-        };
-
-        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), genericInvProvider);
-        event.addListener(genericInvProvider::invalidate);
+        });
     }
 }
