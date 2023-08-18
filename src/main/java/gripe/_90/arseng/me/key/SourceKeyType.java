@@ -39,6 +39,6 @@ public class SourceKeyType extends AEKeyType {
 
     @Override
     public int getAmountPerOperation() {
-        return 50;
+        return 1000;
     }
 }

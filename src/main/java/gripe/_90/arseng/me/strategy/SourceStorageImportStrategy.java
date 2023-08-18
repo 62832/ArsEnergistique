@@ -42,15 +42,18 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
             return false;
         }
 
-        var remainingTransferAmount =
-                (long) context.getOperationsRemaining() * SourceKeyType.TYPE.getAmountPerOperation();
-        var amount = (int) Math.min(remainingTransferAmount, sourceTile.getSource());
+        int remainingTransferAmount = context.getOperationsRemaining() * SourceKeyType.TYPE.getAmountPerOperation();
+        int rawAmount = Math.min(remainingTransferAmount, sourceTile.getSource());
+
+        var inv = context.getInternalStorage();
+
+        // Check how much source we can actually insert
+        int amount = (int) inv.getInventory().insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
 
         if (amount > 0) {
             sourceTile.removeSource(amount);
         }
 
-        var inv = context.getInternalStorage();
         var inserted = inv.getInventory().insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
 
         if (inserted < amount) {
