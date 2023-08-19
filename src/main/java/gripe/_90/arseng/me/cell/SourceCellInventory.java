@@ -15,113 +15,132 @@ import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
 
 import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceCellInventory implements StorageCell {
-
     private static final String AMOUNT = "amount";
-    protected static final long MAX_SOURCE = 5000;
 
+    private final ISourceCellItem cellType;
     private final ItemStack i;
     private final ISaveProvider container;
 
     private long sourceAmount;
     private boolean isPersisted = true;
 
-    public SourceCellInventory(ItemStack o, ISaveProvider container) {
+    public SourceCellInventory(ISourceCellItem cellType, ItemStack o, ISaveProvider container) {
+        this.cellType = cellType;
         this.i = o;
         this.container = container;
 
         this.sourceAmount = getTag().getLong(AMOUNT);
     }
 
-    protected long getSourceAmount() {
-        return this.sourceAmount;
+    public long getTotalBytes() {
+        return cellType.getTotalBytes();
+    }
+
+    public long getUsedBytes() {
+        var amountPerByte = SourceKeyType.TYPE.getAmountPerByte();
+        return (sourceAmount + amountPerByte - 1) / amountPerByte;
+    }
+
+    public long getMaxSource() {
+        return cellType.getTotalBytes() * SourceKeyType.TYPE.getAmountPerByte();
     }
 
     private CompoundTag getTag() {
-        return this.i.getOrCreateTag();
+        return i.getOrCreateTag();
     }
 
     @Override
     public CellState getStatus() {
-        if (this.sourceAmount == 0) {
+        if (sourceAmount == 0) {
             return CellState.EMPTY;
         }
-        if (this.sourceAmount == MAX_SOURCE) {
+
+        if (sourceAmount == getMaxSource()) {
             return CellState.FULL;
         }
-        if (this.sourceAmount > MAX_SOURCE / 2) {
+
+        if (sourceAmount > getMaxSource() / 2) {
             return CellState.TYPES_FULL;
         }
+
         return CellState.NOT_EMPTY;
     }
 
     @Override
     public double getIdleDrain() {
-        return 1.0f;
+        return cellType.getIdleDrain();
     }
 
     protected void saveChanges() {
-        this.isPersisted = false;
-        if (this.container != null) {
-            this.container.saveChanges();
+        isPersisted = false;
+
+        if (container != null) {
+            container.saveChanges();
         } else {
             // if there is no ISaveProvider, store to NBT immediately
-            this.persist();
+            persist();
         }
     }
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount == 0 || !(what instanceof SourceKey) || this.sourceAmount == MAX_SOURCE) {
+        if (amount == 0 || !(what instanceof SourceKey) || sourceAmount == getMaxSource()) {
             return 0;
         }
 
-        long remainingAmount = Math.max(0, MAX_SOURCE - this.sourceAmount);
+        long remainingAmount = Math.max(0, getMaxSource() - sourceAmount);
+
         if (amount > remainingAmount) {
             amount = remainingAmount;
         }
+
         if (mode == Actionable.MODULATE) {
-            this.sourceAmount += amount;
+            sourceAmount += amount;
             saveChanges();
         }
+
         return amount;
     }
 
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
         var extractAmount = Math.min(Integer.MAX_VALUE, amount);
-        var currentAmount = getSourceAmount();
+        var currentAmount = sourceAmount;
 
-        if (this.sourceAmount > 0 && Objects.equals(SourceKey.KEY, what)) {
+        if (sourceAmount > 0 && Objects.equals(SourceKey.KEY, what)) {
             if (mode == Actionable.MODULATE) {
-                this.sourceAmount = Math.max(0, this.sourceAmount - extractAmount);
+                sourceAmount = Math.max(0, sourceAmount - extractAmount);
                 saveChanges();
             }
+
             return Math.min(extractAmount, currentAmount);
         }
+
         return 0;
     }
 
     @Override
     public void persist() {
-        if (this.isPersisted) {
+        if (isPersisted) {
             return;
         }
 
-        if (this.sourceAmount < 0) {
-            this.getTag().remove(AMOUNT);
+        if (sourceAmount < 0) {
+            getTag().remove(AMOUNT);
         } else {
-            this.getTag().putLong(AMOUNT, this.sourceAmount);
+            getTag().putLong(AMOUNT, sourceAmount);
         }
 
-        this.isPersisted = true;
+        isPersisted = true;
     }
 
     @Override
     public void getAvailableStacks(KeyCounter out) {
-        if (this.sourceAmount > 0) {
-            out.add(SourceKey.KEY, this.sourceAmount);
+        if (sourceAmount > 0) {
+            out.add(SourceKey.KEY, sourceAmount);
         }
     }
 
@@ -132,6 +151,6 @@ public class SourceCellInventory implements StorageCell {
 
     @Override
     public Component getDescription() {
-        return this.i.getHoverName();
+        return i.getHoverName();
     }
 }

@@ -51,7 +51,11 @@ minecraft {
         }
 
         create("data") {
-            args("--mod", modId, "--all", "--output", file("src/generated/resources/"), "--existing", file("src/main/resources/"))
+            args(
+                "--mod", modId,
+                "--all",
+                "--output", file("src/generated/resources/"),
+                "--existing", file("src/main/resources/"))
 
             mods {
                 getByName(modId) {
@@ -127,10 +131,10 @@ tasks {
         exclude("**/.cache")
 
         val replaceProperties = mapOf(
-                "version"    to project.version,
-                "fmlVersion" to "[${libs.versions.loader.get()},)",
-                "ae2Version" to "(,${libs.versions.ae2.get().substringBefore('.').toInt() + 1})",
-                "arsVersion" to "(,${libs.versions.ars.get().substringBefore('.').toInt() + 1})"
+            "version" to project.version,
+            "fmlVersion" to "[${libs.versions.loader.get()},)",
+            "ae2Version" to "(,${libs.versions.ae2.get().substringBefore('.').toInt() + 1})",
+            "arsVersion" to "(,${libs.versions.ars.get().substringBefore('.').toInt() + 1})"
         )
 
         inputs.properties(replaceProperties)
@@ -150,6 +154,11 @@ tasks {
 }
 
 spotless {
+    kotlinGradle {
+        target("*.kts")
+        diktat()
+    }
+
     java {
         target("src/**/java/**/*.java")
         palantirJavaFormat()

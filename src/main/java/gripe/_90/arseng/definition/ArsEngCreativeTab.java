@@ -21,7 +21,7 @@ public final class ArsEngCreativeTab {
                     ArsEngCore.makeId("tab"),
                     CreativeModeTab.builder()
                             .title(Component.literal("Ars Énergistique"))
-                            .icon(ArsEngItems.SOURCE_STORAGE_CELL::stack)
+                            .icon(ArsEngItems.SOURCE_CELL_256K::stack)
                             .displayItems(ArsEngCreativeTab::display)
                             .build());
         }

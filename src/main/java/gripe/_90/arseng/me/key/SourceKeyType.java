@@ -38,6 +38,11 @@ public class SourceKeyType extends AEKeyType {
     }
 
     @Override
+    public int getAmountPerByte() {
+        return 1000;
+    }
+
+    @Override
     public int getAmountPerOperation() {
         return 1000;
     }
