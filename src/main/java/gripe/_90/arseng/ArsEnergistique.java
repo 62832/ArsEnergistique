@@ -72,7 +72,7 @@ public class ArsEnergistique {
 
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
 
-            var driveCell = ArsEngCore.makeId("block/drive/cells/source_storage_cell");
+            var driveCell = ArsEngCore.makeId("block/source_drive_cell");
             ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));
             ArsEngItems.getPortables().forEach(portable -> StorageCellModels.registerModel(portable, driveCell));
             StorageCellModels.registerModel(ArsEngItems.CREATIVE_SOURCE_CELL, driveCell);

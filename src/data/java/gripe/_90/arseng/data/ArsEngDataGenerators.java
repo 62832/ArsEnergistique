@@ -23,7 +23,7 @@ public final class ArsEngDataGenerators {
         var existing = event.getExistingFileHelper();
 
         pack.addProvider(output -> new ItemModelProvider(output, existing));
-        pack.addProvider(output -> new BlockModelProvider(output, existing));
+        pack.addProvider(output -> new BlockStateModelProvider(output, existing));
 
         pack.addProvider(RecipeProvider::new);
         pack.addProvider(LocalisationProvider::new);
@@ -33,7 +33,6 @@ public final class ArsEngDataGenerators {
             @Override
             protected void addTags(@NotNull HolderLookup.Provider provider) {}
         });
-
         pack.addProvider(output -> new TagsProvider(output, registries, blockTags.contentsGetter()));
     }
 }
