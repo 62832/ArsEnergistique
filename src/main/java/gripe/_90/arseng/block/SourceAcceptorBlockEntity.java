@@ -8,6 +8,7 @@ import appeng.api.networking.*;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.util.AECableType;
+import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.powersink.IExternalPowerSink;
 import appeng.me.InWorldGridNode;
 import appeng.me.energy.StoredEnergyAmount;
@@ -50,6 +51,7 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putDouble("internalCurrentPower", stored.getAmount());
+        getMainNode().saveToNBT(tag);
     }
 
     Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
@@ -76,7 +78,6 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
 
     @Override
     public IGridNode getActionableNode() {
-        logger.info("get actionable node");
         return getMainNode().getNode();
     }
 
@@ -84,27 +85,35 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
     public void load(CompoundTag tag) {
         super.load(tag);
         stored.setStored(tag.getDouble("internalCurrentPower"));
+        getMainNode().loadFromNBT(tag);
     }
 
     public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
         super(ArsEngBlocks.SOURCE_ACCEPTOR_TYPE.get(), pos, state);
         nodeListener = new NodeListener();
         getMainNode().setExposedOnSides(Set.of(Direction.values()));
-
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        getMainNode().create(level,getBlockPos());
+    public void clearRemoved() {
+        super.clearRemoved();
+        Init();
+    }
+
+    void Init(){
+        GridHelper.onFirstTick(this, this::OnReady);
+    }
+
+    void OnReady(SourceAcceptorBlockEntity sourceAcceptorBlock){
+        getMainNode().create(level, getBlockPos());
     }
 
     int PowerToSource(double power) {
-        return (int) (power / 4);
+        return (int) (power / 8);
     }
 
     double SourceToPower(int source) {
-        return (double) source * 4;
+        return (double) source * 8;
     }
 
     @Override
@@ -127,13 +136,25 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
 
     @Override
     public int getSource() {
+        int max = getMaxSource();
         //shows up as full a lot sooner than it should, so that things stop sending unneeded power
-        return Math.min(PowerToSource(getAECurrentPower()) + 500,getMaxSource());
+        int source = Math.min(max,max - PowerToSource(getFunnelPowerDemand(Math.max(0, max - SourceToPower(1000)))) + 1000);
+        logger.info("get source returned: "+source);
+        return source;
     }
 
     @Override
     public int getMaxSource() {
-        return PowerToSource(getAEMaxPower());
+        int source;
+        var grid = getMainNode().getGrid();
+        if(grid != null){
+            source = PowerToSource(grid.getEnergyService().getMaxStoredPower());
+        }
+        else {
+            source = PowerToSource(getAEMaxPower());
+        }
+        logger.info("get max source returned: "+source);
+        return source;
     }
 
     @Override
