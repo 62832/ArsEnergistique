@@ -127,7 +127,8 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
 
     @Override
     public int getSource() {
-        return Math.min(PowerToSource(stored.getAmount()) + 1,getMaxSource());
+        //shows up as full a lot sooner than it should, so that things stop sending unneeded power
+        return Math.min(PowerToSource(getAECurrentPower()) + 500,getMaxSource());
     }
 
     @Override
