@@ -22,7 +22,7 @@ import appeng.blockentity.AEBaseBlockEntity;
 import appeng.core.definitions.BlockDefinition;
 
 import gripe._90.arseng.block.SourceAcceptorBlock;
-import gripe._90.arseng.block.SourceAcceptorBlockEntity;
+import gripe._90.arseng.block.entity.SourceAcceptorBlockEntity;
 
 public final class ArsEngBlocks {
     private ArsEngBlocks() {}

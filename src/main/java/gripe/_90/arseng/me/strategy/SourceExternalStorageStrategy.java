@@ -1,6 +1,5 @@
 package gripe._90.arseng.me.strategy;
 
-import gripe._90.arseng.definition.IAdvancedSourceTile;
 import org.jetbrains.annotations.Nullable;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
@@ -19,6 +18,7 @@ import appeng.api.storage.MEStorage;
 import appeng.core.localization.GuiText;
 import appeng.util.BlockApiCache;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;

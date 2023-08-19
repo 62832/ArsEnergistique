@@ -1,10 +1,7 @@
 package gripe._90.arseng.me.strategy;
 
-import gripe._90.arseng.definition.IAdvancedSourceTile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,6 +12,7 @@ import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 import appeng.util.BlockApiCache;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;

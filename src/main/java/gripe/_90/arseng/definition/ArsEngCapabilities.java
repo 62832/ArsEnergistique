@@ -18,6 +18,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 import appeng.capabilities.Capabilities;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
+import gripe._90.arseng.block.entity.SourceTileWrapper;
 import gripe._90.arseng.me.storage.GenericStackSourceStorage;
 
 public final class ArsEngCapabilities {
@@ -33,15 +35,9 @@ public final class ArsEngCapabilities {
         var be = event.getObject();
 
         if (be instanceof ISourceTile sourceTile) {
-            LazyOptional<IAdvancedSourceTile> handler;
-            if(sourceTile instanceof SourceJarTile){
-                handler = LazyOptional.of(() -> new SourceTileWrapper(sourceTile));
-            }
-            else{
-                handler = LazyOptional.of(() -> new SourceTileWrapper(sourceTile).withSourcelinkProvidePower(false));
-            }
             var provider = new ICapabilityProvider() {
-                private final LazyOptional<IAdvancedSourceTile> sourceHandler = handler;
+                private final LazyOptional<IAdvancedSourceTile> sourceHandler = LazyOptional.of(
+                        () -> new SourceTileWrapper(sourceTile, true, sourceTile instanceof SourceJarTile));
 
                 @NotNull
                 @Override

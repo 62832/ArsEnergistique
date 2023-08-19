@@ -1,13 +1,7 @@
-package gripe._90.arseng.block;
+package gripe._90.arseng.block.entity;
 
-import gripe._90.arseng.definition.IAdvancedSourceTile;
-import gripe._90.arseng.me.energy.SourcePowerSinkAdapter;
-import org.apache.logging.log4j.core.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,6 +25,7 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
+import gripe._90.arseng.me.energy.SourceEnergyAdapter;
 
 public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
         implements IExternalPowerSink, IGridConnectedBlockEntity {
@@ -41,8 +36,6 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
             .setInWorldNode(true)
             .setTagName("proxy");
     private LazyOptional<IAdvancedSourceTile> sourceTileOptional;
-
-    private final Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
 
     public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
         super(ArsEngBlocks.SOURCE_ACCEPTOR_ENTITY, pos, state);
@@ -87,14 +80,12 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     @Override
     public void onLoad() {
         super.onLoad();
-        sourceTileOptional = LazyOptional.of(() -> new SourcePowerSinkAdapter(this,this));
+        sourceTileOptional = LazyOptional.of(() -> new SourceEnergyAdapter(this, this));
     }
 
     public IManagedGridNode getMainNode() {
         return mainNode;
     }
-
-
 
     @NotNull
     @Override

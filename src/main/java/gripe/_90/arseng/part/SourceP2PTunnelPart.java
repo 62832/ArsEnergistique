@@ -3,9 +3,6 @@ package gripe._90.arseng.part;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-
-import gripe._90.arseng.definition.IAdvancedSourceTile;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import appeng.api.config.PowerUnits;
@@ -16,6 +13,7 @@ import appeng.items.parts.PartModels;
 import appeng.parts.p2p.CapabilityP2PTunnelPart;
 import appeng.parts.p2p.P2PModels;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;

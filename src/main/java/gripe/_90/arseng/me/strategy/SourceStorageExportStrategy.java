@@ -1,8 +1,5 @@
 package gripe._90.arseng.me.strategy;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-
-import gripe._90.arseng.definition.IAdvancedSourceTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +11,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
 import appeng.util.BlockApiCache;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 

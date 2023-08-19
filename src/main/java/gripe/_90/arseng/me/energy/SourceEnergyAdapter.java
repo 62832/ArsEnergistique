@@ -4,21 +4,16 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnits;
 import appeng.api.networking.security.IActionHost;
 import appeng.blockentity.powersink.IExternalPowerSink;
-import gripe._90.arseng.definition.IAdvancedSourceTile;
 
-public class SourcePowerSinkAdapter implements IAdvancedSourceTile {
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 
-    public static int PowerToSource(double power) {
-        return (int) (power / 8);
-    }
+public class SourceEnergyAdapter implements IAdvancedSourceTile {
+    private static final int AE_PER_SOURCE = 8;
 
-    public static double SourceToPower(int source) {
-        return (double) source * 8;
-    }
-    private IExternalPowerSink sink;
-    private IActionHost host;
+    private final IExternalPowerSink sink;
+    private final IActionHost host;
 
-    public SourcePowerSinkAdapter(IExternalPowerSink sink, IActionHost host){
+    public SourceEnergyAdapter(IExternalPowerSink sink, IActionHost host) {
         this.sink = sink;
         this.host = host;
     }
@@ -40,12 +35,11 @@ public class SourcePowerSinkAdapter implements IAdvancedSourceTile {
 
     @Override
     public int getSource() {
-        int max = getMaxSource();
+        var max = getMaxSource();
         // shows up as full a lot sooner than it should, so that things stop sending unneeded power
-        //also, we use our on conversion so power units is AE
-        int source =
-                Math.min(max, max - PowerToSource(sink.getExternalPowerDemand(PowerUnits.AE, Math.max(0, max - SourceToPower(1000)))) + 1000);
-        return source;
+        // also, we use our own conversion so power units is AE
+        var earlyCap = sink.getExternalPowerDemand(PowerUnits.AE, Math.max(0, max - 1000 * AE_PER_SOURCE));
+        return (int) Math.min(max, max - (earlyCap / AE_PER_SOURCE) + 1000);
     }
 
     @Override
@@ -53,7 +47,7 @@ public class SourcePowerSinkAdapter implements IAdvancedSourceTile {
         var grid = host.getActionableNode();
 
         if (grid != null) {
-            return PowerToSource(grid.getGrid().getEnergyService().getMaxStoredPower());
+            return (int) (grid.getGrid().getEnergyService().getMaxStoredPower() / AE_PER_SOURCE);
         }
         return 0;
     }
@@ -70,7 +64,7 @@ public class SourcePowerSinkAdapter implements IAdvancedSourceTile {
 
     @Override
     public int addSource(int source) {
-        sink.injectExternalPower(PowerUnits.AE, SourceToPower(source), Actionable.MODULATE);
+        sink.injectExternalPower(PowerUnits.AE, source * AE_PER_SOURCE, Actionable.MODULATE);
         return Math.min(source + getSource(), getMaxSource());
     }
 
