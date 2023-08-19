@@ -4,9 +4,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.behaviors.GenericSlotCapacities;
@@ -19,6 +19,8 @@ import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
 import gripe._90.arseng.definition.ArsEngItems;
+import gripe._90.arseng.item.PortableSourceCellItem;
+import gripe._90.arseng.me.cell.CreativeSourceCellHandler;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 import gripe._90.arseng.me.client.SourceRenderer;
 import gripe._90.arseng.me.key.SourceKey;
@@ -40,6 +42,7 @@ public class ArsEnergistique {
 
         bus.addListener(SourceKeyType::register);
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
+        StorageCells.addCellHandler(CreativeSourceCellHandler.INSTANCE);
 
         bus.addListener(ArsEngCapabilities::register);
         MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, ArsEngCapabilities::attach);
@@ -53,17 +56,24 @@ public class ArsEnergistique {
 
         bus.addListener(SourceP2PTunnelPart::initAttunement);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> Client::new);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            Client.init();
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class Client {
-        Client() {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(SourceCellHandler::initLED);
+    private static class Client {
+        private static void init() {
+            var bus = FMLJavaModLoadingContext.get().getModEventBus();
+            bus.addListener(SourceCellHandler::initLED);
+            bus.addListener(PortableSourceCellItem::initColours);
 
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
-            StorageCellModels.registerModel(
-                    ArsEngItems.SOURCE_STORAGE_CELL, ArsEngCore.makeId("block/drive/cells/source_storage_cell"));
+
+            var driveCell = ArsEngCore.makeId("block/drive/cells/source_storage_cell");
+            ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));
+            ArsEngItems.getPortables().forEach(portable -> StorageCellModels.registerModel(portable, driveCell));
+            StorageCellModels.registerModel(ArsEngItems.CREATIVE_SOURCE_CELL, driveCell);
         }
     }
 }
