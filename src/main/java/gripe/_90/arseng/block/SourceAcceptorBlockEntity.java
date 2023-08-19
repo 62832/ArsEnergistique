@@ -100,11 +100,11 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
     }
 
     int PowerToSource(double power) {
-        return (int) (power / 2.5);
+        return (int) (power / 4);
     }
 
     double SourceToPower(int source) {
-        return (double) source * 2.5;
+        return (double) source * 4;
     }
 
     @Override
