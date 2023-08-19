@@ -115,7 +115,6 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
         return super.getCapability(cap, side);
     }
 
-
     @Override
     public int getTransferRate() {
         return getMaxSource();
@@ -123,7 +122,7 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
 
     @Override
     public boolean canAcceptSource() {
-        return true;
+        return getSource() < getMaxSource();
     }
 
     @Override
