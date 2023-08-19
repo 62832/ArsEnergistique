@@ -38,6 +38,7 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
             .setIdlePowerUsage(0)
             .setInWorldNode(true)
             .setTagName("proxy");
+    private LazyOptional<ISourceTile> sourceTileOptional;
 
     private final Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
 
@@ -81,6 +82,12 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
         getMainNode().create(getLevel(), getBlockPos());
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        sourceTileOptional = LazyOptional.of(() -> this);
+    }
+
     public IManagedGridNode getMainNode() {
         return mainNode;
     }
@@ -93,12 +100,16 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
         return (double) source * 8;
     }
 
+    @NotNull
     @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ArsEngCapabilities.SOURCE_TILE) {
-            return LazyOptional.of(() -> this).cast();
-        }
-        return super.getCapability(cap, side);
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        return ArsEngCapabilities.SOURCE_TILE.orEmpty(cap, sourceTileOptional);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        sourceTileOptional.invalidate();
     }
 
     @Override
@@ -167,11 +178,7 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
 
     protected double funnelPowerIntoStorage(double power, Actionable mode) {
         var grid = getMainNode().getGrid();
-        if (grid != null) {
-            return grid.getEnergyService().injectPower(power, mode);
-        } else {
-            return injectAEPower(power, mode);
-        }
+        return grid != null ? grid.getEnergyService().injectPower(power, mode) : 0;
     }
 
     @Override
