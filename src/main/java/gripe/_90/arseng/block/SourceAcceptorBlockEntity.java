@@ -5,6 +5,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,6 @@ import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.util.AECableType;
-import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.powersink.IExternalPowerSink;
 import appeng.me.helpers.BlockEntityNodeListener;
 import appeng.me.helpers.IGridConnectedBlockEntity;
@@ -30,10 +30,10 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 
-public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
-        implements IExternalPowerSink, IGridConnectedBlockEntity, ISourceTile {
+public class SourceAcceptorBlockEntity extends AbstractSourceMachine
+        implements IExternalPowerSink, IGridConnectedBlockEntity {
     private final IManagedGridNode mainNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
-            .setVisualRepresentation(getItemFromBlockEntity())
+            .setVisualRepresentation(ArsEngBlocks.SOURCE_ACCEPTOR)
             .addService(IAEPowerStorage.class, this)
             .setIdlePowerUsage(0)
             .setInWorldNode(true)
@@ -53,7 +53,7 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
+    public void load(CompoundTag data) {
         super.load(data);
         getMainNode().loadFromNBT(data);
     }
@@ -61,7 +61,7 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     @Override
     public void clearRemoved() {
         super.clearRemoved();
-        scheduleInit();
+        GridHelper.onFirstTick(this, be -> be.getMainNode().create(be.getLevel(), be.getBlockPos()));
     }
 
     @Override
@@ -77,15 +77,18 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     }
 
     @Override
-    public void onReady() {
-        super.onReady();
-        getMainNode().create(getLevel(), getBlockPos());
-    }
-
-    @Override
     public void onLoad() {
         super.onLoad();
         sourceTileOptional = LazyOptional.of(() -> this);
+    }
+
+    @Override
+    public void saveChanges() {
+        if (level == null) {
+            return;
+        }
+
+        setChanged();
     }
 
     public IManagedGridNode getMainNode() {
