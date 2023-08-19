@@ -1,6 +1,5 @@
 package gripe._90.arseng;
 
-import gripe._90.arseng.definition.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,6 +15,7 @@ import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
@@ -38,9 +38,8 @@ public class ArsEnergistique {
     public ArsEnergistique() {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ArsEngBlocks.DoSetup(bus);
-
         bus.addListener(ArsEngItems::register);
+        bus.addListener(ArsEngBlocks::register);
         bus.addListener(ArsEngCreativeTab::register);
 
         bus.addListener(SourceKeyType::register);

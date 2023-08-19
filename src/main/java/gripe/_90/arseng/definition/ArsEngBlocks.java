@@ -1,31 +1,84 @@
 package gripe._90.arseng.definition;
 
-import appeng.blockentity.powersink.IExternalPowerSink;
-import gripe._90.arseng.block.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegisterEvent;
 
-public class ArsEngBlocks{
+import appeng.block.AEBaseBlockItem;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.core.definitions.BlockDefinition;
 
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ArsEngCore.MODID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ArsEngCore.MODID);
+import gripe._90.arseng.block.SourceAcceptorBlock;
+import gripe._90.arseng.block.SourceAcceptorBlockEntity;
 
-    static BlockBehaviour.Properties basicProperties = BlockBehaviour.Properties.of().destroyTime(2f).sound(SoundType.STONE);
-    public static final RegistryObject<Block> SOURCE_ACCEPTOR_BLOCK = BLOCKS.register("source_acceptor_block", () -> new SourceAcceptorBlock(basicProperties));
+public final class ArsEngBlocks {
+    private ArsEngBlocks() {}
 
-    public static final RegistryObject<BlockEntityType<SourceAcceptorBlockEntity>> SOURCE_ACCEPTOR_TYPE = BLOCK_ENTITIES.register("source_acceptor_block",() -> BlockEntityType.Builder.of(SourceAcceptorBlockEntity::new,SOURCE_ACCEPTOR_BLOCK.get()).build(null));
+    private static final List<BlockDefinition<?>> BLOCKS = new ArrayList<>();
+    private static final Map<ResourceLocation, BlockEntityType<?>> BLOCK_ENTITIES = new HashMap<>();
 
-
-    public static void DoSetup(IEventBus bus){
-        BLOCKS.register(bus);
-        BLOCK_ENTITIES.register(bus);
+    public static List<BlockDefinition<?>> getBlocks() {
+        return Collections.unmodifiableList(BLOCKS);
     }
 
+    public static void register(RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.BLOCK)) {
+            BLOCKS.forEach(b -> ForgeRegistries.BLOCKS.register(b.id(), b.block()));
+        }
+
+        if (event.getRegistryKey().equals(Registries.ITEM)) {
+            BLOCKS.forEach(b -> ForgeRegistries.ITEMS.register(b.id(), b.asItem()));
+        }
+
+        if (event.getRegistryKey().equals(Registries.BLOCK_ENTITY_TYPE)) {
+            BLOCK_ENTITIES.forEach(ForgeRegistries.BLOCK_ENTITY_TYPES::register);
+        }
+    }
+
+    public static final BlockDefinition<SourceAcceptorBlock> SOURCE_ACCEPTOR =
+            block("ME Source Acceptor", "source_acceptor", SourceAcceptorBlock::new);
+
+    public static final BlockEntityType<SourceAcceptorBlockEntity> SOURCE_ACCEPTOR_ENTITY = blockEntity(
+            "source_acceptor", SourceAcceptorBlockEntity.class, SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
+
+    private static <T extends Block> BlockDefinition<T> block(String englishName, String id, Supplier<T> supplier) {
+        return block(englishName, id, supplier, block -> new AEBaseBlockItem(block, new Item.Properties()));
+    }
+
+    private static <T extends Block> BlockDefinition<T> block(
+            String englishName,
+            String id,
+            Supplier<T> blockSupplier,
+            Function<T, ? extends AEBaseBlockItem> itemFunction) {
+        var block = blockSupplier.get();
+        var item = itemFunction.apply(block);
+        var definition = new BlockDefinition<>(englishName, ArsEngCore.makeId(id), block, item);
+        BLOCKS.add(definition);
+        return definition;
+    }
+
+    private static <T extends AEBaseBlockEntity> BlockEntityType<T> blockEntity(
+            String id,
+            Class<T> entityClass,
+            BlockEntityType.BlockEntitySupplier<T> supplier,
+            BlockDefinition<? extends AEBaseEntityBlock<T>> block) {
+        var type = BlockEntityType.Builder.of(supplier, block.block()).build(null);
+        BLOCK_ENTITIES.put(ArsEngCore.makeId(id), type);
+        AEBaseBlockEntity.registerBlockEntityItem(type, block.asItem());
+        block.block().setBlockEntity(entityClass, type, null, null);
+        return type;
+    }
 }

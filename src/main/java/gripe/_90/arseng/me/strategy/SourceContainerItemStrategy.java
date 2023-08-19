@@ -1,6 +1,5 @@
 package gripe._90.arseng.me.strategy;
 
-import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Preconditions;
@@ -19,7 +18,8 @@ import appeng.api.stacks.GenericStack;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public class SourceContainerItemStrategy implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
+public class SourceContainerItemStrategy
+        implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
     public static final int MAX_SOURCE = 10000;
 
     private boolean isSourceJar(ItemStack stack) {
@@ -34,14 +34,14 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
 
     private int getSource(ItemStack sourceJar) {
         Preconditions.checkArgument(isSourceJar(sourceJar));
-        if(isCreativeSourceJar(sourceJar)){
+
+        if (isCreativeSourceJar(sourceJar)) {
             return MAX_SOURCE;
         }
-        //fixes this creating a tag on the stack
-        else if(!sourceJar.hasTag()){
+        // fixes this creating a tag on the stack
+        else if (!sourceJar.hasTag()) {
             return 0;
-        }
-        else{
+        } else {
             return sourceJar.getOrCreateTag().getCompound("BlockEntityTag").getInt("source");
         }
     }
@@ -54,8 +54,8 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
         }
 
         var beTag = sourceJar.getOrCreateTag().getCompound("BlockEntityTag");
-        beTag.putInt("source", Math.min(MAX_SOURCE, Math.max(getSource(sourceJar) + amount,0)));
-        beTag.putIntArray("items",new int[]{ });
+        beTag.putInt("source", Math.min(MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0)));
+        beTag.putIntArray("items", new int[] {});
 
         sourceJar.getOrCreateTag().put("BlockEntityTag", beTag);
     }
@@ -83,14 +83,13 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
     @Override
     public long extract(Context context, SourceKey what, long amount, Actionable mode) {
         var stackCopy = context.getStack().copyWithCount(1);
-
         var extracted = (int) Math.min(amount, getSource(stackCopy));
 
         if (extracted > 0 && mode == Actionable.MODULATE) {
             changeSource(-extracted, stackCopy);
-
+            // remove emptied item from stack
             context.getStack().shrink(1);
-
+            // add new emptied jar to context
             context.addOverflow(stackCopy);
         }
 
@@ -100,14 +99,13 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
     @Override
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
         var stackCopy = context.getStack().copyWithCount(1);
-
         var inserted = (int) Math.min(amount, MAX_SOURCE - getSource(stackCopy));
 
         if (inserted > 0 && mode == Actionable.MODULATE) {
             changeSource(inserted, stackCopy);
-            //remove filled item from stack
+            // remove filled item from stack
             context.getStack().shrink(1);
-            //add new filled jar to context
+            // add new filled jar to context
             context.addOverflow(stackCopy);
         }
 
@@ -126,10 +124,8 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
         return getContainedStack(context.getStack());
     }
 
-    interface Context {
+    public interface Context {
         ItemStack getStack();
-
-        void setStack(ItemStack stack);
 
         void addOverflow(ItemStack stack);
     }
@@ -138,11 +134,6 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
         @Override
         public ItemStack getStack() {
             return menu.getCarried();
-        }
-
-        @Override
-        public void setStack(ItemStack stack) {
-            menu.setCarried(stack);
         }
 
         public void addOverflow(ItemStack stack) {
@@ -158,11 +149,6 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
         @Override
         public ItemStack getStack() {
             return player.getInventory().getItem(slot);
-        }
-
-        @Override
-        public void setStack(ItemStack stack) {
-            player.getInventory().setItem(slot, stack);
         }
 
         public void addOverflow(ItemStack stack) {

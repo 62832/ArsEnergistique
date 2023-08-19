@@ -1,111 +1,88 @@
 package gripe._90.arseng.block;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
-import appeng.api.networking.*;
-import appeng.api.networking.energy.IAEPowerStorage;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.util.AECableType;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.powersink.IExternalPowerSink;
-import appeng.me.InWorldGridNode;
-import appeng.me.energy.StoredEnergyAmount;
-import appeng.me.helpers.BlockEntityNodeListener;
-import appeng.me.helpers.IGridConnectedBlockEntity;
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-import gripe._90.arseng.definition.ArsEngBlocks;
-import gripe._90.arseng.definition.ArsEngCapabilities;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-import java.util.Set;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
-public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalPowerSink, IGridConnectedBlockEntity, ICapabilityProvider, ISourceTile {
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-    // the current power buffer.
-    private final StoredEnergyAmount stored = new StoredEnergyAmount(0, 10000, x -> {
-    });
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
+import appeng.api.config.PowerUnits;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.energy.IAEPowerStorage;
+import appeng.api.util.AECableType;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.powersink.IExternalPowerSink;
+import appeng.me.helpers.BlockEntityNodeListener;
+import appeng.me.helpers.IGridConnectedBlockEntity;
 
-    IGridNodeListener nodeListener;
+import gripe._90.arseng.definition.ArsEngBlocks;
+import gripe._90.arseng.definition.ArsEngCapabilities;
+
+public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
+        implements IExternalPowerSink, IGridConnectedBlockEntity, ISourceTile {
+    private final IManagedGridNode mainNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
+            .setVisualRepresentation(getItemFromBlockEntity())
+            .addService(IAEPowerStorage.class, this)
+            .setIdlePowerUsage(0)
+            .setInWorldNode(true)
+            .setTagName("proxy");
+
+    private final Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
+
+    public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
+        super(ArsEngBlocks.SOURCE_ACCEPTOR_ENTITY, pos, state);
+    }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putDouble("internalCurrentPower", stored.getAmount());
         getMainNode().saveToNBT(tag);
     }
 
-    Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
-
     @Override
-    public IGridNode getGridNode(Direction dir) {
-        logger.info("get grid node: "+dir);
-        var node = this.getMainNode().getNode();
-
-        return node;
-
-        /*
-        // We use the node rather than getGridConnectableSides since the node is already using absolute sides
-        if (node instanceof InWorldGridNode inWorldGridNode
-                && inWorldGridNode.isExposedOnSide(dir)) {
-            logger.info("returning node");
-            return node;
-        }
-
-        logger.warning("returning null!!!");
-        return null;
-         */
-    }
-
-    @Override
-    public IGridNode getActionableNode() {
-        return getMainNode().getNode();
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        stored.setStored(tag.getDouble("internalCurrentPower"));
-        getMainNode().loadFromNBT(tag);
-    }
-
-    public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
-        super(ArsEngBlocks.SOURCE_ACCEPTOR_TYPE.get(), pos, state);
-        nodeListener = new NodeListener();
-        getMainNode().setExposedOnSides(Set.of(Direction.values()));
+    public void loadTag(CompoundTag data) {
+        super.load(data);
+        getMainNode().loadFromNBT(data);
     }
 
     @Override
     public void clearRemoved() {
         super.clearRemoved();
-        Init();
+        scheduleInit();
     }
 
-    void Init(){
-        GridHelper.onFirstTick(this, this::OnReady);
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        getMainNode().destroy();
     }
 
-    void OnReady(SourceAcceptorBlockEntity sourceAcceptorBlock){
-        getMainNode().create(level, getBlockPos());
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        getMainNode().destroy();
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+        getMainNode().create(getLevel(), getBlockPos());
+    }
+
+    public IManagedGridNode getMainNode() {
+        return mainNode;
     }
 
     int PowerToSource(double power) {
@@ -137,23 +114,23 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
     @Override
     public int getSource() {
         int max = getMaxSource();
-        //shows up as full a lot sooner than it should, so that things stop sending unneeded power
-        int source = Math.min(max,max - PowerToSource(getFunnelPowerDemand(Math.max(0, max - SourceToPower(1000)))) + 1000);
-        logger.info("get source returned: "+source);
+        // shows up as full a lot sooner than it should, so that things stop sending unneeded power
+        int source =
+                Math.min(max, max - PowerToSource(getFunnelPowerDemand(Math.max(0, max - SourceToPower(1000)))) + 1000);
+        logger.info("get source returned: " + source);
         return source;
     }
 
     @Override
     public int getMaxSource() {
-        int source;
+        int source = 0;
         var grid = getMainNode().getGrid();
-        if(grid != null){
+
+        if (grid != null) {
             source = PowerToSource(grid.getEnergyService().getMaxStoredPower());
         }
-        else {
-            source = PowerToSource(getAEMaxPower());
-        }
-        logger.info("get max source returned: "+source);
+
+        logger.info("get max source returned: " + source);
         return source;
     }
 
@@ -178,58 +155,14 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
         throw new UnsupportedOperationException();
     }
 
-    private final IManagedGridNode mainNode = createMainNode()
-            .setVisualRepresentation(Items.CACTUS)//TODO: make it show the right block
-            .addService(IAEPowerStorage.class, this)
-            .setInWorldNode(true)
-            .setTagName("proxy");
-
-    class NodeListener implements IGridNodeListener{
-        @Override
-        public void onSaveChanges(Object nodeOwner, IGridNode node) {
-            saveChanges();
-        }
-    }
-
-
-    protected IManagedGridNode createMainNode() {
-        if(nodeListener == null){
-            nodeListener = new NodeListener();
-        }
-        Objects.requireNonNull(nodeListener);
-        IManagedGridNode node = GridHelper.createManagedNode(this, nodeListener);
-        return node;
-    }
-
-    public IManagedGridNode getMainNode() {
-        return mainNode;
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    public void saveChanges() {
-        if (this.level == null) {
-            return;
-        }
-        this.setChanged();
-    }
-
     @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
     }
 
-
     protected double getFunnelPowerDemand(double maxRequired) {
         var grid = getMainNode().getGrid();
-        if (grid != null) {
-            return grid.getEnergyService().getEnergyDemand(maxRequired);
-        } else {
-            return stored.getMaximum() - stored.getAmount();
-        }
+        return grid != null ? grid.getEnergyService().getEnergyDemand(maxRequired) : 0;
     }
 
     protected double funnelPowerIntoStorage(double power, Actionable mode) {
@@ -237,13 +170,14 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
         if (grid != null) {
             return grid.getEnergyService().injectPower(power, mode);
         } else {
-            return this.injectAEPower(power, mode);
+            return injectAEPower(power, mode);
         }
     }
 
     @Override
     public final double getExternalPowerDemand(PowerUnits externalUnit, double maxPowerRequired) {
-        return PowerUnits.AE.convertTo(externalUnit,
+        return PowerUnits.AE.convertTo(
+                externalUnit,
                 Math.max(0.0, this.getFunnelPowerDemand(externalUnit.convertTo(PowerUnits.AE, maxPowerRequired))));
     }
 
@@ -253,37 +187,32 @@ public class SourceAcceptorBlockEntity extends BlockEntity implements IExternalP
     }
 
     @Override
+    public AccessRestriction getPowerFlow() {
+        return AccessRestriction.READ_WRITE;
+    }
+
+    @Override
     public double injectAEPower(double amt, Actionable mode) {
-        return amt - stored.insert(amt, mode == Actionable.MODULATE);
+        return 0;
+    }
+
+    @Override
+    public final double extractAEPower(double amt, Actionable mode, PowerMultiplier multiplier) {
+        return 0;
     }
 
     @Override
     public double getAEMaxPower() {
-        return stored.getMaximum();
+        return 0;
     }
 
     @Override
     public double getAECurrentPower() {
-        return stored.getAmount();
+        return 0;
     }
 
     @Override
     public boolean isAEPublicPowerStorage() {
         return false;
-    }
-
-    @Override
-    public AccessRestriction getPowerFlow() {
-        return AccessRestriction.READ_WRITE;
-    }
-
-
-    @Override
-    public final double extractAEPower(double amt, Actionable mode, PowerMultiplier multiplier) {
-        return multiplier.divide(this.extractAEPower(multiplier.multiply(amt), mode));
-    }
-
-    protected double extractAEPower(double amt, Actionable mode) {
-        return stored.extract(amt, mode == Actionable.MODULATE);
     }
 }
