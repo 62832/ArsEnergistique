@@ -4,8 +4,9 @@
   "package": "gripe._90.arseng.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "SourceUtilMixin",
-    "RelayTileMixin"
+    "RelaySplitterTileMixin",
+    "RelayTileMixin",
+    "SourceUtilMixin"
   ],
   "client": [],
   "injectors": {
