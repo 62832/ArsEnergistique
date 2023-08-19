@@ -1,5 +1,7 @@
 package gripe._90.arseng.block;
 
+import gripe._90.arseng.definition.IAdvancedSourceTile;
+import gripe._90.arseng.me.energy.SourcePowerSinkAdapter;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.jetbrains.annotations.NotNull;
@@ -31,14 +33,14 @@ import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 
 public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
-        implements IExternalPowerSink, IGridConnectedBlockEntity, ISourceTile {
+        implements IExternalPowerSink, IGridConnectedBlockEntity {
     private final IManagedGridNode mainNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
             .setVisualRepresentation(getItemFromBlockEntity())
             .addService(IAEPowerStorage.class, this)
             .setIdlePowerUsage(0)
             .setInWorldNode(true)
             .setTagName("proxy");
-    private LazyOptional<ISourceTile> sourceTileOptional;
+    private LazyOptional<IAdvancedSourceTile> sourceTileOptional;
 
     private final Logger logger = LoggerContext.getContext().getLogger("SourceAcceptor");
 
@@ -85,20 +87,14 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     @Override
     public void onLoad() {
         super.onLoad();
-        sourceTileOptional = LazyOptional.of(() -> this);
+        sourceTileOptional = LazyOptional.of(() -> new SourcePowerSinkAdapter(this,this));
     }
 
     public IManagedGridNode getMainNode() {
         return mainNode;
     }
 
-    int PowerToSource(double power) {
-        return (int) (power / 8);
-    }
 
-    double SourceToPower(int source) {
-        return (double) source * 8;
-    }
 
     @NotNull
     @Override
@@ -110,60 +106,6 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
     public void invalidateCaps() {
         super.invalidateCaps();
         sourceTileOptional.invalidate();
-    }
-
-    @Override
-    public int getTransferRate() {
-        return getMaxSource();
-    }
-
-    @Override
-    public boolean canAcceptSource() {
-        return getSource() < getMaxSource();
-    }
-
-    @Override
-    public int getSource() {
-        int max = getMaxSource();
-        // shows up as full a lot sooner than it should, so that things stop sending unneeded power
-        int source =
-                Math.min(max, max - PowerToSource(getFunnelPowerDemand(Math.max(0, max - SourceToPower(1000)))) + 1000);
-        logger.info("get source returned: " + source);
-        return source;
-    }
-
-    @Override
-    public int getMaxSource() {
-        int source = 0;
-        var grid = getMainNode().getGrid();
-
-        if (grid != null) {
-            source = PowerToSource(grid.getEnergyService().getMaxStoredPower());
-        }
-
-        logger.info("get max source returned: " + source);
-        return source;
-    }
-
-    @Override
-    public void setMaxSource(int max) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int setSource(int source) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int addSource(int source) {
-        funnelPowerIntoStorage(SourceToPower(source), Actionable.MODULATE);
-        return Math.min(source + getSource(), getMaxSource());
-    }
-
-    @Override
-    public int removeSource(int source) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gripe._90.arseng.me.strategy;
 
+import gripe._90.arseng.definition.IAdvancedSourceTile;
 import org.jetbrains.annotations.Nullable;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
@@ -24,7 +25,7 @@ import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
-    private final BlockApiCache<ISourceTile> apiCache;
+    private final BlockApiCache<IAdvancedSourceTile> apiCache;
     private final Direction fromSide;
 
     public SourceExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {

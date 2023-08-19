@@ -31,7 +31,7 @@ public abstract class SourceUtilMixin {
                 if (be != null) {
                     be.getCapability(ArsEngCapabilities.SOURCE_TILE, arseng$getDirTo(pos, b))
                             .ifPresent(sourceTile -> {
-                                if (sourceTile.canAcceptSource()) {
+                                if (sourceTile.canAcceptSource() && sourceTile.sourcelinksCanProvidePower()) {
                                     var provider = new SourceProvider(sourceTile, b.immutable());
 
                                     // account for the fact that posList isn't a Set and that source jars have the
@@ -57,7 +57,7 @@ public abstract class SourceUtilMixin {
                 if (be != null) {
                     be.getCapability(ArsEngCapabilities.SOURCE_TILE, arseng$getDirTo(pos, b))
                             .ifPresent(sourceTile -> {
-                                if (sourceTile.getSource() > 0) {
+                                if (sourceTile.getSource() > 0 && sourceTile.relayCanTakePower()) {
                                     var provider = new SourceProvider(sourceTile, b.immutable());
 
                                     if (!posList.contains(provider)) {
@@ -79,7 +79,7 @@ public abstract class SourceUtilMixin {
             // le nested Optional has arrived
             return be != null
                     && be.getCapability(ArsEngCapabilities.SOURCE_TILE, arseng$getDirTo(pos, p))
-                            .filter(sourceTile -> sourceTile.getSource() >= source)
+                            .filter(sourceTile -> sourceTile.getSource() >= source && sourceTile.relayCanTakePower())
                             .isPresent();
         });
 

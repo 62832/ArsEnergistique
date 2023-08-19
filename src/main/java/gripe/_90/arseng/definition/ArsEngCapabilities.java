@@ -23,7 +23,7 @@ import gripe._90.arseng.me.storage.GenericStackSourceStorage;
 public final class ArsEngCapabilities {
     private ArsEngCapabilities() {}
 
-    public static final Capability<ISourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<IAdvancedSourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(ISourceTile.class);
@@ -32,9 +32,16 @@ public final class ArsEngCapabilities {
     public static void attach(AttachCapabilitiesEvent<BlockEntity> event) {
         var be = event.getObject();
 
-        if (be instanceof SourceJarTile sourceJar) {
+        if (be instanceof ISourceTile sourceTile) {
+            LazyOptional<IAdvancedSourceTile> handler;
+            if(sourceTile instanceof SourceJarTile){
+                handler = LazyOptional.of(() -> new SourceTileWrapper(sourceTile));
+            }
+            else{
+                handler = LazyOptional.of(() -> new SourceTileWrapper(sourceTile).withSourcelinkProvidePower(false));
+            }
             var provider = new ICapabilityProvider() {
-                private final LazyOptional<ISourceTile> sourceHandler = LazyOptional.of(() -> sourceJar);
+                private final LazyOptional<IAdvancedSourceTile> sourceHandler = handler;
 
                 @NotNull
                 @Override

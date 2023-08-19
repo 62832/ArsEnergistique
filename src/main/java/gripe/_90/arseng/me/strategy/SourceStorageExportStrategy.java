@@ -2,6 +2,7 @@ package gripe._90.arseng.me.strategy;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
+import gripe._90.arseng.definition.IAdvancedSourceTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,7 @@ import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceStorageExportStrategy implements StackExportStrategy {
-    private final BlockApiCache<ISourceTile> apiCache;
+    private final BlockApiCache<IAdvancedSourceTile> apiCache;
     private final Direction fromSide;
 
     public SourceStorageExportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {

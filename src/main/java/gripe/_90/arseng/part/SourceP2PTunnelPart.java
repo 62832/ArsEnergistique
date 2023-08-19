@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
+import gripe._90.arseng.definition.IAdvancedSourceTile;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import appeng.api.config.PowerUnits;
@@ -20,7 +21,7 @@ import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.key.SourceKeyType;
 
-public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, ISourceTile> {
+public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, IAdvancedSourceTile> {
     private static final P2PModels MODELS = new P2PModels(ArsEngCore.makeId("part/source_p2p_tunnel"));
 
     private static final EmptyHandler EMPTY_HANDLER = new EmptyHandler();
@@ -47,7 +48,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         return MODELS.getModel(isPowered(), isActive());
     }
 
-    private class InputHandler implements ISourceTile {
+    private class InputHandler implements IAdvancedSourceTile {
         @Override
         public int getTransferRate() {
             return getMaxSource();
@@ -117,9 +118,19 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         public int removeSource(int source) {
             return 0;
         }
+
+        @Override
+        public boolean relayCanTakePower() {
+            return false;
+        }
+
+        @Override
+        public boolean sourcelinksCanProvidePower() {
+            return true;
+        }
     }
 
-    private class OutputHandler implements ISourceTile {
+    private class OutputHandler implements IAdvancedSourceTile {
         @Override
         public int getTransferRate() {
             try (var input = getInputCapability()) {
@@ -171,9 +182,19 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
                 return result;
             }
         }
+
+        @Override
+        public boolean relayCanTakePower() {
+            return true;
+        }
+
+        @Override
+        public boolean sourcelinksCanProvidePower() {
+            return false;
+        }
     }
 
-    private static class EmptyHandler implements ISourceTile {
+    private static class EmptyHandler implements IAdvancedSourceTile {
         @Override
         public int getTransferRate() {
             return 0;
@@ -210,6 +231,16 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         @Override
         public int removeSource(int source) {
             return 0;
+        }
+
+        @Override
+        public boolean relayCanTakePower() {
+            return false;
+        }
+
+        @Override
+        public boolean sourcelinksCanProvidePower() {
+            return false;
         }
     }
 }

@@ -1,5 +1,6 @@
 package gripe._90.arseng.me.strategy;
 
+import gripe._90.arseng.definition.IAdvancedSourceTile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,7 @@ import gripe._90.arseng.me.key.SourceKeyType;
 public class SourceStorageImportStrategy implements StackImportStrategy {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceStorageImportStrategy.class);
 
-    private final BlockApiCache<ISourceTile> apiCache;
+    private final BlockApiCache<IAdvancedSourceTile> apiCache;
     private final Direction fromSide;
 
     public SourceStorageImportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
