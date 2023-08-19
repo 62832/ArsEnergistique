@@ -55,7 +55,13 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         @Override
         public boolean canAcceptSource() {
-            return true;
+            for(SourceP2PTunnelPart part : getOutputs()) {
+                try(var guard = part.getAdjacentCapability() ){
+                    ISourceTile dest = guard.get();
+                    return dest.canAcceptSource();
+                }
+            }
+            return false;
         }
 
         @Override
