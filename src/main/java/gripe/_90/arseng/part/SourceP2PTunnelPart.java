@@ -3,6 +3,7 @@ package gripe._90.arseng.part;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import appeng.api.config.PowerUnits;
@@ -18,11 +19,16 @@ import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.key.SourceKeyType;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, IAdvancedSourceTile> {
     private static final P2PModels MODELS = new P2PModels(ArsEngCore.makeId("part/source_p2p_tunnel"));
 
     private static final EmptyHandler EMPTY_HANDLER = new EmptyHandler();
+
+    //please keep this here thanks
+    static Logger logger = LoggerContext.getContext().getLogger("Source Tunnel");
 
     public SourceP2PTunnelPart(IPartItem<?> partItem) {
         super(partItem, ArsEngCapabilities.SOURCE_TILE);
@@ -47,6 +53,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
     }
 
     private class InputHandler implements IAdvancedSourceTile {
+
         @Override
         public int getTransferRate() {
             return getMaxSource();
@@ -55,10 +62,8 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         @Override
         public boolean canAcceptSource() {
             for (SourceP2PTunnelPart part : getOutputs()) {
-                try (var guard = part.getAdjacentCapability()) {
-                    if (guard.get().canAcceptSource()) {
-                        return true;
-                    }
+                if(getOutputHandler(part).canAcceptLocalSource()) {
+                    return true;
                 }
             }
 
@@ -67,12 +72,20 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         @Override
         public int getSource() {
-            return 0;
+            int source = 0;
+            for (SourceP2PTunnelPart part : getOutputs()) {
+                source += getOutputHandler(part).getLocalSource();
+            }
+            return source;
         }
 
         @Override
         public int getMaxSource() {
-            return Integer.MAX_VALUE;
+            int max = 0;
+            for (SourceP2PTunnelPart part : getOutputs()) {
+                max += getOutputHandler(part).getLocalMaxSource();
+            }
+            return max;
         }
 
         @Override
@@ -89,9 +102,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         public int addSource(int source) {
             var outputs = getOutputStream()
                     .filter(part -> {
-                        try (var guard = part.getAdjacentCapability()) {
-                            return guard.get().canAcceptSource();
-                        }
+                        return getOutputHandler(part).canAcceptLocalSource();
                     })
                     .toList();
 
@@ -102,14 +113,14 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
             queueTunnelDrain(PowerUnits.AE, source / 100D);
             var forEach = source / outputs.size();
             var spill = new AtomicInteger(source % outputs.size());
+            var total = new AtomicInteger(0);
 
-            return outputs.stream()
-                    .map(output -> {
-                        try (var guard = output.getAdjacentCapability()) {
-                            return guard.get().addSource(forEach + (spill.getAndDecrement() > 0 ? 1 : 0));
-                        }
-                    })
-                    .reduce(0, Integer::sum);
+            outputs.stream()
+                    .forEach(output -> {
+                        total.addAndGet(getOutputHandler(output).addSourceRespectingBuffer(forEach + (spill.getAndDecrement() > 0 ? 1 : 0)));
+                    });
+
+            return total.get();
         }
 
         @Override
@@ -128,32 +139,123 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         }
     }
 
+    @Override
+    public void writeToNBT(CompoundTag data) {
+        super.writeToNBT(data);
+        OutputHandler output = getOutputHandler(this);
+        if(output != null) {
+            data.putInt("source",output.bufferSource);
+        }
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag data) {
+        super.readFromNBT(data);
+        OutputHandler output = getOutputHandler(this);
+        if(output != null && data.contains("source")) {
+            output.bufferSource = data.getInt("source");
+        }
+    }
+
+
+    static OutputHandler getOutputHandler(SourceP2PTunnelPart output){
+        if(!output.isOutput()){
+            return null;
+        }
+        if(output.outputHandler instanceof OutputHandler handler){
+            return handler;
+        }
+        logger.warn("couldn't cast output handler! ");
+        return null;
+    }
+
     private class OutputHandler implements IAdvancedSourceTile {
+        public int bufferSource = 0;
+        public int bufferMax = 1000;
+
+        public boolean canAcceptLocalSource(){
+            return getLocalSource() < getLocalMaxSource();
+        }
+
+        public int addSourceRespectingBuffer(int amount){
+            int sourceVal = 0;
+
+            try (var adj = getAdjacentCapability()) {
+                IAdvancedSourceTile tile = adj.get();
+                if(tile != null && !(tile instanceof EmptyHandler)) {
+                    sourceVal += tile.addSource(amount);
+                    amount = 0;
+                }
+            }
+
+            //add to buffer only if no machine to add to
+            bufferSource += amount;
+            if(bufferSource > bufferMax){
+                bufferSource = bufferMax;
+            }
+            sourceVal += bufferSource;
+
+            return sourceVal;
+        }
+
+        public int getLocalSource(){
+            int source = bufferSource;
+            try (var adj = getAdjacentCapability()) {
+                IAdvancedSourceTile tile = adj.get();
+                source += tile.getSource();
+            }
+            return source;
+        }
+
+        public int getLocalMaxSource(){
+            int max = bufferMax;
+            try (var adj = getAdjacentCapability()) {
+                IAdvancedSourceTile tile = adj.get();
+                max += tile.getMaxSource();
+            }
+            return max;
+        }
+
         @Override
         public int getTransferRate() {
             try (var input = getInputCapability()) {
-                return input.get().getTransferRate();
+                IAdvancedSourceTile tile = input.get();
+                int rate = 0;
+                if(tile != null && !(tile instanceof EmptyHandler)) {
+                    rate = tile.getTransferRate();
+                }
+                else{
+                    rate = 1000;
+                }
+                return rate;
             }
         }
 
         @Override
         public boolean canAcceptSource() {
             try (var input = getInputCapability()) {
-                return input.get().canAcceptSource();
+                IAdvancedSourceTile tile = input.get();
+                if(tile != null && !(tile instanceof EmptyHandler)) {
+                    return tile.canAcceptSource();
+                }
+                else{
+                    return false;
+                }
             }
         }
 
         @Override
         public int getSource() {
             try (var input = getInputCapability()) {
-                return input.get().getSource();
+                int source = input.get().getSource() + bufferSource;
+                return source;
             }
         }
 
         @Override
         public int getMaxSource() {
             try (var input = getInputCapability()) {
-                return input.get().getMaxSource();
+                return input.get().getMaxSource() + bufferMax;
             }
         }
 
@@ -174,6 +276,16 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         @Override
         public int removeSource(int source) {
+            //use buffer first
+            if(bufferSource >= source){
+                bufferSource -= source;
+                return 0;
+            }
+            else{
+                bufferSource = 0;
+                source -= bufferSource;
+            }
+
             try (var input = getInputCapability()) {
                 var result = input.get().removeSource(source);
                 queueTunnelDrain(PowerUnits.AE, (double) result / SourceKeyType.TYPE.getAmountPerOperation());

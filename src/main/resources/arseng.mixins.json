@@ -3,7 +3,10 @@
   "required": true,
   "package": "gripe._90.arseng.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": ["SourceUtilMixin"],
+  "mixins": [
+    "SourceUtilMixin",
+    "RelayTileMixin"
+  ],
   "client": [],
   "injectors": {
     "defaultRequire": 1

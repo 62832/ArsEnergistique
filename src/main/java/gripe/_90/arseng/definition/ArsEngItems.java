@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
+import gripe._90.arseng.part.SourceAcceptorPart;
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
@@ -64,6 +65,14 @@ public final class ArsEngItems {
                 "ME Source P2P Tunnel",
                 "source_p2p_tunnel",
                 p -> new PartItem<>(p, SourceP2PTunnelPart.class, SourceP2PTunnelPart::new));
+    });
+
+    public static final ItemDefinition<PartItem<SourceAcceptorPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
+        PartModels.registerModels(PartModelsHelper.createModels(SourceAcceptorPart.class));
+        return item(
+                "Source Acceptor",
+                "source_acceptor_part",
+                p -> new PartItem<>(p, SourceAcceptorPart.class, SourceAcceptorPart::new));
     });
 
     public static List<ItemDefinition<SourceCellItem>> getCells() {

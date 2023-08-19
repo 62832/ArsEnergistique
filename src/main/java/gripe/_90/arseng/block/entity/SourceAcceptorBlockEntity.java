@@ -49,7 +49,7 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
 
     @Override
     public void loadTag(CompoundTag data) {
-        super.load(data);
+        super.loadTag(data);
         getMainNode().loadFromNBT(data);
     }
 

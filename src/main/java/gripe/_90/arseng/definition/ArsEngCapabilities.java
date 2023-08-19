@@ -1,5 +1,6 @@
 package gripe._90.arseng.definition;
 
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +38,9 @@ public final class ArsEngCapabilities {
         if (be instanceof ISourceTile sourceTile) {
             var provider = new ICapabilityProvider() {
                 private final LazyOptional<IAdvancedSourceTile> sourceHandler = LazyOptional.of(
-                        () -> new SourceTileWrapper(sourceTile, true, sourceTile instanceof SourceJarTile));
+                        //to semi-preserve the relay's behavior of only working on abstract source machines
+                        //to reduce the risk of crashes with another addon
+                        () -> new SourceTileWrapper(sourceTile, sourceTile instanceof AbstractSourceMachine, sourceTile instanceof SourceJarTile));
 
                 @NotNull
                 @Override
