@@ -8,7 +8,7 @@ import appeng.blockentity.powersink.IExternalPowerSink;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 
 public class SourceEnergyAdapter implements IAdvancedSourceTile {
-    private static final int AE_PER_SOURCE = 20;//it shouldn't be super hard to run a storage network
+    private static final int AE_PER_SOURCE = 20; // it shouldn't be super hard to run a storage network
 
     private final IExternalPowerSink sink;
     private final IActionHost host;

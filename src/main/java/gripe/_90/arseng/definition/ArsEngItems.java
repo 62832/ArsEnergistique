@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-import gripe._90.arseng.part.SourceAcceptorPart;
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
@@ -22,6 +21,7 @@ import appeng.items.storage.StorageTier;
 import gripe._90.arseng.item.CreativeSourceCellItem;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
+import gripe._90.arseng.part.SourceAcceptorPart;
 import gripe._90.arseng.part.SourceP2PTunnelPart;
 
 public final class ArsEngItems {
@@ -70,8 +70,8 @@ public final class ArsEngItems {
     public static final ItemDefinition<PartItem<SourceAcceptorPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
         PartModels.registerModels(PartModelsHelper.createModels(SourceAcceptorPart.class));
         return item(
-                "Source Acceptor",
-                "source_acceptor_part",
+                "ME Source Acceptor",
+                "cable_source_acceptor",
                 p -> new PartItem<>(p, SourceAcceptorPart.class, SourceAcceptorPart::new));
     });
 
