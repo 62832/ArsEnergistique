@@ -18,13 +18,14 @@ import appeng.api.storage.MEStorage;
 import appeng.core.localization.GuiText;
 import appeng.util.BlockApiCache;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
-    private final BlockApiCache<ISourceTile> apiCache;
+    private final BlockApiCache<IAdvancedSourceTile> apiCache;
     private final Direction fromSide;
 
     public SourceExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {

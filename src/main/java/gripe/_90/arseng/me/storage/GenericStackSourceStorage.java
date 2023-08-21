@@ -1,15 +1,15 @@
 package gripe._90.arseng.me.storage;
 
 import com.google.common.primitives.Ints;
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
 import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.config.Actionable;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public class GenericStackSourceStorage implements ISourceTile {
+public class GenericStackSourceStorage implements IAdvancedSourceTile {
     private final GenericInternalInventory inv;
 
     public GenericStackSourceStorage(GenericInternalInventory inv) {
@@ -84,5 +84,15 @@ public class GenericStackSourceStorage implements ISourceTile {
         }
 
         return extracted;
+    }
+
+    @Override
+    public boolean relayCanTakePower() {
+        return true;
+    }
+
+    @Override
+    public boolean sourcelinksCanProvidePower() {
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package gripe._90.arseng.definition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 
@@ -18,12 +19,14 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 import appeng.capabilities.Capabilities;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
+import gripe._90.arseng.block.entity.SourceTileWrapper;
 import gripe._90.arseng.me.storage.GenericStackSourceStorage;
 
 public final class ArsEngCapabilities {
     private ArsEngCapabilities() {}
 
-    public static final Capability<ISourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<IAdvancedSourceTile> SOURCE_TILE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(ISourceTile.class);
@@ -32,9 +35,15 @@ public final class ArsEngCapabilities {
     public static void attach(AttachCapabilitiesEvent<BlockEntity> event) {
         var be = event.getObject();
 
-        if (be instanceof SourceJarTile sourceJar) {
+        if (be instanceof ISourceTile sourceTile) {
             var provider = new ICapabilityProvider() {
-                private final LazyOptional<ISourceTile> sourceHandler = LazyOptional.of(() -> sourceJar);
+                private final LazyOptional<IAdvancedSourceTile> sourceHandler = LazyOptional.of(
+                        // to semi-preserve the relay's behavior of only working on abstract source machines
+                        // to reduce the risk of crashes with another addon
+                        () -> new SourceTileWrapper(
+                                sourceTile,
+                                sourceTile instanceof AbstractSourceMachine,
+                                sourceTile instanceof SourceJarTile));
 
                 @NotNull
                 @Override

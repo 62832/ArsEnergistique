@@ -21,6 +21,7 @@ import appeng.items.storage.StorageTier;
 import gripe._90.arseng.item.CreativeSourceCellItem;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
+import gripe._90.arseng.part.SourceAcceptorPart;
 import gripe._90.arseng.part.SourceP2PTunnelPart;
 
 public final class ArsEngItems {
@@ -64,6 +65,14 @@ public final class ArsEngItems {
                 "ME Source P2P Tunnel",
                 "source_p2p_tunnel",
                 p -> new PartItem<>(p, SourceP2PTunnelPart.class, SourceP2PTunnelPart::new));
+    });
+
+    public static final ItemDefinition<PartItem<SourceAcceptorPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
+        PartModels.registerModels(PartModelsHelper.createModels(SourceAcceptorPart.class));
+        return item(
+                "ME Source Acceptor",
+                "cable_source_acceptor",
+                p -> new PartItem<>(p, SourceAcceptorPart.class, SourceAcceptorPart::new));
     });
 
     public static List<ItemDefinition<SourceCellItem>> getCells() {

@@ -11,6 +11,8 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 
 import appeng.core.definitions.AEBlocks;
 
+import gripe._90.arseng.definition.ArsEngBlocks;
+import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
@@ -43,5 +45,14 @@ class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                     .unlockedBy("has_energy_cell", has(AEBlocks.ENERGY_CELL))
                     .save(consumer, portable.id());
         }
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ArsEngItems.SOURCE_ACCEPTOR_PART)
+                .requires(ArsEngBlocks.SOURCE_ACCEPTOR)
+                .unlockedBy("has_source_acceptor", has(ArsEngBlocks.SOURCE_ACCEPTOR))
+                .save(consumer, ArsEngCore.makeId("source_acceptor_part"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ArsEngBlocks.SOURCE_ACCEPTOR)
+                .requires(ArsEngItems.SOURCE_ACCEPTOR_PART)
+                .unlockedBy("has_source_acceptor", has(ArsEngBlocks.SOURCE_ACCEPTOR))
+                .save(consumer, ArsEngCore.makeId("source_acceptor_from_part"));
     }
 }

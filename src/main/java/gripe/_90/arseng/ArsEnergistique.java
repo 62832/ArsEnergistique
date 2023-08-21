@@ -15,6 +15,7 @@ import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
@@ -38,6 +39,7 @@ public class ArsEnergistique {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         bus.addListener(ArsEngItems::register);
+        bus.addListener(ArsEngBlocks::register);
         bus.addListener(ArsEngCreativeTab::register);
 
         bus.addListener(SourceKeyType::register);
@@ -70,7 +72,7 @@ public class ArsEnergistique {
 
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
 
-            var driveCell = ArsEngCore.makeId("block/drive/cells/source_storage_cell");
+            var driveCell = ArsEngCore.makeId("block/source_drive_cell");
             ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));
             ArsEngItems.getPortables().forEach(portable -> StorageCellModels.registerModel(portable, driveCell));
             StorageCellModels.registerModel(ArsEngItems.CREATIVE_SOURCE_CELL, driveCell);

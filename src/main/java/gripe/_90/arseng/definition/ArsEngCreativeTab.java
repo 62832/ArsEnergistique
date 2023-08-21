@@ -1,5 +1,7 @@
 package gripe._90.arseng.definition;
 
+import java.util.ArrayList;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -9,6 +11,7 @@ import net.minecraftforge.registries.RegisterEvent;
 
 import appeng.block.AEBaseBlock;
 import appeng.block.AEBaseBlockItem;
+import appeng.core.definitions.ItemDefinition;
 import appeng.items.AEBaseItem;
 
 public final class ArsEngCreativeTab {
@@ -28,7 +31,9 @@ public final class ArsEngCreativeTab {
     }
 
     private static void display(CreativeModeTab.ItemDisplayParameters params, CreativeModeTab.Output output) {
-        var defs = ArsEngItems.getItems();
+        var defs = new ArrayList<ItemDefinition<?>>();
+        defs.addAll(ArsEngItems.getItems());
+        defs.addAll(ArsEngBlocks.getBlocks());
 
         for (var def : defs) {
             var item = def.asItem();

@@ -2,6 +2,7 @@ package gripe._90.arseng.me.key;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -21,8 +22,10 @@ public class SourceKeyType extends AEKeyType {
         super(ArsEngCore.makeId("source"), SourceKey.class, SOURCE);
     }
 
-    public static void register(RegisterEvent ignoredEvent) {
-        AEKeyTypes.register(TYPE);
+    public static void register(RegisterEvent event) {
+        if (event.getRegistryKey().equals(Registries.ITEM)) {
+            AEKeyTypes.register(TYPE);
+        }
     }
 
     @Nullable

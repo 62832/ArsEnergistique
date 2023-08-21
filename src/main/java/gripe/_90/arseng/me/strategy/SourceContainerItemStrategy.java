@@ -18,7 +18,8 @@ import appeng.api.stacks.GenericStack;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public class SourceContainerItemStrategy implements ContainerItemStrategy<SourceKey, ItemStack> {
+public class SourceContainerItemStrategy
+        implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
     public static final int MAX_SOURCE = 10000;
 
     private boolean isSourceJar(ItemStack stack) {
@@ -33,12 +34,19 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
 
     private int getSource(ItemStack sourceJar) {
         Preconditions.checkArgument(isSourceJar(sourceJar));
-        return isCreativeSourceJar(sourceJar)
-                ? MAX_SOURCE
-                : sourceJar.getOrCreateTag().getCompound("BlockEntityTag").getInt("source");
+
+        if (isCreativeSourceJar(sourceJar)) {
+            return MAX_SOURCE;
+        }
+        // fixes this creating a tag on the stack
+        else if (!sourceJar.hasTag()) {
+            return 0;
+        } else {
+            return sourceJar.getOrCreateTag().getCompound("BlockEntityTag").getInt("source");
+        }
     }
 
-    private void addSource(int source, ItemStack sourceJar) {
+    private void changeSource(int amount, ItemStack sourceJar) {
         Preconditions.checkArgument(isSourceJar(sourceJar));
 
         if (isCreativeSourceJar(sourceJar)) {
@@ -46,7 +54,9 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
         }
 
         var beTag = sourceJar.getOrCreateTag().getCompound("BlockEntityTag");
-        beTag.putInt("source", Math.min(MAX_SOURCE, getSource(sourceJar) + source));
+        beTag.putInt("source", Math.min(MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0)));
+        beTag.putIntArray("items", new int[] {});
+
         sourceJar.getOrCreateTag().put("BlockEntityTag", beTag);
     }
 
@@ -58,35 +68,45 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
 
     @Nullable
     @Override
-    public ItemStack findCarriedContext(Player player, AbstractContainerMenu menu) {
+    public Context findCarriedContext(Player player, AbstractContainerMenu menu) {
         var carried = menu.getCarried();
-        return isSourceJar(carried) ? carried : null;
+        return isSourceJar(carried) ? new CarriedContext(player, menu) : null;
     }
 
     @Nullable
     @Override
-    public ItemStack findPlayerSlotContext(Player player, int slot) {
+    public Context findPlayerSlotContext(Player player, int slot) {
         var carried = player.getInventory().getItem(slot);
-        return isSourceJar(carried) ? carried : null;
+        return isSourceJar(carried) ? new PlayerInvContext(player, slot) : null;
     }
 
     @Override
-    public long extract(ItemStack context, SourceKey what, long amount, Actionable mode) {
-        var extracted = (int) Math.min(amount, getSource(context));
+    public long extract(Context context, SourceKey what, long amount, Actionable mode) {
+        var stackCopy = context.getStack().copyWithCount(1);
+        var extracted = (int) Math.min(amount, getSource(stackCopy));
 
         if (extracted > 0 && mode == Actionable.MODULATE) {
-            addSource(-extracted, context);
+            changeSource(-extracted, stackCopy);
+            // remove emptied item from stack
+            context.getStack().shrink(1);
+            // add new emptied jar to context
+            context.addOverflow(stackCopy);
         }
 
         return extracted;
     }
 
     @Override
-    public long insert(ItemStack context, SourceKey what, long amount, Actionable mode) {
-        var inserted = (int) Math.min(amount, MAX_SOURCE - getSource(context));
+    public long insert(Context context, SourceKey what, long amount, Actionable mode) {
+        var stackCopy = context.getStack().copyWithCount(1);
+        var inserted = (int) Math.min(amount, MAX_SOURCE - getSource(stackCopy));
 
         if (inserted > 0 && mode == Actionable.MODULATE) {
-            addSource(inserted, context);
+            changeSource(inserted, stackCopy);
+            // remove filled item from stack
+            context.getStack().shrink(1);
+            // add new filled jar to context
+            context.addOverflow(stackCopy);
         }
 
         return inserted;
@@ -100,7 +120,39 @@ public class SourceContainerItemStrategy implements ContainerItemStrategy<Source
 
     @Nullable
     @Override
-    public GenericStack getExtractableContent(ItemStack context) {
-        return getContainedStack(context);
+    public GenericStack getExtractableContent(Context context) {
+        return getContainedStack(context.getStack());
+    }
+
+    public interface Context {
+        ItemStack getStack();
+
+        void addOverflow(ItemStack stack);
+    }
+
+    private record CarriedContext(Player player, AbstractContainerMenu menu) implements Context {
+        @Override
+        public ItemStack getStack() {
+            return menu.getCarried();
+        }
+
+        public void addOverflow(ItemStack stack) {
+            if (menu.getCarried().isEmpty()) {
+                menu.setCarried(stack);
+            } else {
+                player.getInventory().placeItemBackInInventory(stack);
+            }
+        }
+    }
+
+    private record PlayerInvContext(Player player, int slot) implements Context {
+        @Override
+        public ItemStack getStack() {
+            return player.getInventory().getItem(slot);
+        }
+
+        public void addOverflow(ItemStack stack) {
+            player.getInventory().placeItemBackInInventory(stack);
+        }
     }
 }

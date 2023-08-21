@@ -3,8 +3,6 @@ package gripe._90.arseng.me.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +12,7 @@ import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 import appeng.util.BlockApiCache;
 
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
@@ -22,7 +21,7 @@ import gripe._90.arseng.me.key.SourceKeyType;
 public class SourceStorageImportStrategy implements StackImportStrategy {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceStorageImportStrategy.class);
 
-    private final BlockApiCache<ISourceTile> apiCache;
+    private final BlockApiCache<IAdvancedSourceTile> apiCache;
     private final Direction fromSide;
 
     public SourceStorageImportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
@@ -42,16 +41,19 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
             return false;
         }
 
-        var remainingTransferAmount =
-                (long) context.getOperationsRemaining() * SourceKeyType.TYPE.getAmountPerOperation();
-        var amount = (int) Math.min(remainingTransferAmount, sourceTile.getSource());
+        int remainingTransferAmount = context.getOperationsRemaining() * SourceKeyType.TYPE.getAmountPerOperation();
+        int rawAmount = Math.min(remainingTransferAmount, sourceTile.getSource());
+
+        var inv = context.getInternalStorage().getInventory();
+
+        // Check how much source we can actually insert
+        var amount = inv.insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
 
         if (amount > 0) {
-            sourceTile.removeSource(amount);
+            sourceTile.removeSource((int) amount);
         }
 
-        var inv = context.getInternalStorage();
-        var inserted = inv.getInventory().insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
+        var inserted = inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
 
         if (inserted < amount) {
             var leftover = amount - inserted;
