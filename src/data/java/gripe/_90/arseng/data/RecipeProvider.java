@@ -1,14 +1,8 @@
 package gripe._90.arseng.data;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import appeng.core.definitions.AEItems;
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.datagen.ApparatusRecipeBuilder;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
