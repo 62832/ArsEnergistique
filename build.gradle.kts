@@ -154,11 +154,6 @@ tasks {
 }
 
 spotless {
-    kotlinGradle {
-        target("*.kts")
-        diktat()
-    }
-
     java {
         target("src/**/java/**/*.java")
         palantirJavaFormat()

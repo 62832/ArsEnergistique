@@ -50,7 +50,7 @@ public class DocumentationProvider extends PatchouliProvider {
                 sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
 
         var cellsBuilder = buildBasicItem(
-                ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new CraftingPage(ArsEngItems.SOURCE_CELL_HOUSING));
+                ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new ApparatusPage(ArsEngItems.SOURCE_CELL_HOUSING));
         ArsEngItems.getCells().forEach(cell -> cellsBuilder.withPage(new CraftingPage(cell)));
         addPage(new PatchouliPage(cellsBuilder, getPath(AUTOMATION, "me_cells")));
     }
