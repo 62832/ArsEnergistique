@@ -112,8 +112,6 @@ dependencies {
     implementation(fg.deobf(libs.ae2.get()))
     implementation(fg.deobf(libs.ars.get()))
 
-    runtimeOnly(fg.deobf(libs.geckolib.get()))
-    runtimeOnly(fg.deobf(libs.mixin.extras.get()))
     runtimeOnly(fg.deobf(libs.curios.get()))
     runtimeOnly(fg.deobf(libs.patchouli.get()))
 

@@ -15,6 +15,8 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
 import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IInWorldGridNodeHost;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.util.AECableType;
@@ -28,7 +30,7 @@ import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.energy.SourceEnergyAdapter;
 
 public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
-        implements IExternalPowerSink, IGridConnectedBlockEntity {
+        implements IExternalPowerSink, IInWorldGridNodeHost, IGridConnectedBlockEntity {
     private final IManagedGridNode mainNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
             .setVisualRepresentation(getItemFromBlockEntity())
             .addService(IAEPowerStorage.class, this)
@@ -85,6 +87,13 @@ public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
 
     public IManagedGridNode getMainNode() {
         return mainNode;
+    }
+
+    @Nullable
+    @Override
+    public IGridNode getGridNode(Direction dir) {
+        var node = mainNode.getNode();
+        return node != null && node.isExposedOnSide(dir) ? node : null;
     }
 
     @NotNull

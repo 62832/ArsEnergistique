@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -35,15 +35,15 @@ public final class ArsEngBlocks {
     }
 
     public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.BLOCK)) {
+        if (event.getRegistryKey().equals(Registry.BLOCK_REGISTRY)) {
             BLOCKS.forEach(b -> ForgeRegistries.BLOCKS.register(b.id(), b.block()));
         }
 
-        if (event.getRegistryKey().equals(Registries.ITEM)) {
+        if (event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
             BLOCKS.forEach(b -> ForgeRegistries.ITEMS.register(b.id(), b.asItem()));
         }
 
-        if (event.getRegistryKey().equals(Registries.BLOCK_ENTITY_TYPE)) {
+        if (event.getRegistryKey().equals(Registry.BLOCK_ENTITY_TYPE_REGISTRY)) {
             BLOCK_ENTITIES.forEach(ForgeRegistries.BLOCK_ENTITY_TYPES::register);
         }
     }
@@ -55,7 +55,11 @@ public final class ArsEngBlocks {
             "source_acceptor", SourceAcceptorBlockEntity.class, SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
 
     private static <T extends Block> BlockDefinition<T> block(String englishName, String id, Supplier<T> supplier) {
-        return block(englishName, id, supplier, block -> new AEBaseBlockItem(block, new Item.Properties()));
+        return block(
+                englishName,
+                id,
+                supplier,
+                block -> new AEBaseBlockItem(block, new Item.Properties().tab(ArsEngCore.CREATIVE_TAB)));
     }
 
     private static <T extends Block> BlockDefinition<T> block(

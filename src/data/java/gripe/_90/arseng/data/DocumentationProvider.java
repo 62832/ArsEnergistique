@@ -1,6 +1,6 @@
 package gripe._90.arseng.data;
 
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
+import java.io.IOException;
 
 import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.ApparatusPage;
@@ -9,13 +9,17 @@ import com.hollingsworth.arsnouveau.common.datagen.patchouli.IPatchouliPage;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.PatchouliBuilder;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.TextPage;
 
+import net.minecraft.core.Registry;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
 
+@SuppressWarnings("deprecation")
 public class DocumentationProvider extends PatchouliProvider {
     public DocumentationProvider(DataGenerator generator) {
         super(generator);
@@ -26,7 +30,7 @@ public class DocumentationProvider extends PatchouliProvider {
         var builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withPage(new TextPage(
-                        "arseng.page." + getRegistryName(item.asItem()).getPath()));
+                        "arseng.page." + Registry.ITEM.getKey(item.asItem()).getPath()));
 
         if (recipePage != null) {
             builder.withPage(recipePage);
@@ -47,11 +51,21 @@ public class DocumentationProvider extends PatchouliProvider {
         sourceAcceptorBuilder.withPage(new TextPage(getLangPath("source_acceptor_description")));
         sourceAcceptorBuilder.withPage(new CraftingPage(ArsEngItems.SOURCE_ACCEPTOR_PART));
         addPage(new PatchouliPage(
-                sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
+                sourceAcceptorBuilder,
+                getPath(AUTOMATION, Registry.ITEM.getKey(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
 
         var cellsBuilder = buildBasicItem(
                 ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new CraftingPage(ArsEngItems.SOURCE_CELL_HOUSING));
         ArsEngItems.getCells().forEach(cell -> cellsBuilder.withPage(new CraftingPage(cell)));
         addPage(new PatchouliPage(cellsBuilder, getPath(AUTOMATION, "me_cells")));
+    }
+
+    @Override
+    public void run(CachedOutput cache) throws IOException {
+        addEntries();
+
+        for (var page : pages) {
+            DataProvider.saveStable(cache, page.build(), page.path());
+        }
     }
 }

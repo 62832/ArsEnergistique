@@ -1,6 +1,6 @@
 package gripe._90.arseng.data;
 
-import net.minecraft.data.PackOutput;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -20,10 +20,10 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
     private static final ResourceLocation ENERGY_ACCEPTOR_PART_ITEM = AppEng.makeId("item/cable_energy_acceptor");
 
     private static final ResourceLocation SOURCE_GEM_BLOCK =
-            new ResourceLocation("ars_nouveau", "block/source_gem_block");
+            new ResourceLocation("ars_nouveau", "blocks/source_gem_block");
 
-    ItemModelProvider(PackOutput output, ExistingFileHelper existing) {
-        super(output, ArsEngCore.MODID, existing);
+    ItemModelProvider(DataGenerator generator, ExistingFileHelper existing) {
+        super(generator, ArsEngCore.MODID, existing);
         existing.trackGenerated(P2P_TUNNEL_BASE_ITEM, MODEL);
         existing.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
         existing.trackGenerated(STORAGE_CELL_LED, TEXTURE);
@@ -39,17 +39,7 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
         flatSingleLayer(ArsEngItems.CREATIVE_SOURCE_CELL);
 
         ArsEngItems.getCells().forEach(cell -> flatSingleLayer(cell).texture("layer1", STORAGE_CELL_LED));
-        ArsEngItems.getPortables().forEach(portable -> {
-            var side = AppEng.makeId(
-                    "item/portable_cell_side_" + portable.asItem().getTier().namePrefix());
-            existingFileHelper.trackGenerated(side, TEXTURE);
-
-            withExistingParent(portable.id().getPath(), mcLoc("item/generated"))
-                    .texture("layer0", ArsEngCore.makeId("item/portable_cell_screen"))
-                    .texture("layer1", PORTABLE_CELL_LED)
-                    .texture("layer2", ArsEngCore.makeId("item/portable_cell_housing"))
-                    .texture("layer3", side);
-        });
+        ArsEngItems.getPortables().forEach(cell -> flatSingleLayer(cell).texture("layer1", PORTABLE_CELL_LED));
 
         withExistingParent("item/source_p2p_tunnel", P2P_TUNNEL_BASE_ITEM).texture("type", SOURCE_GEM_BLOCK);
         withExistingParent("part/source_p2p_tunnel", P2P_TUNNEL_BASE_PART).texture("type", SOURCE_GEM_BLOCK);

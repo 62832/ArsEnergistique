@@ -25,8 +25,8 @@ import gripe._90.arseng.me.cell.ISourceCellItem;
 public class PortableSourceCellItem extends AbstractPortableCell implements ISourceCellItem {
     private final StorageTier tier;
 
-    public PortableSourceCellItem(Properties props, StorageTier tier, int defaultColor) {
-        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props, defaultColor);
+    public PortableSourceCellItem(Properties props, StorageTier tier) {
+        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props);
         this.tier = tier;
     }
 

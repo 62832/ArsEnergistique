@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
@@ -34,7 +34,7 @@ public final class ArsEngItems {
     }
 
     public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.ITEM)) {
+        if (event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
             ITEMS.forEach(i -> ForgeRegistries.ITEMS.register(i.id(), i.asItem()));
         }
     }
@@ -99,12 +99,13 @@ public final class ArsEngItems {
         return item(
                 tier.namePrefix() + " Portable Source Cell",
                 "portable_source_cell_" + tier.namePrefix(),
-                p -> new PortableSourceCellItem(p.stacksTo(1), tier, 0xFAD64A));
+                p -> new PortableSourceCellItem(p.stacksTo(1), tier));
     }
 
     public static <T extends Item> ItemDefinition<T> item(
             String englishName, String id, Function<Item.Properties, T> factory) {
-        var definition = new ItemDefinition<>(englishName, ArsEngCore.makeId(id), factory.apply(new Item.Properties()));
+        var definition = new ItemDefinition<>(
+                englishName, ArsEngCore.makeId(id), factory.apply(new Item.Properties().tab(ArsEngCore.CREATIVE_TAB)));
         ITEMS.add(definition);
         return definition;
     }

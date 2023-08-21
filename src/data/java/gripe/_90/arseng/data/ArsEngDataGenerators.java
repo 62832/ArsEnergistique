@@ -1,18 +1,6 @@
 package gripe._90.arseng.data;
 
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
-import org.jetbrains.annotations.NotNull;
-
-import net.minecraft.Util;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,26 +11,21 @@ import gripe._90.arseng.definition.ArsEngCore;
 public final class ArsEngDataGenerators {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
-        var pack = event.getGenerator().getVanillaPack(true);
+        var generator = event.getGenerator();
         var existing = event.getExistingFileHelper();
 
-        pack.addProvider(output -> new ItemModelProvider(output, existing));
-        pack.addProvider(output -> new BlockStateModelProvider(output, existing));
+        generator.addProvider(true, new ItemModelProvider(generator, existing));
+        generator.addProvider(true, new BlockStateModelProvider(generator, existing));
 
-        pack.addProvider(RecipeProvider::new);
-        pack.addProvider(LocalisationProvider::new);
+        var blockTags = new TagsProvider.Blocks(generator, existing);
+        generator.addProvider(true, blockTags);
+        generator.addProvider(true, new TagsProvider.Items(generator, blockTags, existing));
 
-        pack.addProvider(g -> new DocumentationProvider(event.getGenerator()));
-        pack.addProvider(g -> new EnchantingRecipeProvider(event.getGenerator()));
+        generator.addProvider(true, new RecipeProvider(generator));
+        generator.addProvider(true, new LocalisationProvider(generator));
+        generator.addProvider(true, new BlockDropProvider(generator));
 
-        var registries = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-        var blockTags = pack.addProvider(output -> new BlockTagsProvider(output, registries, ArsEngCore.MODID, null) {
-            @Override
-            protected void addTags(@NotNull HolderLookup.Provider provider) {}
-        });
-        pack.addProvider(output -> new TagsProvider(output, registries, blockTags.contentsGetter()));
-
-        var blockDrops = new LootTableProvider.SubProviderEntry(BlockDropProvider::new, LootContextParamSets.BLOCK);
-        pack.addProvider(output -> new LootTableProvider(output, Set.of(), List.of(blockDrops)));
+        generator.addProvider(true, new DocumentationProvider(generator));
+        generator.addProvider(true, new EnchantingRecipeProvider(generator));
     }
 }
