@@ -196,10 +196,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         @Override
         public boolean canAcceptSource() {
-            try (var input = getInputCapability()) {
-                var tile = input.get();
-                return tile != null && !(tile instanceof EmptyHandler) && tile.canAcceptSource();
-            }
+            return false;
         }
 
         @Override

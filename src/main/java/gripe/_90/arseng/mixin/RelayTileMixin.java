@@ -120,7 +120,7 @@ public abstract class RelayTileMixin extends AbstractSourceMachine {
                 var cap = be.getCapability(
                         ArsEngCapabilities.SOURCE_TILE, IAdvancedSourceTile.getDirTo(getBlockPos(), fromPos));
                 cap.ifPresent(tile -> {
-                    if (transferSource(tile, this) > 0) {
+                    if (tile.relayCanTakePower() && transferSource(tile, this) > 0) {
                         updateBlock();
                         ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
                     }
@@ -138,7 +138,7 @@ public abstract class RelayTileMixin extends AbstractSourceMachine {
                 var cap = be.getCapability(
                         ArsEngCapabilities.SOURCE_TILE, IAdvancedSourceTile.getDirTo(getBlockPos(), toPos));
                 cap.ifPresent(tile -> {
-                    if (transferSource(this, tile) > 0) {
+                    if (tile.canAcceptSource() && transferSource(this, tile) > 0) {
                         updateBlock();
                         ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
                     }
