@@ -32,8 +32,8 @@ public final class ArsEngDataGenerators {
         pack.addProvider(RecipeProvider::new);
         pack.addProvider(LocalisationProvider::new);
 
-        pack.addProvider((g) -> new DocumentationProvider(event.getGenerator()));
-        pack.addProvider((g) -> new EnchantingApparatusRecipeProvider(event.getGenerator()));
+        pack.addProvider(g -> new DocumentationProvider(event.getGenerator()));
+        pack.addProvider(g -> new EnchantingRecipeProvider(event.getGenerator()));
 
         var registries = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
         var blockTags = pack.addProvider(output -> new BlockTagsProvider(output, registries, ArsEngCore.MODID, null) {

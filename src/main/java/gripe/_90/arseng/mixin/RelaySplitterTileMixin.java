@@ -3,7 +3,6 @@ package gripe._90.arseng.mixin;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -69,11 +68,12 @@ public abstract class RelaySplitterTileMixin extends AbstractSourceMachine {
                     .resolve();
 
             if (cap.isPresent()) {
-                ISourceTile fromTile = sendSource ? this : cap.get();
-                ISourceTile toTile = sendSource ? cap.get() : this;
+                var fromTile = sendSource ? this : cap.get();
+                var toTile = sendSource ? cap.get() : this;
+
                 if (transferSource(fromTile, toTile, ratePer) > 0) {
-                    BlockPos fromPos = sendSource ? worldPosition : pos;
-                    BlockPos toPos = sendSource ? pos : worldPosition;
+                    var fromPos = sendSource ? worldPosition : pos;
+                    var toPos = sendSource ? pos : worldPosition;
                     createParticles(fromPos, toPos);
                 }
             } else {

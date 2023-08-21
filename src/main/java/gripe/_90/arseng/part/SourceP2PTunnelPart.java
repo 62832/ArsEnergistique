@@ -146,18 +146,18 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         private int bufferSource = 0;
 
-        public boolean canAcceptLocalSource() {
+        private boolean canAcceptLocalSource() {
             return getLocalSource() < getLocalMaxSource();
         }
 
-        public int addSourceRespectingBuffer(int amount) {
-            int sourceVal = 0;
+        private int addSourceRespectingBuffer(int amount) {
+            int source = 0;
 
             try (var guard = getAdjacentCapability()) {
                 var tile = guard.get();
 
                 if (tile != null && !(tile instanceof EmptyHandler)) {
-                    sourceVal += tile.addSource(amount);
+                    source += tile.addSource(amount);
                     amount = 0;
                 }
             }
@@ -169,18 +169,18 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
                 bufferSource = MAX_BUFFER;
             }
 
-            sourceVal += bufferSource;
+            source += bufferSource;
 
-            return sourceVal;
+            return source;
         }
 
-        public int getLocalSource() {
+        private int getLocalSource() {
             try (var guard = getAdjacentCapability()) {
                 return bufferSource + guard.get().getSource();
             }
         }
 
-        public int getLocalMaxSource() {
+        private int getLocalMaxSource() {
             try (var guard = getAdjacentCapability()) {
                 return MAX_BUFFER + guard.get().getMaxSource();
             }
@@ -190,7 +190,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         public int getTransferRate() {
             try (var input = getInputCapability()) {
                 var tile = input.get();
-                return tile != null && !(tile instanceof EmptyHandler) ? tile.getTransferRate() : MAX_BUFFER;
+                return tile != emptyHandler ? tile.getTransferRate() : MAX_BUFFER;
             }
         }
 

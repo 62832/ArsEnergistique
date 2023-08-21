@@ -2,9 +2,6 @@ package gripe._90.arseng.data;
 
 import java.util.function.Consumer;
 
-import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.data.PackOutput;
@@ -57,16 +54,5 @@ class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                 .requires(ArsEngItems.SOURCE_ACCEPTOR_PART)
                 .unlockedBy("has_source_acceptor", has(ArsEngBlocks.SOURCE_ACCEPTOR))
                 .save(consumer, ArsEngCore.makeId("source_acceptor_from_part"));
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ArsEngItems.SOURCE_CELL_HOUSING)
-                .unlockedBy("has_source_gem", has(ItemsRegistry.SOURCE_GEM))
-                .pattern("qrq")
-                .pattern("rsr")
-                .pattern("ggg")
-                .define('q',AEBlocks.QUARTZ_GLASS.asItem())
-                .define('r',Items.REDSTONE)
-                .define('g',Items.GOLD_INGOT)
-                .define('s',ItemsRegistry.SOURCE_GEM)
-                .save(consumer, ArsEngItems.SOURCE_CELL_HOUSING.id());
     }
 }

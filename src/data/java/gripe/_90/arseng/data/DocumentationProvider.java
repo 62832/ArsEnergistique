@@ -1,28 +1,37 @@
 package gripe._90.arseng.data;
 
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
+
 import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
-import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
-import gripe._90.arseng.definition.ArsEngBlocks;
-import gripe._90.arseng.definition.ArsEngItems;
+import com.hollingsworth.arsnouveau.common.datagen.patchouli.ApparatusPage;
+import com.hollingsworth.arsnouveau.common.datagen.patchouli.CraftingPage;
+import com.hollingsworth.arsnouveau.common.datagen.patchouli.IPatchouliPage;
+import com.hollingsworth.arsnouveau.common.datagen.patchouli.PatchouliBuilder;
+import com.hollingsworth.arsnouveau.common.datagen.patchouli.TextPage;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 
-import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
+import gripe._90.arseng.definition.ArsEngBlocks;
+import gripe._90.arseng.definition.ArsEngItems;
 
 public class DocumentationProvider extends PatchouliProvider {
-    public DocumentationProvider(DataGenerator generatorIn) {
-        super(generatorIn);
+    public DocumentationProvider(DataGenerator generator) {
+        super(generator);
     }
 
     @Override
     public PatchouliBuilder buildBasicItem(ItemLike item, ResourceLocation category, IPatchouliPage recipePage) {
-        PatchouliBuilder builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
+        var builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
-                .withPage(new TextPage("arseng.page." + getRegistryName(item.asItem()).getPath()));
+                .withPage(new TextPage(
+                        "arseng.page." + getRegistryName(item.asItem()).getPath()));
+
         if (recipePage != null) {
             builder.withPage(recipePage);
         }
+
         return builder;
     }
 
@@ -33,17 +42,16 @@ public class DocumentationProvider extends PatchouliProvider {
 
     @Override
     public void addEntries() {
-        //obv don't call super here lol
-        PatchouliBuilder sourceAcceptorBuilder = buildBasicItem(ArsEngBlocks.SOURCE_ACCEPTOR,AUTOMATION,new ApparatusPage(ArsEngBlocks.SOURCE_ACCEPTOR));
+        var sourceAcceptorBuilder = buildBasicItem(
+                ArsEngBlocks.SOURCE_ACCEPTOR, AUTOMATION, new ApparatusPage(ArsEngBlocks.SOURCE_ACCEPTOR));
         sourceAcceptorBuilder.withPage(new TextPage(getLangPath("source_acceptor_description")));
         sourceAcceptorBuilder.withPage(new CraftingPage(ArsEngItems.SOURCE_ACCEPTOR_PART));
-        addPage(new PatchouliPage(sourceAcceptorBuilder,getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
+        addPage(new PatchouliPage(
+                sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
 
-        PatchouliBuilder meCellsBuilder = buildBasicItem(ArsEngItems.SOURCE_CELL_HOUSING,AUTOMATION,new CraftingPage(ArsEngItems.SOURCE_CELL_HOUSING));
-        ArsEngItems.getCells().forEach(cell -> {
-            meCellsBuilder.withPage(new CraftingPage(cell));
-        });
-        addPage(new PatchouliPage(meCellsBuilder,getPath(AUTOMATION, "me_cells")));
+        var cellsBuilder = buildBasicItem(
+                ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new CraftingPage(ArsEngItems.SOURCE_CELL_HOUSING));
+        ArsEngItems.getCells().forEach(cell -> cellsBuilder.withPage(new CraftingPage(cell)));
+        addPage(new PatchouliPage(cellsBuilder, getPath(AUTOMATION, "me_cells")));
     }
-
 }
