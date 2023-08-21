@@ -15,6 +15,7 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import appeng.api.upgrades.Upgrades;
 import appeng.items.storage.StorageTier;
 import appeng.items.tools.powered.AbstractPortableCell;
+import appeng.items.tools.powered.PortableCellItem;
 import appeng.menu.me.common.MEStorageMenu;
 
 import gripe._90.arseng.definition.ArsEngCore;
@@ -24,8 +25,8 @@ import gripe._90.arseng.me.cell.ISourceCellItem;
 public class PortableSourceCellItem extends AbstractPortableCell implements ISourceCellItem {
     private final StorageTier tier;
 
-    public PortableSourceCellItem(Properties props, StorageTier tier) {
-        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props, 0xE9B115);
+    public PortableSourceCellItem(Properties props, StorageTier tier, int defaultColor) {
+        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props, defaultColor);
         this.tier = tier;
     }
 
@@ -61,6 +62,6 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
 
     @OnlyIn(Dist.CLIENT)
     public static void initColours(RegisterColorHandlersEvent.Item event) {
-        ArsEngItems.getPortables().forEach(portable -> event.register(PortableSourceCellItem::getColor, portable));
+        ArsEngItems.getPortables().forEach(portable -> event.register(PortableCellItem::getColor, portable));
     }
 }

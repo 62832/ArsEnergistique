@@ -99,7 +99,7 @@ public final class ArsEngItems {
         return item(
                 tier.namePrefix() + " Portable Source Cell",
                 "portable_source_cell_" + tier.namePrefix(),
-                p -> new PortableSourceCellItem(p.stacksTo(1), tier));
+                p -> new PortableSourceCellItem(p.stacksTo(1), tier, 0xFAD64A));
     }
 
     public static <T extends Item> ItemDefinition<T> item(

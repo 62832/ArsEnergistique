@@ -16,8 +16,6 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
     private static final ResourceLocation P2P_TUNNEL_BASE_PART = AppEng.makeId("part/p2p/p2p_tunnel_base");
     private static final ResourceLocation STORAGE_CELL_LED = AppEng.makeId("item/storage_cell_led");
     private static final ResourceLocation PORTABLE_CELL_LED = AppEng.makeId("item/portable_cell_led");
-    // TODO: make own portable cell housing texture, default colour currently looks like shit on this one
-    private static final ResourceLocation PORTABLE_CELL_ITEM_HOUSING = AppEng.makeId("item/portable_cell_item_housing");
     private static final ResourceLocation ENERGY_ACCEPTOR_PART = AppEng.makeId("part/energy_acceptor");
     private static final ResourceLocation ENERGY_ACCEPTOR_PART_ITEM = AppEng.makeId("item/cable_energy_acceptor");
 
@@ -30,7 +28,6 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
         existing.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
         existing.trackGenerated(STORAGE_CELL_LED, TEXTURE);
         existing.trackGenerated(PORTABLE_CELL_LED, TEXTURE);
-        existing.trackGenerated(PORTABLE_CELL_ITEM_HOUSING, TEXTURE);
         existing.trackGenerated(ENERGY_ACCEPTOR_PART, MODEL);
         existing.trackGenerated(ENERGY_ACCEPTOR_PART_ITEM, MODEL);
         existing.trackGenerated(SOURCE_GEM_BLOCK, TEXTURE);
@@ -50,7 +47,7 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
             withExistingParent(portable.id().getPath(), mcLoc("item/generated"))
                     .texture("layer0", ArsEngCore.makeId("item/portable_cell_screen"))
                     .texture("layer1", PORTABLE_CELL_LED)
-                    .texture("layer2", PORTABLE_CELL_ITEM_HOUSING)
+                    .texture("layer2", ArsEngCore.makeId("item/portable_cell_housing"))
                     .texture("layer3", side);
         });
 
