@@ -120,8 +120,8 @@ dependencies {
 }
 
 mixin {
-    add(sourceSets.main.get(), "arseng.refmap.json")
-    config("arseng.mixins.json")
+    add(sourceSets.main.get(), "$modId.refmap.json")
+    config("$modId.mixins.json")
 }
 
 tasks {
@@ -165,7 +165,7 @@ spotless {
         removeUnusedImports()
         toggleOffOn()
         trimTrailingWhitespace()
-        importOrderFile(rootProject.file("codeformat/arseng.importorder"))
+        importOrderFile(rootProject.file("codeformat/$modId.importorder"))
 
         // courtesy of diffplug/spotless#240
         // https://github.com/diffplug/spotless/issues/240#issuecomment-385206606

@@ -46,7 +46,9 @@ public abstract class ConvertBuddingGoalMixin {
                     @At(
                             value = "FIELD",
                             target =
-                                    "Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem;goalState:Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem$AmethystGolemGoalState;"))
+                                    "Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem;goalState:Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem$AmethystGolemGoalState;",
+                            remap = false),
+            remap = true)
     private void targetCertus(CallbackInfo ci) {
         for (var pos : ((CertusGolem) golem).arseng$getCertusBlocks()) {
             if (golem.level.getBlockState(pos).getBlock() == AEBlocks.QUARTZ_BLOCK.block()) {
@@ -56,7 +58,7 @@ public abstract class ConvertBuddingGoalMixin {
         }
     }
 
-    @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canUse", at = @At("HEAD"), cancellable = true, remap = true)
     private void accountForCertus(CallbackInfoReturnable<Boolean> cir) {
         var blocksEmpty = golem.amethystBlocks.isEmpty()
                 && ((CertusGolem) golem).arseng$getCertusBlocks().isEmpty();
