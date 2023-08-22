@@ -4,7 +4,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -17,6 +19,7 @@ import appeng.parts.automation.StackWorldBehaviors;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
+import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
 import gripe._90.arseng.definition.ArsEngItems;
@@ -36,8 +39,9 @@ import gripe._90.arseng.part.SourceP2PTunnelPart;
 public class ArsEnergistique {
     @SuppressWarnings("UnstableApiUsage")
     public ArsEnergistique() {
-        var bus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ArsEngConfig.SPEC);
 
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(ArsEngItems::register);
         bus.addListener(ArsEngBlocks::register);
         bus.addListener(ArsEngCreativeTab::register);

@@ -6,9 +6,10 @@ import appeng.api.networking.security.IActionHost;
 import appeng.blockentity.powersink.IExternalPowerSink;
 
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
+import gripe._90.arseng.definition.ArsEngConfig;
 
 public class SourceEnergyAdapter implements IAdvancedSourceTile {
-    private static final int AE_PER_SOURCE = 20; // it shouldn't be super hard to run a storage network
+    private static final double AE_PER_SOURCE = ArsEngConfig.AE_PER_SOURCE.get();
 
     private final IExternalPowerSink sink;
     private final IActionHost host;
@@ -45,11 +46,7 @@ public class SourceEnergyAdapter implements IAdvancedSourceTile {
     @Override
     public int getMaxSource() {
         var grid = host.getActionableNode();
-
-        if (grid != null) {
-            return (int) (grid.getGrid().getEnergyService().getMaxStoredPower() / AE_PER_SOURCE);
-        }
-        return 0;
+        return grid != null ? (int) (grid.getGrid().getEnergyService().getMaxStoredPower() / AE_PER_SOURCE) : 0;
     }
 
     @Override

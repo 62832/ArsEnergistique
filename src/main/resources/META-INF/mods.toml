@@ -9,7 +9,7 @@ displayURL="https://github.com/62832/ArsEnergique"
 modId="arseng"
 version="${version}"
 displayName="Ars Énergistique"
-authors="90"
+authors="90, dkmk100"
 description='''Bringing magic to the digital age.
 Adds digital source storage, P2P transport and various other cross-compatibility improvements to Ars Nouveau and AE2.'''
 
