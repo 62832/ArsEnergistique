@@ -7,8 +7,10 @@ plugins {
 }
 
 val modId = "arseng"
+val modVersion = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1)
+val minecraftVersion: String = libs.versions.minecraft.get()
 
-version = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1)
+version = "$modVersion-$minecraftVersion"
 group = "gripe.90"
 base.archivesName.set(modId)
 
@@ -127,6 +129,18 @@ mixin {
 }
 
 tasks {
+    register("releaseInfo") {
+        doLast {
+            val output = System.getenv("GITHUB_OUTPUT")
+
+            if (!output.isNullOrEmpty()) {
+                val outputFile = File(output)
+                outputFile.appendText("MOD_VERSION=$modVersion\n")
+                outputFile.appendText("MINECRAFT_VERSION=$minecraftVersion\n")
+            }
+        }
+    }
+
     processResources {
         exclude("**/.cache")
 
