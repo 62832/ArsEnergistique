@@ -34,11 +34,8 @@ public abstract class ConvertBuddingGoalMixin {
     private void convertCertus(CallbackInfo ci) {
         if (targetCluster != null
                 && golem.level.getBlockState(targetCluster).getBlock() == AEBlocks.QUARTZ_BLOCK.block()) {
-            golem.level
-                    .setBlock(
-                            targetCluster,
-                            AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState(),
-                            3);
+            golem.level.setBlock(
+                    targetCluster, AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState(), 3);
             ParticleUtil.spawnTouchPacket(golem.level, targetCluster, ParticleUtil.defaultParticleColorWrapper());
         }
     }

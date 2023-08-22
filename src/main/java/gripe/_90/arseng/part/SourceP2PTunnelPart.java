@@ -16,6 +16,7 @@ import appeng.parts.p2p.P2PModels;
 
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
+import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.key.SourceKeyType;
@@ -142,7 +143,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
     }
 
     private class OutputHandler implements IAdvancedSourceTile {
-        private static final int MAX_BUFFER = 1000;
+        private static final int MAX_BUFFER = ArsEngConfig.OUTPUT_P2P_BUFFER.get();
 
         private int bufferSource = 0;
 

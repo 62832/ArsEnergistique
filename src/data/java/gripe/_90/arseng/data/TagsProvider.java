@@ -1,6 +1,5 @@
 package gripe._90.arseng.data;
 
-import appeng.datagen.providers.tags.ConventionTags;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 
@@ -11,6 +10,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import appeng.api.features.P2PTunnelAttunement;
+import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCore;
