@@ -1,5 +1,6 @@
 package gripe._90.arseng.data;
 
+import appeng.datagen.providers.tags.ConventionTags;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
 
@@ -32,6 +33,8 @@ class TagsProvider {
             ars.addOptionalTag(BlockTagProvider.DECORATIVE_AN.location());
             ars.addOptionalTag(BlockTagProvider.MAGIC_SAPLINGS.location());
             ars.addOptionalTag(BlockTagProvider.MAGIC_PLANTS.location());
+
+            tag(ItemTagProvider.SHARD_TAG).addOptionalTag(ConventionTags.CERTUS_QUARTZ.location());
         }
     }
 
@@ -44,6 +47,9 @@ class TagsProvider {
         protected void addTags() {
             ArsEngBlocks.getBlocks()
                     .forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.block()));
+
+            tag(BlockTagProvider.BUDDING_BLOCKS).addOptionalTag(ConventionTags.BUDDING_BLOCKS_BLOCKS.location());
+            tag(BlockTagProvider.CLUSTER_BLOCKS).addOptionalTag(ConventionTags.CLUSTERS_BLOCKS.location());
         }
     }
 }
