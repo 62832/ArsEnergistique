@@ -7,7 +7,7 @@ plugins {
 }
 
 val modId = "arseng"
-val modVersion = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1)
+val modVersion = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1).substringBeforeLast('-')
 val minecraftVersion: String = libs.versions.minecraft.get()
 
 version = "$modVersion-$minecraftVersion"
