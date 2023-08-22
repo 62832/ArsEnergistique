@@ -1,5 +1,7 @@
 package gripe._90.arseng.data;
 
+import java.nio.file.Path;
+
 import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.ApparatusPage;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.CraftingPage;
@@ -41,11 +43,25 @@ public class DocumentationProvider extends PatchouliProvider {
     }
 
     @Override
+    public Path getPath(ResourceLocation category, ResourceLocation fileName) {
+        return getPath(category, fileName.getPath());
+    }
+
+    @Override
+    public Path getPath(ResourceLocation category, String fileName) {
+        return generator
+                .getOutputFolder()
+                .resolve("data/arseng/patchouli_books/worn_notebook/en_us/entries/%s/%s.json"
+                        .formatted(category.getPath(), fileName));
+    }
+
+    @Override
     public void addEntries() {
         var sourceAcceptorBuilder = buildBasicItem(
                 ArsEngBlocks.SOURCE_ACCEPTOR, AUTOMATION, new ApparatusPage(ArsEngBlocks.SOURCE_ACCEPTOR));
         sourceAcceptorBuilder.withPage(new TextPage(getLangPath("source_acceptor_description")));
-        sourceAcceptorBuilder.withPage(new CraftingPage(ArsEngItems.SOURCE_ACCEPTOR_PART));
+        sourceAcceptorBuilder.withPage(
+                new CraftingPage("arseng:source_acceptor_part")); // name must match that of the recipe
         addPage(new PatchouliPage(
                 sourceAcceptorBuilder,
                 getPath(AUTOMATION, Registry.ITEM.getKey(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));

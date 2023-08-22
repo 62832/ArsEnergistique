@@ -1,6 +1,7 @@
 package gripe._90.arseng.data;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 import com.hollingsworth.arsnouveau.common.datagen.ApparatusRecipeProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -52,6 +53,10 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
                     getRecipePath(
                             this.generator.getOutputFolder(), recipe.getId().getPath()));
         }
+    }
+
+    protected static Path getRecipePath(Path pathIn, String str) {
+        return pathIn.resolve("data/arseng/recipes/" + str + ".json");
     }
 
     @Override
