@@ -7,10 +7,8 @@ plugins {
 }
 
 val modId = "arseng"
-val modVersion = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1).substringBeforeLast('-')
-val minecraftVersion: String = libs.versions.minecraft.get()
 
-version = "$modVersion-$minecraftVersion"
+version = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1)
 group = "gripe.90"
 base.archivesName.set(modId)
 
@@ -133,8 +131,8 @@ tasks {
 
             if (!output.isNullOrEmpty()) {
                 val outputFile = File(output)
-                outputFile.appendText("MOD_VERSION=$modVersion\n")
-                outputFile.appendText("MINECRAFT_VERSION=$minecraftVersion\n")
+                outputFile.appendText("MOD_VERSION=$version\n")
+                outputFile.appendText("MINECRAFT_VERSION=${libs.versions.minecraft.get()}\n")
             }
         }
     }
