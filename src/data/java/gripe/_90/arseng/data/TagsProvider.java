@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.BlockTagsProvider;
 
 import appeng.api.features.P2PTunnelAttunement;
+import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCore;
@@ -40,6 +41,8 @@ abstract class TagsProvider {
             ars.addOptionalTag(BlockTagProvider.DECORATIVE_AN.location());
             ars.addOptionalTag(BlockTagProvider.MAGIC_SAPLINGS.location());
             ars.addOptionalTag(BlockTagProvider.MAGIC_PLANTS.location());
+
+            tag(ItemTagProvider.SHARD_TAG).addOptionalTag(ConventionTags.CERTUS_QUARTZ.location());
         }
     }
 
@@ -49,9 +52,12 @@ abstract class TagsProvider {
         }
 
         @Override
-        protected void addTags(HolderLookup.@NotNull Provider provider) {
+        protected void addTags(@NotNull HolderLookup.Provider provider) {
             ArsEngBlocks.getBlocks()
                     .forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.block()));
+
+            tag(BlockTagProvider.BUDDING_BLOCKS).addOptionalTag(ConventionTags.BUDDING_BLOCKS_BLOCKS.location());
+            tag(BlockTagProvider.CLUSTER_BLOCKS).addOptionalTag(ConventionTags.CLUSTERS_BLOCKS.location());
         }
     }
 }
