@@ -22,7 +22,7 @@ import gripe._90.arseng.me.key.SourceKeyType;
 @OnlyIn(Dist.CLIENT)
 public class SourceRenderer implements IAEStackRenderHandler<SourceKey> {
     public static final Material SOURCE =
-            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
+            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "blocks/mana_still"));
 
     @Override
     public void drawInGui(Minecraft minecraft, PoseStack poseStack, int x, int y, int zIndex, SourceKey stack) {
