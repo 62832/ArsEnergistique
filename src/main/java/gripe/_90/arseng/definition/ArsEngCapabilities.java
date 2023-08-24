@@ -1,10 +1,13 @@
 package gripe._90.arseng.definition;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.block.tile.SourceJarTile;
 
 import net.minecraft.core.Direction;
@@ -42,7 +45,7 @@ public final class ArsEngCapabilities {
                         // to reduce the risk of crashes with another addon
                         () -> new SourceTileWrapper(
                                 sourceTile,
-                                sourceTile instanceof AbstractSourceMachine,
+                                sourceTile instanceof AbstractSourceMachine && isNotBlackListed(sourceTile),
                                 sourceTile instanceof SourceJarTile));
 
                 @NotNull
@@ -54,33 +57,33 @@ public final class ArsEngCapabilities {
                 private void invalidate() {
                     sourceHandler.invalidate();
                 }
+
+                // TODO: Need a better solution than this
+                private boolean isNotBlackListed(ISourceTile tile) {
+                    var blacklistedClasses = List.of(ImbuementTile.class);
+                    return blacklistedClasses.stream().noneMatch(clazz -> clazz.isInstance(tile));
+                }
             };
 
             event.addCapability(ArsEngCore.makeId("source_tile"), provider);
             event.addListener(provider::invalidate);
         }
 
-        var genericInvProvider = new ICapabilityProvider() {
-            private LazyOptional<GenericStackSourceStorage> sourceHandler = LazyOptional.empty();
-
+        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if (cap == SOURCE_TILE) {
-                    sourceHandler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                            .lazyMap(GenericStackSourceStorage::new);
+                    return be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                            .lazyMap(GenericStackSourceStorage::new)
+                            .cast();
                 }
 
-                return sourceHandler.cast();
+                // this probably shouldn't have an invalidator considering GENERIC_INTERNAL_INV doesn't typically
+                // provide invalidation anyway
+                return LazyOptional.empty();
             }
-
-            private void invalidate() {
-                sourceHandler.invalidate();
-            }
-        };
-
-        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), genericInvProvider);
-        event.addListener(genericInvProvider::invalidate);
+        });
     }
 }
