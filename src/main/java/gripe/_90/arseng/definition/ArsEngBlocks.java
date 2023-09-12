@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.minecraft.core.Registry;
@@ -54,21 +53,10 @@ public final class ArsEngBlocks {
     public static final BlockEntityType<SourceAcceptorBlockEntity> SOURCE_ACCEPTOR_ENTITY = blockEntity(
             "source_acceptor", SourceAcceptorBlockEntity.class, SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
 
-    private static <T extends Block> BlockDefinition<T> block(String englishName, String id, Supplier<T> supplier) {
-        return block(
-                englishName,
-                id,
-                supplier,
-                block -> new AEBaseBlockItem(block, new Item.Properties().tab(ArsEngCore.CREATIVE_TAB)));
-    }
-
     private static <T extends Block> BlockDefinition<T> block(
-            String englishName,
-            String id,
-            Supplier<T> blockSupplier,
-            Function<T, ? extends AEBaseBlockItem> itemFunction) {
+            String englishName, String id, Supplier<T> blockSupplier) {
         var block = blockSupplier.get();
-        var item = itemFunction.apply(block);
+        var item = new AEBaseBlockItem(block, new Item.Properties().tab(ArsEngCore.CREATIVE_TAB));
         var definition = new BlockDefinition<>(englishName, ArsEngCore.makeId(id), block, item);
         BLOCKS.add(definition);
         return definition;
