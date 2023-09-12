@@ -9,6 +9,7 @@
     "ConvertBuddingGoalMixin",
     "RelaySplitterTileMixin",
     "RelayTileMixin",
+    "ScribesTileMixin",
     "SourceUtilMixin"
   ],
   "client": [],
