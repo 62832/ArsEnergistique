@@ -2,6 +2,7 @@ package gripe._90.arseng.data;
 
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
@@ -24,15 +25,21 @@ class TagsProvider {
 
         @Override
         protected void addTags() {
-            var ars = tag(P2PTunnelAttunement.getAttunementTag(ArsEngItems.SOURCE_P2P_TUNNEL));
+            var sourceP2P = tag(P2PTunnelAttunement.getAttunementTag(ArsEngItems.SOURCE_P2P_TUNNEL));
+            sourceP2P
+                    .addOptionalTag(ItemTagProvider.SOURCE_GEM_TAG.location())
+                    .addOptionalTag(ItemTagProvider.SOURCE_GEM_BLOCK_TAG.location())
+                    .addOptionalTag(ItemTagProvider.ARCHWOOD_LOG_TAG.location())
+                    .addOptionalTag(BlockTagProvider.DECORATIVE_AN.location())
+                    .addOptionalTag(BlockTagProvider.MAGIC_SAPLINGS.location())
+                    .addOptionalTag(BlockTagProvider.MAGIC_PLANTS.location());
 
-            ars.addOptionalTag(ItemTagProvider.SOURCE_GEM_TAG.location());
-            ars.addOptionalTag(ItemTagProvider.SOURCE_GEM_BLOCK_TAG.location());
-            ars.addOptionalTag(ItemTagProvider.ARCHWOOD_LOG_TAG.location());
-
-            ars.addOptionalTag(BlockTagProvider.DECORATIVE_AN.location());
-            ars.addOptionalTag(BlockTagProvider.MAGIC_SAPLINGS.location());
-            ars.addOptionalTag(BlockTagProvider.MAGIC_PLANTS.location());
+            var spellP2P = tag(P2PTunnelAttunement.getAttunementTag(ArsEngItems.SPELL_P2P_TUNNEL));
+            spellP2P.add(
+                    ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
+                    ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
+                    ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
+                    ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
 
             tag(ItemTagProvider.SHARD_TAG).addOptionalTag(ConventionTags.CERTUS_QUARTZ.location());
         }

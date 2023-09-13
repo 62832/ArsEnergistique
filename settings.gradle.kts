@@ -27,7 +27,7 @@ dependencyResolutionManagement {
             version("ae2", "12.9.5")
             library("ae2", "appeng", "appliedenergistics2-forge").versionRef("ae2")
 
-            version("ars", "3.17.9.554")
+            version("ars", "3.17.999")
             library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$minecraftVersion").versionRef("ars")
 
             library("curios", "top.theillusivec4.curios", "curios-forge").version("$minecraftVersion-5.1.1.0")

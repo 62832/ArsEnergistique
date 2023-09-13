@@ -67,6 +67,8 @@ minecraft {
 }
 
 repositories {
+    mavenLocal()
+
     maven {
         name = "ModMaven (K4U-NL)"
         url = uri("https://modmaven.dev/")

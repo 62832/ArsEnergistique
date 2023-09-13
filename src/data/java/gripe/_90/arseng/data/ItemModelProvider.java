@@ -21,6 +21,8 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
 
     private static final ResourceLocation SOURCE_GEM_BLOCK =
             new ResourceLocation("ars_nouveau", "blocks/source_gem_block");
+    private static final ResourceLocation GILDED_SOURCESTONE =
+            new ResourceLocation("ars_nouveau", "blocks/gilded_sourcestone_large_bricks");
 
     ItemModelProvider(DataGenerator generator, ExistingFileHelper existing) {
         super(generator, ArsEngCore.MODID, existing);
@@ -31,6 +33,7 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
         existing.trackGenerated(ENERGY_ACCEPTOR_PART, MODEL);
         existing.trackGenerated(ENERGY_ACCEPTOR_PART_ITEM, MODEL);
         existing.trackGenerated(SOURCE_GEM_BLOCK, TEXTURE);
+        existing.trackGenerated(GILDED_SOURCESTONE, TEXTURE);
     }
 
     @Override
@@ -43,6 +46,8 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
 
         withExistingParent("item/source_p2p_tunnel", P2P_TUNNEL_BASE_ITEM).texture("type", SOURCE_GEM_BLOCK);
         withExistingParent("part/source_p2p_tunnel", P2P_TUNNEL_BASE_PART).texture("type", SOURCE_GEM_BLOCK);
+        withExistingParent("item/spell_p2p_tunnel", P2P_TUNNEL_BASE_ITEM).texture("type", GILDED_SOURCESTONE);
+        withExistingParent("part/spell_p2p_tunnel", P2P_TUNNEL_BASE_PART).texture("type", GILDED_SOURCESTONE);
 
         withExistingParent("part/source_acceptor", ENERGY_ACCEPTOR_PART)
                 .texture("sides", "part/source_acceptor_sides")

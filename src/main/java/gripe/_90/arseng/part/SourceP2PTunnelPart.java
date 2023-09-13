@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import appeng.api.config.PowerUnits;
-import appeng.api.features.P2PTunnelAttunement;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.items.parts.PartModels;
@@ -18,7 +16,6 @@ import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCore;
-import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, IAdvancedSourceTile> {
@@ -31,10 +28,6 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         inputHandler = new InputHandler();
         outputHandler = new OutputHandler();
         emptyHandler = EMPTY_HANDLER;
-    }
-
-    public static void initAttunement(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> P2PTunnelAttunement.registerAttunementTag(ArsEngItems.SOURCE_P2P_TUNNEL));
     }
 
     @SuppressWarnings("unused")

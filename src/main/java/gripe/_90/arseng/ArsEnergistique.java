@@ -32,7 +32,7 @@ import gripe._90.arseng.me.strategy.SourceContainerItemStrategy;
 import gripe._90.arseng.me.strategy.SourceExternalStorageStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageExportStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageImportStrategy;
-import gripe._90.arseng.part.SourceP2PTunnelPart;
+import gripe._90.arseng.part.SpellP2PTunnelPart;
 
 @Mod(ArsEngCore.MODID)
 public class ArsEnergistique {
@@ -58,7 +58,8 @@ public class ArsEnergistique {
         ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
         GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
 
-        bus.addListener(SourceP2PTunnelPart::initAttunement);
+        bus.addListener(ArsEngItems::initP2PAttunement);
+        MinecraftForge.EVENT_BUS.addListener(SpellP2PTunnelPart::onSpellHit);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             Client.init();
