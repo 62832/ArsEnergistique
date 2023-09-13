@@ -26,6 +26,7 @@ public class SourceAcceptorBlockEntity extends AENetworkBlockEntity implements I
 
     public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
         super(ArsEngBlocks.SOURCE_ACCEPTOR_ENTITY, pos, state);
+        getMainNode().setIdlePowerUsage(0);
     }
 
     @Override
