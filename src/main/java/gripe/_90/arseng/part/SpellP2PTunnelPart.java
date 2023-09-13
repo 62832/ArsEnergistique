@@ -6,11 +6,12 @@ import java.util.List;
 
 import com.hollingsworth.arsnouveau.api.event.SpellProjectileHitEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.advancement.ANCriteriaTriggers;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDecelerate;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -61,6 +62,9 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
         }
     }
 
+    /**
+     * See {@link com.hollingsworth.arsnouveau.common.block.SpellPrismBlock#onHit}
+     */
     private void redirectSpell(EntityProjectileSpell spell) {
         if (!this.equals(getInput())) return;
 
@@ -72,12 +76,13 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
 
         var dir = selected.getSide();
         var pos = selected.getHost().getBlockEntity().getBlockPos();
-        var x = pos.getX() + 0.5;
-        var y = pos.getY() + 0.5;
-        var z = pos.getZ() + 0.5;
 
-        spell.setPos(x, y, z);
+        spell.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
         spell.prismRedirect++;
+
+        if (spell.prismRedirect >= 3 && getLevel() instanceof ServerLevel level) {
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC, level, pos, 10);
+        }
 
         if (spell.spellResolver == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);
@@ -89,6 +94,6 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
         var velocity = Math.max(0.1, 0.5 + 0.1 * Math.min(2, acceleration - deceleration * 0.5));
 
         spell.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), (float) velocity, 0);
-        BlockUtil.updateObservers(getLevel(), new BlockPos(x, y, z));
+        BlockUtil.updateObservers(getLevel(), pos);
     }
 }

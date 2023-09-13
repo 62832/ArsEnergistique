@@ -2,6 +2,7 @@ package gripe._90.arseng.data;
 
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 
 import net.minecraft.data.DataGenerator;
@@ -39,7 +40,12 @@ class TagsProvider {
                     ItemsRegistry.NOVICE_SPELLBOOK.asItem(),
                     ItemsRegistry.APPRENTICE_SPELLBOOK.asItem(),
                     ItemsRegistry.ARCHMAGE_SPELLBOOK.asItem(),
-                    ItemsRegistry.CREATIVE_SPELLBOOK.asItem());
+                    ItemsRegistry.CREATIVE_SPELLBOOK.asItem(),
+                    BlockRegistry.SPELL_PRISM.asItem(),
+                    BlockRegistry.VOID_PRISM.asItem(),
+                    ItemsRegistry.SPELL_PARCHMENT.asItem(),
+                    ItemsRegistry.SPELL_BOW.asItem(),
+                    ItemsRegistry.SPELL_CROSSBOW.asItem());
 
             tag(ItemTagProvider.SHARD_TAG).addOptionalTag(ConventionTags.CERTUS_QUARTZ.location());
         }
