@@ -1,15 +1,13 @@
 package gripe._90.arseng.data;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import com.hollingsworth.arsnouveau.common.datagen.ApparatusRecipeProvider;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.world.item.Items;
 
 import appeng.core.definitions.AEBlocks;
@@ -31,7 +29,6 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.SOURCE_GEM)
                 .withPedestalItem(4, Items.GOLD_INGOT)
-                .withSourceCost(2000)
                 .build());
         addRecipe(builder()
                 .withResult(ArsEngBlocks.SOURCE_ACCEPTOR)
@@ -44,15 +41,14 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
     }
 
     @Override
-    public void run(CachedOutput pOutput) throws IOException {
+    public void collectJsons(CachedOutput pOutput) {
         addEntries();
 
         for (var recipe : recipes) {
-            DataProvider.saveStable(
+            saveStable(
                     pOutput,
                     recipe.asRecipe(),
-                    getRecipePath(
-                            this.generator.getOutputFolder(), recipe.getId().getPath()));
+                    getRecipePath(output, recipe.getId().getPath()));
         }
     }
 

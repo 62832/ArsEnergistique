@@ -1,6 +1,6 @@
 package gripe._90.arseng.data;
 
-import java.nio.file.Path;
+import static com.hollingsworth.arsnouveau.setup.registry.RegistryHelper.getRegistryName;
 
 import com.hollingsworth.arsnouveau.common.datagen.PatchouliProvider;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.ApparatusPage;
@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.datagen.patchouli.IPatchouliPage;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.PatchouliBuilder;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.TextPage;
 
-import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.ItemLike;
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
 
-@SuppressWarnings("deprecation")
 public class DocumentationProvider extends PatchouliProvider {
     public DocumentationProvider(DataGenerator generator) {
         super(generator);
@@ -28,7 +26,7 @@ public class DocumentationProvider extends PatchouliProvider {
         var builder = new PatchouliBuilder(category, item.asItem().getDescriptionId())
                 .withIcon(item.asItem())
                 .withPage(new TextPage(
-                        "arseng.page." + Registry.ITEM.getKey(item.asItem()).getPath()));
+                        "arseng.page." + getRegistryName(item.asItem()).getPath()));
 
         if (recipePage != null) {
             builder.withPage(recipePage);
@@ -43,28 +41,13 @@ public class DocumentationProvider extends PatchouliProvider {
     }
 
     @Override
-    public Path getPath(ResourceLocation category, ResourceLocation fileName) {
-        return getPath(category, fileName.getPath());
-    }
-
-    @Override
-    public Path getPath(ResourceLocation category, String fileName) {
-        return generator
-                .getOutputFolder()
-                .resolve("data/arseng/patchouli_books/worn_notebook/en_us/entries/%s/%s.json"
-                        .formatted(category.getPath(), fileName));
-    }
-
-    @Override
     public void addEntries() {
         var sourceAcceptorBuilder = buildBasicItem(
                 ArsEngBlocks.SOURCE_ACCEPTOR, AUTOMATION, new ApparatusPage(ArsEngBlocks.SOURCE_ACCEPTOR));
         sourceAcceptorBuilder.withPage(new TextPage(getLangPath("source_acceptor_description")));
-        sourceAcceptorBuilder.withPage(
-                new CraftingPage("arseng:source_acceptor_part")); // name must match that of the recipe
+        sourceAcceptorBuilder.withPage(new CraftingPage(ArsEngItems.SOURCE_ACCEPTOR_PART));
         addPage(new PatchouliPage(
-                sourceAcceptorBuilder,
-                getPath(AUTOMATION, Registry.ITEM.getKey(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
+                sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
 
         var cellsBuilder = buildBasicItem(
                 ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new ApparatusPage(ArsEngItems.SOURCE_CELL_HOUSING));

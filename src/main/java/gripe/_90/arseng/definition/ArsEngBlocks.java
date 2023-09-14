@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -20,6 +20,7 @@ import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.core.definitions.BlockDefinition;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.block.SourceAcceptorBlock;
 import gripe._90.arseng.block.entity.SourceAcceptorBlockEntity;
 
@@ -34,15 +35,15 @@ public final class ArsEngBlocks {
     }
 
     public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registry.BLOCK_REGISTRY)) {
+        if (event.getRegistryKey().equals(Registries.BLOCK)) {
             BLOCKS.forEach(b -> ForgeRegistries.BLOCKS.register(b.id(), b.block()));
         }
 
-        if (event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
+        if (event.getRegistryKey().equals(Registries.ITEM)) {
             BLOCKS.forEach(b -> ForgeRegistries.ITEMS.register(b.id(), b.asItem()));
         }
 
-        if (event.getRegistryKey().equals(Registry.BLOCK_ENTITY_TYPE_REGISTRY)) {
+        if (event.getRegistryKey().equals(Registries.BLOCK_ENTITY_TYPE)) {
             BLOCK_ENTITIES.forEach(ForgeRegistries.BLOCK_ENTITY_TYPES::register);
         }
     }
@@ -56,8 +57,8 @@ public final class ArsEngBlocks {
     private static <T extends Block> BlockDefinition<T> block(
             String englishName, String id, Supplier<T> blockSupplier) {
         var block = blockSupplier.get();
-        var item = new AEBaseBlockItem(block, new Item.Properties().tab(ArsEngCore.CREATIVE_TAB));
-        var definition = new BlockDefinition<>(englishName, ArsEngCore.makeId(id), block, item);
+        var item = new AEBaseBlockItem(block, new Item.Properties());
+        var definition = new BlockDefinition<>(englishName, ArsEnergistique.makeId(id), block, item);
         BLOCKS.add(definition);
         return definition;
     }
@@ -68,7 +69,7 @@ public final class ArsEngBlocks {
             BlockEntityType.BlockEntitySupplier<T> supplier,
             BlockDefinition<? extends AEBaseEntityBlock<T>> block) {
         var type = BlockEntityType.Builder.of(supplier, block.block()).build(null);
-        BLOCK_ENTITIES.put(ArsEngCore.makeId(id), type);
+        BLOCK_ENTITIES.put(ArsEnergistique.makeId(id), type);
         AEBaseBlockEntity.registerBlockEntityItem(type, block.asItem());
         block.block().setBlockEntity(entityClass, type, null, null);
         return type;

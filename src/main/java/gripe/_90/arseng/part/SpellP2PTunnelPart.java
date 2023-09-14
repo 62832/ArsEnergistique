@@ -22,10 +22,10 @@ import appeng.items.parts.PartModels;
 import appeng.parts.p2p.P2PModels;
 import appeng.parts.p2p.P2PTunnelPart;
 
-import gripe._90.arseng.definition.ArsEngCore;
+import gripe._90.arseng.ArsEnergistique;
 
 public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
-    public static final P2PModels MODELS = new P2PModels(ArsEngCore.makeId("part/spell_p2p_tunnel"));
+    public static final P2PModels MODELS = new P2PModels(ArsEnergistique.makeId("part/spell_p2p_tunnel"));
 
     public SpellP2PTunnelPart(IPartItem<?> partItem) {
         super(partItem);
@@ -47,9 +47,10 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
         return MODELS.getModel(isPowered(), isActive());
     }
 
+    @SuppressWarnings("resource")
     public static void onSpellHit(SpellProjectileHitEvent event) {
         if (event.getHitResult() instanceof BlockHitResult blockHit) {
-            var be = event.getProjectile().level.getBlockEntity(blockHit.getBlockPos());
+            var be = event.getProjectile().level().getBlockEntity(blockHit.getBlockPos());
 
             if (be instanceof CableBusBlockEntity cableBus) {
                 var part = cableBus.getPart(blockHit.getDirection());

@@ -9,16 +9,13 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
-import appeng.api.storage.IStorageMonitorableAccessor;
+import appeng.api.storage.MEStorage;
 import appeng.capabilities.Capabilities;
 
 import gripe._90.arseng.block.entity.PlayerAwareScribesTile;
@@ -36,9 +33,6 @@ public abstract class ScribesTileMixin extends ModdedTile implements PlayerAware
     @Shadow
     public List<ItemStack> consumedStacks;
 
-    @Unique
-    private Player arseng$player;
-
     public ScribesTileMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -46,19 +40,9 @@ public abstract class ScribesTileMixin extends ModdedTile implements PlayerAware
     @Shadow
     public abstract boolean canConsumeItemstack(ItemStack stack);
 
-    @Override
-    public void arseng$setPlayer(Player player) {
-        arseng$player = player;
-    }
-
-    @Inject(method = "setRecipe", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void setPlayer(GlyphRecipe recipe, Player player, CallbackInfo ci, ScribesTile tile) {
-        ((PlayerAwareScribesTile) tile).arseng$setPlayer(player);
-    }
-
     @Inject(method = "takeNearby", at = @At("TAIL"))
     private void takeFromInterfaces(CallbackInfo ci) {
-        if (level == null || arseng$player == null) {
+        if (level == null) {
             return;
         }
 
@@ -70,8 +54,7 @@ public abstract class ScribesTileMixin extends ModdedTile implements PlayerAware
             var be = level.getBlockEntity(pos);
 
             if (be != null) {
-                var centreCap = be.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR)
-                        .resolve();
+                var centreCap = be.getCapability(Capabilities.STORAGE).resolve();
 
                 if (centreCap.isPresent()) {
                     arseng$extract(centreCap.get(), pos);
@@ -79,8 +62,7 @@ public abstract class ScribesTileMixin extends ModdedTile implements PlayerAware
                 }
 
                 for (var side : Direction.values()) {
-                    var sidedCap = be.getCapability(Capabilities.STORAGE_MONITORABLE_ACCESSOR, side)
-                            .resolve();
+                    var sidedCap = be.getCapability(Capabilities.STORAGE, side).resolve();
 
                     if (sidedCap.isPresent()) {
                         arseng$extract(sidedCap.get(), pos);
@@ -92,27 +74,18 @@ public abstract class ScribesTileMixin extends ModdedTile implements PlayerAware
     }
 
     @Unique
-    private void arseng$extract(IStorageMonitorableAccessor monitorable, BlockPos pos) {
-        if (arseng$player == null) {
-            return;
-        }
+    private void arseng$extract(MEStorage storage, BlockPos pos) {
+        for (var stored : storage.getAvailableStacks()) {
+            if (stored.getKey() instanceof AEItemKey item && canConsumeItemstack(item.wrapForDisplayOrFilter())) {
+                var extracted = storage.extract(item, 1, Actionable.MODULATE, IActionSource.empty());
+                var taken = item.toStack((int) extracted);
+                consumedStacks.add(taken);
 
-        var actionSource = IActionSource.ofPlayer(arseng$player);
-        var storage = monitorable.getInventory(actionSource);
-
-        if (storage != null) {
-            for (var stored : storage.getAvailableStacks()) {
-                if (stored.getKey() instanceof AEItemKey item && canConsumeItemstack(item.wrapForDisplayOrFilter())) {
-                    var extracted = storage.extract(item, 1, Actionable.MODULATE, actionSource);
-                    var taken = item.toStack((int) extracted);
-                    consumedStacks.add(taken);
-
-                    var flyingItem = new EntityFlyingItem(level, pos, getBlockPos());
-                    flyingItem.setStack(taken);
-                    Objects.requireNonNull(level).addFreshEntity(flyingItem);
-                    updateBlock();
-                    return;
-                }
+                var flyingItem = new EntityFlyingItem(level, pos, getBlockPos());
+                flyingItem.setStack(taken);
+                Objects.requireNonNull(level).addFreshEntity(flyingItem);
+                updateBlock();
+                return;
             }
         }
     }

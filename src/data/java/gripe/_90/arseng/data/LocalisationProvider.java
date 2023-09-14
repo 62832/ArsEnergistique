@@ -1,15 +1,15 @@
 package gripe._90.arseng.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.LanguageProvider;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlocks;
-import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class LocalisationProvider extends LanguageProvider {
-    LocalisationProvider(DataGenerator generator) {
-        super(generator, ArsEngCore.MODID, "en_us");
+    LocalisationProvider(PackOutput output) {
+        super(output, ArsEnergistique.MODID, "en_us");
     }
 
     @Override
@@ -17,7 +17,7 @@ class LocalisationProvider extends LanguageProvider {
         ArsEngItems.getItems().forEach(i -> add(i.asItem(), i.getEnglishName()));
         ArsEngBlocks.getBlocks().forEach(b -> add(b.block(), b.getEnglishName()));
 
-        add("itemGroup." + ArsEngCore.MODID, "Ars Énergistique");
+        add("itemGroup." + ArsEnergistique.MODID, "Ars Énergistique");
 
         add(
                 "arseng.page.source_cell_housing",

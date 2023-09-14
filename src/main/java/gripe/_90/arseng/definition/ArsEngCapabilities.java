@@ -22,6 +22,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 import appeng.capabilities.Capabilities;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.block.entity.SourceTileWrapper;
 import gripe._90.arseng.me.storage.GenericStackSourceStorage;
@@ -65,11 +66,11 @@ public final class ArsEngCapabilities {
                 }
             };
 
-            event.addCapability(ArsEngCore.makeId("source_tile"), provider);
+            event.addCapability(ArsEnergistique.makeId("source_tile"), provider);
             event.addListener(provider::invalidate);
         }
 
-        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
+        event.addCapability(ArsEnergistique.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override

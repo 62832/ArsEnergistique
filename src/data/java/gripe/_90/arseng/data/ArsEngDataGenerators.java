@@ -13,9 +13,9 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import gripe._90.arseng.definition.ArsEngCore;
+import gripe._90.arseng.ArsEnergistique;
 
-@Mod.EventBusSubscriber(modid = ArsEngCore.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = ArsEnergistique.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ArsEngDataGenerators {
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {

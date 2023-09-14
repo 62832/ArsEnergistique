@@ -1,6 +1,6 @@
 package gripe._90.arseng.data;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -8,7 +8,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import appeng.core.AppEng;
 import appeng.core.definitions.ItemDefinition;
 
-import gripe._90.arseng.definition.ArsEngCore;
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngItems;
 
 class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemModelProvider {
@@ -20,12 +20,12 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
     private static final ResourceLocation ENERGY_ACCEPTOR_PART_ITEM = AppEng.makeId("item/cable_energy_acceptor");
 
     private static final ResourceLocation SOURCE_GEM_BLOCK =
-            new ResourceLocation("ars_nouveau", "blocks/source_gem_block");
+            new ResourceLocation("ars_nouveau", "block/source_gem_block");
     private static final ResourceLocation GILDED_SOURCESTONE =
-            new ResourceLocation("ars_nouveau", "blocks/gilded_sourcestone_large_bricks");
+            new ResourceLocation("ars_nouveau", "block/gilded_sourcestone_large_bricks");
 
-    ItemModelProvider(DataGenerator generator, ExistingFileHelper existing) {
-        super(generator, ArsEngCore.MODID, existing);
+    ItemModelProvider(PackOutput output, ExistingFileHelper existing) {
+        super(output, ArsEnergistique.MODID, existing);
         existing.trackGenerated(P2P_TUNNEL_BASE_ITEM, MODEL);
         existing.trackGenerated(P2P_TUNNEL_BASE_PART, MODEL);
         existing.trackGenerated(STORAGE_CELL_LED, TEXTURE);
@@ -62,6 +62,6 @@ class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemM
 
     private ItemModelBuilder flatSingleLayer(ItemDefinition<?> item) {
         var path = item.id().getPath();
-        return singleTexture(path, mcLoc("item/generated"), "layer0", ArsEngCore.makeId("item/" + path));
+        return singleTexture(path, mcLoc("item/generated"), "layer0", ArsEnergistique.makeId("item/" + path));
     }
 }

@@ -12,14 +12,14 @@ import appeng.items.parts.PartModels;
 import appeng.parts.p2p.CapabilityP2PTunnelPart;
 import appeng.parts.p2p.P2PModels;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngConfig;
-import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnelPart, IAdvancedSourceTile> {
-    private static final P2PModels MODELS = new P2PModels(ArsEngCore.makeId("part/source_p2p_tunnel"));
+    private static final P2PModels MODELS = new P2PModels(ArsEnergistique.makeId("part/source_p2p_tunnel"));
 
     private static final EmptyHandler EMPTY_HANDLER = new EmptyHandler();
 

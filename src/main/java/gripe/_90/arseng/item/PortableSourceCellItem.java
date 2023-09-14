@@ -19,7 +19,7 @@ import appeng.items.storage.StorageTier;
 import appeng.items.tools.powered.AbstractPortableCell;
 import appeng.menu.me.common.MEStorageMenu;
 
-import gripe._90.arseng.definition.ArsEngCore;
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.cell.ISourceCellItem;
 
@@ -47,7 +47,7 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
 
     @Override
     public ResourceLocation getRecipeId() {
-        return ArsEngCore.makeId(Objects.requireNonNull(getRegistryName()).getPath());
+        return ArsEnergistique.makeId(Objects.requireNonNull(getRegistryName()).getPath());
     }
 
     @Override

@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -17,8 +19,8 @@ import net.minecraftforge.common.data.BlockTagsProvider;
 import appeng.api.features.P2PTunnelAttunement;
 import appeng.datagen.providers.tags.ConventionTags;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlocks;
-import gripe._90.arseng.definition.ArsEngCore;
 import gripe._90.arseng.definition.ArsEngItems;
 
 abstract class TagsProvider {
@@ -27,7 +29,7 @@ abstract class TagsProvider {
                 PackOutput output,
                 CompletableFuture<HolderLookup.Provider> registries,
                 CompletableFuture<TagLookup<Block>> blockTags) {
-            super(output, registries, blockTags, ArsEngCore.MODID, null);
+            super(output, registries, blockTags, ArsEnergistique.MODID, null);
         }
 
         @Override
@@ -59,7 +61,7 @@ abstract class TagsProvider {
 
     static class Blocks extends BlockTagsProvider {
         public Blocks(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-            super(output, registries, ArsEngCore.MODID, null);
+            super(output, registries, ArsEnergistique.MODID, null);
         }
 
         @Override

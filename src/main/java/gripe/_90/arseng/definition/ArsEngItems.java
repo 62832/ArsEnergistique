@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -20,6 +20,7 @@ import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
 import appeng.items.storage.StorageTier;
 
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.item.CreativeSourceCellItem;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
@@ -37,7 +38,7 @@ public final class ArsEngItems {
     }
 
     public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
+        if (event.getRegistryKey().equals(Registries.ITEM)) {
             ITEMS.forEach(i -> ForgeRegistries.ITEMS.register(i.id(), i.asItem()));
         }
     }
@@ -122,8 +123,8 @@ public final class ArsEngItems {
 
     public static <T extends Item> ItemDefinition<T> item(
             String englishName, String id, Function<Item.Properties, T> factory) {
-        var definition = new ItemDefinition<>(
-                englishName, ArsEngCore.makeId(id), factory.apply(new Item.Properties().tab(ArsEngCore.CREATIVE_TAB)));
+        var definition =
+                new ItemDefinition<>(englishName, ArsEnergistique.makeId(id), factory.apply(new Item.Properties()));
         ITEMS.add(definition);
         return definition;
     }
