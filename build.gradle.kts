@@ -144,7 +144,7 @@ tasks {
             "version" to project.version,
             "fmlVersion" to "[${libs.versions.loader.get()},)",
             "ae2Version" to "(,${libs.versions.ae2.get().substringBefore('.').toInt() + 1})",
-            "arsVersion" to "(,${libs.versions.ars.get().substringBefore('.').toInt() + 1})"
+            "arsVersion" to "[${libs.versions.ars.get().substringBeforeLast('.')},)"
         )
 
         inputs.properties(replaceProperties)
