@@ -54,9 +54,14 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
             if (be instanceof CableBusBlockEntity cableBus) {
                 var part = cableBus.getPart(blockHit.getDirection());
 
-                if (part instanceof SpellP2PTunnelPart spellP2P) {
-                    spellP2P.redirectSpell(event.getProjectile());
-                    event.setCanceled(true);
+                if (part instanceof SpellP2PTunnelPart spellP2P && spellP2P.equals(spellP2P.getInput())) {
+                    var outputs = new ArrayList<>(spellP2P.getOutputs());
+
+                    if (!outputs.isEmpty()) {
+                        Collections.shuffle(outputs);
+                        spellP2P.redirectSpell(event.getProjectile(), outputs.get(0));
+                        event.setCanceled(true);
+                    }
                 }
             }
         }
@@ -65,17 +70,9 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
     /**
      * See {@link com.hollingsworth.arsnouveau.common.block.SpellPrismBlock#onHit}
      */
-    private void redirectSpell(EntityProjectileSpell spell) {
-        if (!this.equals(getInput())) return;
-
-        var outputs = new ArrayList<>(getOutputs());
-        if (outputs.isEmpty()) return;
-
-        Collections.shuffle(outputs);
-        var selected = outputs.get(0);
-
-        var dir = selected.getSide();
-        var pos = selected.getHost().getBlockEntity().getBlockPos();
+    private void redirectSpell(EntityProjectileSpell spell, SpellP2PTunnelPart output) {
+        var dir = output.getSide();
+        var pos = output.getHost().getBlockEntity().getBlockPos();
 
         spell.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
         spell.prismRedirect++;
