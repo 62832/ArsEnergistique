@@ -28,7 +28,7 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
 
     @Override
     public long getTotalBytes() {
-        return 1000 * (long) Math.pow(4, tier.index() - 1);
+        return 100 * (long) Math.pow(4, tier.index() - 1);
     }
 
     @Override

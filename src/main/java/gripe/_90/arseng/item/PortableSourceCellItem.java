@@ -36,7 +36,7 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
 
     @Override
     public long getTotalBytes() {
-        return 500 * (long) Math.pow(4, tier.index() - 1);
+        return 50 * (long) Math.pow(4, tier.index() - 1);
     }
 
     @Override
