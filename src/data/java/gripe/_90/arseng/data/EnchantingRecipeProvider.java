@@ -31,6 +31,7 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
                 .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(2, ItemsRegistry.SOURCE_GEM)
                 .withPedestalItem(4, Items.GOLD_INGOT)
+                .withSourceCost(2000)
                 .build());
         addRecipe(builder()
                 .withResult(ArsEngBlocks.SOURCE_ACCEPTOR)
