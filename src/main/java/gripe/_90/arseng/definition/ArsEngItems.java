@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.function.Function;
 
 import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
+import appeng.api.features.P2PTunnelAttunement;
 import appeng.api.parts.PartModels;
 import appeng.core.definitions.ItemDefinition;
 import appeng.items.materials.MaterialItem;
@@ -23,6 +25,7 @@ import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.part.SourceAcceptorPart;
 import gripe._90.arseng.part.SourceP2PTunnelPart;
+import gripe._90.arseng.part.SpellP2PTunnelPart;
 
 public final class ArsEngItems {
     private ArsEngItems() {}
@@ -34,7 +37,7 @@ public final class ArsEngItems {
     }
 
     public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.ITEM)) {
+        if (event.getRegistryKey().equals(Registry.ITEM_REGISTRY)) {
             ITEMS.forEach(i -> ForgeRegistries.ITEMS.register(i.id(), i.asItem()));
         }
     }
@@ -67,6 +70,14 @@ public final class ArsEngItems {
                 p -> new PartItem<>(p, SourceP2PTunnelPart.class, SourceP2PTunnelPart::new));
     });
 
+    public static final ItemDefinition<PartItem<SpellP2PTunnelPart>> SPELL_P2P_TUNNEL = Util.make(() -> {
+        PartModels.registerModels(PartModelsHelper.createModels(SpellP2PTunnelPart.class));
+        return item(
+                "ME Spell P2P Tunnel",
+                "spell_p2p_tunnel",
+                p -> new PartItem<>(p, SpellP2PTunnelPart.class, SpellP2PTunnelPart::new));
+    });
+
     public static final ItemDefinition<PartItem<SourceAcceptorPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
         PartModels.registerModels(PartModelsHelper.createModels(SourceAcceptorPart.class));
         return item(
@@ -74,6 +85,13 @@ public final class ArsEngItems {
                 "cable_source_acceptor",
                 p -> new PartItem<>(p, SourceAcceptorPart.class, SourceAcceptorPart::new));
     });
+
+    public static void initP2PAttunement(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            P2PTunnelAttunement.registerAttunementTag(SOURCE_P2P_TUNNEL);
+            P2PTunnelAttunement.registerAttunementTag(SPELL_P2P_TUNNEL);
+        });
+    }
 
     public static List<ItemDefinition<SourceCellItem>> getCells() {
         return List.of(SOURCE_CELL_1K, SOURCE_CELL_4K, SOURCE_CELL_16K, SOURCE_CELL_64K, SOURCE_CELL_256K);
@@ -104,7 +122,8 @@ public final class ArsEngItems {
 
     public static <T extends Item> ItemDefinition<T> item(
             String englishName, String id, Function<Item.Properties, T> factory) {
-        var definition = new ItemDefinition<>(englishName, ArsEngCore.makeId(id), factory.apply(new Item.Properties()));
+        var definition = new ItemDefinition<>(
+                englishName, ArsEngCore.makeId(id), factory.apply(new Item.Properties().tab(ArsEngCore.CREATIVE_TAB)));
         ITEMS.add(definition);
         return definition;
     }

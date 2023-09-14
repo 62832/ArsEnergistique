@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -14,77 +13,26 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.PowerUnits;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IManagedGridNode;
-import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.util.AECableType;
-import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.grid.AENetworkBlockEntity;
 import appeng.blockentity.powersink.IExternalPowerSink;
-import appeng.me.helpers.BlockEntityNodeListener;
-import appeng.me.helpers.IGridConnectedBlockEntity;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.energy.SourceEnergyAdapter;
 
-public class SourceAcceptorBlockEntity extends AEBaseBlockEntity
-        implements IExternalPowerSink, IGridConnectedBlockEntity {
-    private final IManagedGridNode mainNode = GridHelper.createManagedNode(this, BlockEntityNodeListener.INSTANCE)
-            .setVisualRepresentation(getItemFromBlockEntity())
-            .addService(IAEPowerStorage.class, this)
-            .setIdlePowerUsage(0)
-            .setInWorldNode(true)
-            .setTagName("proxy");
+public class SourceAcceptorBlockEntity extends AENetworkBlockEntity implements IExternalPowerSink {
     private LazyOptional<IAdvancedSourceTile> sourceTileOptional;
 
     public SourceAcceptorBlockEntity(BlockPos pos, BlockState state) {
         super(ArsEngBlocks.SOURCE_ACCEPTOR_ENTITY, pos, state);
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        getMainNode().saveToNBT(tag);
-    }
-
-    @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        getMainNode().loadFromNBT(data);
-    }
-
-    @Override
-    public void clearRemoved() {
-        super.clearRemoved();
-        scheduleInit();
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        getMainNode().destroy();
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        getMainNode().destroy();
-    }
-
-    @Override
-    public void onReady() {
-        super.onReady();
-        getMainNode().create(getLevel(), getBlockPos());
+        getMainNode().setIdlePowerUsage(0);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
         sourceTileOptional = LazyOptional.of(() -> new SourceEnergyAdapter(this, this));
-    }
-
-    public IManagedGridNode getMainNode() {
-        return mainNode;
     }
 
     @NotNull

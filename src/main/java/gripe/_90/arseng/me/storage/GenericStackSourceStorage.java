@@ -70,7 +70,7 @@ public class GenericStackSourceStorage implements IAdvancedSourceTile {
         var inserted = 0;
 
         for (var i = 0; i < inv.size() && inserted < amount; ++i) {
-            inserted += (int) inv.insert(i, SourceKey.KEY, amount - inserted, mode);
+            inserted += Ints.saturatedCast(inv.insert(i, SourceKey.KEY, amount - inserted, mode));
         }
 
         return inserted;
@@ -80,7 +80,7 @@ public class GenericStackSourceStorage implements IAdvancedSourceTile {
         var extracted = 0;
 
         for (var i = 0; i < inv.size() && extracted < amount; ++i) {
-            extracted += (int) inv.extract(i, SourceKey.KEY, amount - extracted, mode);
+            extracted += Ints.saturatedCast(inv.extract(i, SourceKey.KEY, amount - extracted, mode));
         }
 
         return extracted;

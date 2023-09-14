@@ -10,9 +10,9 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import appeng.api.behaviors.ContainerItemStrategies;
+import appeng.api.behaviors.ContainerItemStrategy;
 import appeng.api.behaviors.GenericSlotCapacities;
-import appeng.api.client.AEKeyRendering;
+import appeng.api.client.AEStackRendering;
 import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import appeng.parts.automation.StackWorldBehaviors;
@@ -21,7 +21,6 @@ import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCore;
-import gripe._90.arseng.definition.ArsEngCreativeTab;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.me.cell.CreativeSourceCellHandler;
@@ -33,7 +32,7 @@ import gripe._90.arseng.me.strategy.SourceContainerItemStrategy;
 import gripe._90.arseng.me.strategy.SourceExternalStorageStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageExportStrategy;
 import gripe._90.arseng.me.strategy.SourceStorageImportStrategy;
-import gripe._90.arseng.part.SourceP2PTunnelPart;
+import gripe._90.arseng.part.SpellP2PTunnelPart;
 
 @Mod(ArsEngCore.MODID)
 public class ArsEnergistique {
@@ -44,7 +43,6 @@ public class ArsEnergistique {
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(ArsEngItems::register);
         bus.addListener(ArsEngBlocks::register);
-        bus.addListener(ArsEngCreativeTab::register);
 
         bus.addListener(SourceKeyType::register);
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
@@ -57,10 +55,11 @@ public class ArsEnergistique {
         StackWorldBehaviors.registerExportStrategy(SourceKeyType.TYPE, SourceStorageExportStrategy::new);
         StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
 
-        ContainerItemStrategies.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
+        ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
         GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
 
-        bus.addListener(SourceP2PTunnelPart::initAttunement);
+        bus.addListener(ArsEngItems::initP2PAttunement);
+        MinecraftForge.EVENT_BUS.addListener(SpellP2PTunnelPart::onSpellHit);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             Client.init();
@@ -74,7 +73,7 @@ public class ArsEnergistique {
             bus.addListener(SourceCellHandler::initLED);
             bus.addListener(PortableSourceCellItem::initColours);
 
-            AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
+            AEStackRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
 
             var driveCell = ArsEngCore.makeId("block/source_drive_cell");
             ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));

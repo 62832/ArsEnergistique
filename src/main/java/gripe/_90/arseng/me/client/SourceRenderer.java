@@ -3,7 +3,6 @@ package gripe._90.arseng.me.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -11,38 +10,33 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import appeng.api.client.AEKeyRenderHandler;
+import appeng.api.client.IAEStackRenderHandler;
 import appeng.client.gui.style.Blitter;
 
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 @OnlyIn(Dist.CLIENT)
-public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
+public class SourceRenderer implements IAEStackRenderHandler<SourceKey> {
     public static final Material SOURCE =
-            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
+            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "blocks/mana_still"));
 
     @Override
-    public void drawInGui(Minecraft minecraft, GuiGraphics guiGraphics, int x, int y, SourceKey stack) {
+    public void drawInGui(Minecraft minecraft, PoseStack poseStack, int x, int y, int zIndex, SourceKey stack) {
         Blitter.sprite(SOURCE.sprite())
                 // Most fluid texture have transparency, but we want an opaque slot
                 .blending(false)
                 .dest(x, y, 16, 16)
-                .blit(guiGraphics);
+                .blit(poseStack, 100 + zIndex);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public void drawOnBlockFace(
-            PoseStack poseStack,
-            MultiBufferSource buffers,
-            SourceKey what,
-            float scale,
-            int combinedLight,
-            Level level) {
+            PoseStack poseStack, MultiBufferSource buffers, SourceKey what, float scale, int combinedLight) {
         var sprite = SOURCE.sprite();
         poseStack.pushPose();
         // Push it out of the block face a bit to avoid z-fighting

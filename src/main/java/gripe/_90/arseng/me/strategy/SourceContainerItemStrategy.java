@@ -82,7 +82,9 @@ public class SourceContainerItemStrategy
 
     @Override
     public long extract(Context context, SourceKey what, long amount, Actionable mode) {
-        var stackCopy = context.getStack().copyWithCount(1);
+        var stackCopy = context.getStack().copy();
+        stackCopy.setCount(1);
+
         var extracted = (int) Math.min(amount, getSource(stackCopy));
 
         if (extracted > 0 && mode == Actionable.MODULATE) {
@@ -98,7 +100,8 @@ public class SourceContainerItemStrategy
 
     @Override
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
-        var stackCopy = context.getStack().copyWithCount(1);
+        var stackCopy = context.getStack().copy();
+        stackCopy.setCount(1);
         var inserted = (int) Math.min(amount, MAX_SOURCE - getSource(stackCopy));
 
         if (inserted > 0 && mode == Actionable.MODULATE) {

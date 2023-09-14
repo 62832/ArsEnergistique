@@ -67,7 +67,7 @@ public class SourceEnergyAdapter implements IAdvancedSourceTile {
 
     @Override
     public int removeSource(int source) {
-        throw new UnsupportedOperationException();
+        return 0;
     }
 
     @Override
