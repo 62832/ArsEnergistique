@@ -27,7 +27,7 @@ dependencyResolutionManagement {
             version("ae2", "15.0.11")
             library("ae2", "appeng", "appliedenergistics2-forge").versionRef("ae2")
 
-            version("ars", "4.3.0.72")
+            version("ars", "4.6.0.99")
             library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$minecraftVersion").versionRef("ars")
 
             library("geckolib", "software.bernie.geckolib", "geckolib-forge-$minecraftVersion").version("4.2.1")

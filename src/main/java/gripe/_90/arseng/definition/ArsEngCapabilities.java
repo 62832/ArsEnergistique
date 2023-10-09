@@ -70,21 +70,27 @@ public final class ArsEngCapabilities {
             event.addListener(provider::invalidate);
         }
 
-        event.addCapability(ArsEnergistique.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
+        var genericInvWrapper = new ICapabilityProvider() {
+            private LazyOptional<ISourceTile> sourceHandler = LazyOptional.empty();
+
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if (cap == SOURCE_TILE) {
-                    return be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                            .lazyMap(GenericStackSourceStorage::new)
-                            .cast();
+                    sourceHandler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                            .lazyMap(GenericStackSourceStorage::new);
                 }
 
-                // this probably shouldn't have an invalidator considering GENERIC_INTERNAL_INV doesn't typically
-                // provide invalidation anyway
-                return LazyOptional.empty();
+                return sourceHandler.cast();
             }
-        });
+
+            private void invalidate() {
+                sourceHandler.invalidate();
+            }
+        };
+
+        event.addCapability(ArsEnergistique.makeId("generic_inv_wrapper"), genericInvWrapper);
+        event.addListener(genericInvWrapper::invalidate);
     }
 }

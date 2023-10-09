@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.ConvertBuddingGoal;
@@ -40,7 +41,7 @@ public abstract class ConvertBuddingGoalMixin {
                             targetCluster,
                             AEBlocks.FLAWED_BUDDING_QUARTZ.block().defaultBlockState(),
                             3);
-            ParticleUtil.spawnTouchPacket(golem.level(), targetCluster, ParticleUtil.defaultParticleColorWrapper());
+            ParticleUtil.spawnTouchPacket(golem.level(), targetCluster, ParticleColor.defaultParticleColor());
         }
     }
 
