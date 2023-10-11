@@ -81,7 +81,7 @@ public class ArsEnergistique {
             bus.addListener(SourceCellHandler::initLED);
             bus.addListener(PortableSourceCellItem::initColours);
 
-            AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, new SourceRenderer());
+            AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, SourceRenderer.INSTANCE);
 
             var driveCell = ArsEnergistique.makeId("block/source_drive_cell");
             ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));

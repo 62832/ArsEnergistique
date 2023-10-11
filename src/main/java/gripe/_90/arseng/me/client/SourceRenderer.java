@@ -23,8 +23,11 @@ import gripe._90.arseng.me.key.SourceKeyType;
 
 @OnlyIn(Dist.CLIENT)
 public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
+    public static final SourceRenderer INSTANCE = new SourceRenderer();
     public static final Material SOURCE =
             new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
+
+    private SourceRenderer() {}
 
     @Override
     public void drawInGui(Minecraft minecraft, GuiGraphics guiGraphics, int x, int y, SourceKey stack) {
