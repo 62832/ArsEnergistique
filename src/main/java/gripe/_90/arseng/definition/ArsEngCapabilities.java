@@ -1,6 +1,8 @@
 package gripe._90.arseng.definition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,22 +73,24 @@ public final class ArsEngCapabilities {
         }
 
         var genericInvWrapper = new ICapabilityProvider() {
-            private LazyOptional<ISourceTile> sourceHandler = LazyOptional.empty();
+            private final Set<LazyOptional<ISourceTile>> sourceHandlers = new HashSet<>();
 
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if (cap == SOURCE_TILE) {
-                    sourceHandler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                    var handler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
                             .lazyMap(GenericStackSourceStorage::new);
+                    sourceHandlers.add(handler.cast());
+                    return handler.cast();
                 }
 
-                return sourceHandler.cast();
+                return LazyOptional.empty();
             }
 
             private void invalidate() {
-                sourceHandler.invalidate();
+                sourceHandlers.forEach(LazyOptional::invalidate);
             }
         };
 
