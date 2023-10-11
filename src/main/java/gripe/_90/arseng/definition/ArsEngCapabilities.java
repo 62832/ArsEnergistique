@@ -1,6 +1,8 @@
 package gripe._90.arseng.definition;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,21 +71,30 @@ public final class ArsEngCapabilities {
             event.addListener(provider::invalidate);
         }
 
-        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), new ICapabilityProvider() {
+        var genericInvWrapper = new ICapabilityProvider() {
+            private final Set<LazyOptional<ISourceTile>> sourceHandlers = new HashSet<>();
+
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if (cap == SOURCE_TILE) {
-                    return be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                            .lazyMap(GenericStackSourceStorage::new)
-                            .cast();
+                    var handler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                            .lazyMap(GenericStackSourceStorage::new);
+                    sourceHandlers.add(handler.cast());
+                    return handler.cast();
                 }
 
-                // this probably shouldn't have an invalidator considering GENERIC_INTERNAL_INV doesn't typically
-                // provide invalidation anyway
                 return LazyOptional.empty();
             }
-        });
+
+            private void invalidate() {
+                sourceHandlers.forEach(LazyOptional::invalidate);
+                sourceHandlers.clear();
+            }
+        };
+
+        event.addCapability(ArsEngCore.makeId("generic_inv_wrapper"), genericInvWrapper);
+        event.addListener(genericInvWrapper::invalidate);
     }
 }

@@ -20,23 +20,23 @@ import gripe._90.arseng.me.key.SourceKeyType;
 public class SourceCellInventory implements StorageCell {
     private static final String AMOUNT = "amount";
 
-    private final ISourceCellItem cellType;
-    private final ItemStack i;
+    private final ISourceCellItem cell;
+    private final ItemStack stack;
     private final ISaveProvider container;
 
     private long sourceAmount;
     private boolean isPersisted = true;
 
-    public SourceCellInventory(ISourceCellItem cellType, ItemStack o, ISaveProvider container) {
-        this.cellType = cellType;
-        this.i = o;
+    public SourceCellInventory(ISourceCellItem cell, ItemStack stack, ISaveProvider container) {
+        this.cell = cell;
+        this.stack = stack;
         this.container = container;
 
-        this.sourceAmount = getTag().getLong(AMOUNT);
+        sourceAmount = getTag().getLong(AMOUNT);
     }
 
     public long getTotalBytes() {
-        return cellType.getTotalBytes();
+        return cell.getTotalBytes();
     }
 
     public long getUsedBytes() {
@@ -45,11 +45,11 @@ public class SourceCellInventory implements StorageCell {
     }
 
     public long getMaxSource() {
-        return cellType.getTotalBytes() * SourceKeyType.TYPE.getAmountPerByte();
+        return cell.getTotalBytes() * SourceKeyType.TYPE.getAmountPerByte();
     }
 
     private CompoundTag getTag() {
-        return i.getOrCreateTag();
+        return stack.getOrCreateTag();
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SourceCellInventory implements StorageCell {
 
     @Override
     public double getIdleDrain() {
-        return cellType.getIdleDrain();
+        return cell.getIdleDrain();
     }
 
     protected void saveChanges() {
@@ -145,12 +145,7 @@ public class SourceCellInventory implements StorageCell {
     }
 
     @Override
-    public boolean isPreferredStorageFor(AEKey what, IActionSource source) {
-        return what instanceof SourceKey;
-    }
-
-    @Override
     public Component getDescription() {
-        return i.getHoverName();
+        return stack.getHoverName();
     }
 }
