@@ -37,10 +37,10 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
     @Override
     public MEStorage createWrapper(boolean extractableOnly, Runnable injectOrExtractCallback) {
         var sourceTile = apiCache.find(fromSide);
-        return sourceTile != null ? new SourceStorageAdapter(sourceTile, injectOrExtractCallback) : null;
+        return sourceTile != null ? new Adaptor(sourceTile, injectOrExtractCallback) : null;
     }
 
-    private record SourceStorageAdapter(ISourceTile sourceTile, Runnable injectOrExtractCallback) implements MEStorage {
+    private record Adaptor(ISourceTile sourceTile, Runnable injectOrExtractCallback) implements MEStorage {
         @Override
         public long insert(AEKey what, long amount, Actionable mode, IActionSource actionSource) {
             if (!(what instanceof SourceKey)) {

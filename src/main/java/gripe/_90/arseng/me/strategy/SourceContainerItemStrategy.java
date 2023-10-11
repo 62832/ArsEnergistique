@@ -55,7 +55,7 @@ public class SourceContainerItemStrategy
 
         var beTag = sourceJar.getOrCreateTag().getCompound("BlockEntityTag");
         beTag.putInt("source", Math.min(MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0)));
-        beTag.putIntArray("items", new int[] {});
+        beTag.putIntArray("items", new int[0]);
 
         sourceJar.getOrCreateTag().put("BlockEntityTag", beTag);
     }

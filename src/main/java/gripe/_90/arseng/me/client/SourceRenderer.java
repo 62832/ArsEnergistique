@@ -21,6 +21,10 @@ import gripe._90.arseng.me.key.SourceKeyType;
 
 @OnlyIn(Dist.CLIENT)
 public class SourceRenderer implements IAEStackRenderHandler<SourceKey> {
+    public static final SourceRenderer INSTANCE = new SourceRenderer();
+
+    private SourceRenderer() {}
+
     public static final Material SOURCE =
             new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "blocks/mana_still"));
 
