@@ -91,6 +91,7 @@ public final class ArsEngCapabilities {
 
             private void invalidate() {
                 sourceHandlers.forEach(LazyOptional::invalidate);
+                sourceHandlers.clear();
             }
         };
 

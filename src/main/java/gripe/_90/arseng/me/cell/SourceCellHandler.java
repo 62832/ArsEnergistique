@@ -42,10 +42,8 @@ public class SourceCellHandler implements ICellHandler {
     public void addCellInformationToTooltip(ItemStack is, List<Component> lines) {
         var handler = getCellInventory(is, null);
 
-        if (handler == null) {
-            return;
+        if (handler != null) {
+            lines.add(Tooltips.bytesUsed(handler.getUsedBytes(), handler.getTotalBytes()));
         }
-
-        lines.add(Tooltips.bytesUsed(handler.getUsedBytes(), handler.getTotalBytes()));
     }
 }
