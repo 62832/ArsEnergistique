@@ -22,6 +22,10 @@ public class SourceContainerItemStrategy
         implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
     public static final int MAX_SOURCE = 10000;
 
+    public static final SourceContainerItemStrategy INSTANCE = new SourceContainerItemStrategy();
+
+    private SourceContainerItemStrategy() {}
+
     private boolean isSourceJar(ItemStack stack) {
         return stack != null
                 && stack.getItem() instanceof BlockItem blockItem
