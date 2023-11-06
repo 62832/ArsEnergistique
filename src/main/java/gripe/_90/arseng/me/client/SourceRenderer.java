@@ -21,7 +21,7 @@ import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
     public static final SourceRenderer INSTANCE = new SourceRenderer();
-    public static final Material SOURCE =
+    private static final Material SOURCE =
             new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
 
     private SourceRenderer() {}
