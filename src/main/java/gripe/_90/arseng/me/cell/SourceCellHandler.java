@@ -10,16 +10,12 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.core.AEConfig;
 import appeng.core.localization.Tooltips;
-import appeng.items.storage.BasicStorageCell;
 import appeng.items.storage.StorageCellTooltipComponent;
-
-import gripe._90.arseng.definition.ArsEngItems;
 
 public class SourceCellHandler implements ICellHandler {
     public static final SourceCellHandler INSTANCE = new SourceCellHandler();
@@ -35,10 +31,6 @@ public class SourceCellHandler implements ICellHandler {
     @Override
     public SourceCellInventory getCellInventory(ItemStack is, @Nullable ISaveProvider container) {
         return isCell(is) ? new SourceCellInventory((ISourceCellItem) is.getItem(), is, container) : null;
-    }
-
-    public static void initLED(RegisterColorHandlersEvent.Item event) {
-        ArsEngItems.getCells().forEach(cell -> event.register(BasicStorageCell::getColor, cell));
     }
 
     void addCellInformationToTooltip(ItemStack is, List<Component> lines) {

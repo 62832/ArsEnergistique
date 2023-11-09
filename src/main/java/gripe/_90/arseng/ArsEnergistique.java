@@ -26,6 +26,7 @@ import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.item.PortableSourceCellItem;
+import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.me.cell.CreativeSourceCellHandler;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 import gripe._90.arseng.me.client.SourceRenderer;
@@ -86,7 +87,7 @@ public class ArsEnergistique {
     private static class Client {
         private static void init() {
             var bus = FMLJavaModLoadingContext.get().getModEventBus();
-            bus.addListener(SourceCellHandler::initLED);
+            bus.addListener(SourceCellItem::initColours);
             bus.addListener(PortableSourceCellItem::initColours);
 
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, SourceRenderer.INSTANCE);

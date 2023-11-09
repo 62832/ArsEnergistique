@@ -80,7 +80,7 @@ public class SourceCellInventory implements StorageCell {
         return cell.getUpgrades(stack);
     }
 
-    protected void saveChanges() {
+    private void saveChanges() {
         isPersisted = false;
 
         if (container != null) {
