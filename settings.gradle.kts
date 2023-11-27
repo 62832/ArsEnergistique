@@ -14,7 +14,7 @@ dependencyResolutionManagement {
         create("libs") {
             plugin("forge", "net.minecraftforge.gradle").version("6.0.+")
             plugin("mixin", "org.spongepowered.mixin").version("0.7.+")
-            plugin("spotless", "com.diffplug.spotless").version("6.20.0")
+            plugin("spotless", "com.diffplug.spotless").version("6.22.0")
 
             val minecraftVersion = "1.20.1"
             version("minecraft", minecraftVersion)
