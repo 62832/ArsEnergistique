@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -46,16 +47,17 @@ public class ArsEnergistique {
         return new ResourceLocation(MODID, id);
     }
 
+    private static final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
     @SuppressWarnings("UnstableApiUsage")
     public ArsEnergistique() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ArsEngConfig.SPEC);
 
-        var bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(ArsEngItems::register);
-        bus.addListener(ArsEngBlocks::register);
-        bus.addListener(ArsEngCreativeTab::register);
+        modEventBus.addListener(ArsEngItems::register);
+        modEventBus.addListener(ArsEngBlocks::register);
+        modEventBus.addListener(ArsEngCreativeTab::register);
 
-        bus.addListener(SourceKeyType::register);
+        modEventBus.addListener(SourceKeyType::register);
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
         StorageCells.addCellHandler(CreativeSourceCellHandler.INSTANCE);
 
@@ -66,7 +68,7 @@ public class ArsEnergistique {
             Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.PortableCells.getTranslationKey());
         });
 
-        bus.addListener(ArsEngCapabilities::register);
+        modEventBus.addListener(ArsEngCapabilities::register);
         MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, ArsEngCapabilities::attach);
 
         StackWorldBehaviors.registerImportStrategy(SourceKeyType.TYPE, SourceStorageImportStrategy::new);
@@ -76,7 +78,7 @@ public class ArsEnergistique {
         ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, SourceContainerItemStrategy.INSTANCE);
         GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
 
-        bus.addListener(ArsEngItems::initP2PAttunement);
+        modEventBus.addListener(ArsEngItems::initP2PAttunement);
         MinecraftForge.EVENT_BUS.addListener(SpellP2PTunnelPart::onSpellHit);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -86,9 +88,8 @@ public class ArsEnergistique {
 
     private static class Client {
         private static void init() {
-            var bus = FMLJavaModLoadingContext.get().getModEventBus();
-            bus.addListener(SourceCellItem::initColours);
-            bus.addListener(PortableSourceCellItem::initColours);
+            modEventBus.addListener(SourceCellItem::initColours);
+            modEventBus.addListener(PortableSourceCellItem::initColours);
 
             AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, SourceRenderer.INSTANCE);
 

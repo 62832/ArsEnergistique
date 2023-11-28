@@ -15,9 +15,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.BlockHitResult;
 
+import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
-import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.items.parts.PartModels;
 import appeng.parts.p2p.P2PModels;
 import appeng.parts.p2p.P2PTunnelPart;
@@ -52,8 +52,8 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
         if (event.getHitResult() instanceof BlockHitResult blockHit) {
             var be = event.getProjectile().level().getBlockEntity(blockHit.getBlockPos());
 
-            if (be instanceof CableBusBlockEntity cableBus) {
-                var part = cableBus.getPart(blockHit.getDirection());
+            if (be instanceof IPartHost partHost) {
+                var part = partHost.getPart(blockHit.getDirection());
 
                 if (part instanceof SpellP2PTunnelPart spellP2P && spellP2P.equals(spellP2P.getInput())) {
                     var outputs = new ArrayList<>(spellP2P.getOutputs());

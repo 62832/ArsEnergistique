@@ -18,7 +18,7 @@ public class SourceKeyType extends AEKeyType {
     public static final Component SOURCE = Component.translatable("ars_nouveau.category.source");
     public static final AEKeyType TYPE = new SourceKeyType();
 
-    public SourceKeyType() {
+    private SourceKeyType() {
         super(ArsEnergistique.makeId("source"), SourceKey.class, SOURCE);
     }
 

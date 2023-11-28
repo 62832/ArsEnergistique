@@ -12,13 +12,7 @@ import appeng.api.storage.cells.StorageCell;
 
 import gripe._90.arseng.me.key.SourceKey;
 
-public class CreativeSourceCellInventory implements StorageCell {
-    private final ItemStack i;
-
-    public CreativeSourceCellInventory(ItemStack o) {
-        this.i = o;
-    }
-
+public record CreativeSourceCellInventory(ItemStack i) implements StorageCell {
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
         return what instanceof SourceKey ? amount : 0;

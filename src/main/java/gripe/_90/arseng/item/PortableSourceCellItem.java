@@ -26,6 +26,7 @@ import appeng.menu.me.common.MEStorageMenu;
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.cell.ISourceCellItem;
+import gripe._90.arseng.me.cell.SourceCellHandler;
 
 public class PortableSourceCellItem extends AbstractPortableCell implements ISourceCellItem {
     private final StorageTier tier;
@@ -57,13 +58,13 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag advancedTooltips) {
         super.appendHoverText(stack, level, lines, advancedTooltips);
-        addCellInformationToTooltip(stack, lines);
+        SourceCellHandler.INSTANCE.addCellInformationToTooltip(stack, lines);
     }
 
     @NotNull
     @Override
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        return getCellTooltipImage(stack);
+        return SourceCellHandler.INSTANCE.getTooltipImage(stack);
     }
 
     @Override

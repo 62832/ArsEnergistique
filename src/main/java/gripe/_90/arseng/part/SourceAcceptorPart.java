@@ -18,13 +18,13 @@ import appeng.parts.PartModel;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngCapabilities;
-import gripe._90.arseng.me.energy.SourceEnergyAdapter;
+import gripe._90.arseng.me.energy.SourceEnergyAdaptor;
 
 public class SourceAcceptorPart extends AEBasePart implements IExternalPowerSink {
     @PartModels
     private static final IPartModel MODEL = new PartModel(ArsEnergistique.makeId("part/source_acceptor"));
 
-    private final SourceEnergyAdapter adapter = new SourceEnergyAdapter(this, this);
+    private final SourceEnergyAdaptor adapter = new SourceEnergyAdaptor(this, this);
 
     public SourceAcceptorPart(IPartItem<?> partItem) {
         super(partItem);

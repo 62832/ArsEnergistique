@@ -29,7 +29,7 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
     private final Direction fromSide;
 
     public SourceExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        this.apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
+        apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
         this.fromSide = fromSide;
     }
 

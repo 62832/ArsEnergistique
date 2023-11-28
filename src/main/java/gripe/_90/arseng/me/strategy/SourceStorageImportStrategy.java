@@ -25,7 +25,7 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
     private final Direction fromSide;
 
     public SourceStorageImportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        this.apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
+        apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
         this.fromSide = fromSide;
     }
 

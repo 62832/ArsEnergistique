@@ -27,6 +27,7 @@ import appeng.items.storage.StorageTier;
 
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.cell.ISourceCellItem;
+import gripe._90.arseng.me.cell.SourceCellHandler;
 
 public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
     private final StorageTier tier;
@@ -103,13 +104,13 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
     @Override
     public void appendHoverText(
             @NotNull ItemStack stack, Level level, @NotNull List<Component> lines, @NotNull TooltipFlag advTooltips) {
-        addCellInformationToTooltip(stack, lines);
+        SourceCellHandler.INSTANCE.addCellInformationToTooltip(stack, lines);
     }
 
     @NotNull
     @Override
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        return getCellTooltipImage(stack);
+        return SourceCellHandler.INSTANCE.getTooltipImage(stack);
     }
 
     public static void initColours(RegisterColorHandlersEvent.Item event) {

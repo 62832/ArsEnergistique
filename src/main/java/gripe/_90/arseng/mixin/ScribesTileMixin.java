@@ -26,10 +26,8 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.capabilities.Capabilities;
 
-import gripe._90.arseng.block.entity.PlayerAwareScribesTile;
-
 @Mixin(value = ScribesTile.class, remap = false)
-public abstract class ScribesTileMixin extends ModdedTile implements PlayerAwareScribesTile {
+public abstract class ScribesTileMixin extends ModdedTile {
     @Shadow
     public List<ItemStack> consumedStacks;
 

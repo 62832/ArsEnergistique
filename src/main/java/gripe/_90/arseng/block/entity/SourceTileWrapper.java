@@ -2,17 +2,7 @@ package gripe._90.arseng.block.entity;
 
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 
-public class SourceTileWrapper implements IAdvancedSourceTile {
-    private final ISourceTile tile;
-    private final boolean relayTake;
-    private final boolean sourcelinkGive;
-
-    public SourceTileWrapper(ISourceTile tile, boolean relayCanTake, boolean sourcelinkCanGive) {
-        this.tile = tile;
-        relayTake = relayCanTake;
-        sourcelinkGive = sourcelinkCanGive;
-    }
-
+public record SourceTileWrapper(ISourceTile tile, boolean takeFrom, boolean giveTo) implements IAdvancedSourceTile {
     @Override
     public int getTransferRate() {
         return tile.getTransferRate();
@@ -55,11 +45,11 @@ public class SourceTileWrapper implements IAdvancedSourceTile {
 
     @Override
     public boolean relayCanTakePower() {
-        return relayTake;
+        return takeFrom;
     }
 
     @Override
     public boolean sourcelinksCanProvidePower() {
-        return sourcelinkGive;
+        return giveTo;
     }
 }

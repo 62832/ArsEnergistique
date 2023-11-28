@@ -9,13 +9,7 @@ import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public class GenericStackSourceStorage implements IAdvancedSourceTile {
-    private final GenericInternalInventory inv;
-
-    public GenericStackSourceStorage(GenericInternalInventory inv) {
-        this.inv = inv;
-    }
-
+public record GenericStackSourceStorage(GenericInternalInventory inv) implements IAdvancedSourceTile {
     @Override
     public int getTransferRate() {
         return Integer.MAX_VALUE;

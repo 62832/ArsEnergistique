@@ -33,7 +33,7 @@ public class SourceCellHandler implements ICellHandler {
         return isCell(is) ? new SourceCellInventory((ISourceCellItem) is.getItem(), is, container) : null;
     }
 
-    void addCellInformationToTooltip(ItemStack is, List<Component> lines) {
+    public void addCellInformationToTooltip(ItemStack is, List<Component> lines) {
         var handler = getCellInventory(is, null);
 
         if (handler != null) {
@@ -41,7 +41,7 @@ public class SourceCellHandler implements ICellHandler {
         }
     }
 
-    Optional<TooltipComponent> getTooltipImage(ItemStack is) {
+    public Optional<TooltipComponent> getTooltipImage(ItemStack is) {
         var handler = getCellInventory(is, null);
         if (handler == null) return Optional.empty();
 

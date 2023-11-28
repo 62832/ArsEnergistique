@@ -8,21 +8,8 @@ import appeng.blockentity.powersink.IExternalPowerSink;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngConfig;
 
-public class SourceEnergyAdapter implements IAdvancedSourceTile {
+public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) implements IAdvancedSourceTile {
     private static final double AE_PER_SOURCE = ArsEngConfig.AE_PER_SOURCE.get();
-
-    private final IExternalPowerSink sink;
-    private final IActionHost host;
-
-    public SourceEnergyAdapter(IExternalPowerSink sink, IActionHost host) {
-        this.sink = sink;
-        this.host = host;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 
     @Override
     public int getTransferRate() {
