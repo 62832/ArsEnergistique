@@ -52,7 +52,6 @@ public abstract class RelaySplitterTileMixin extends AbstractSourceMachine {
         if (posList.isEmpty()) return;
 
         var stale = new ArrayList<BlockPos>();
-        var ratePer = getTransferRate() / posList.size();
 
         for (var pos : posList) {
             if (!Objects.requireNonNull(level).isLoaded(pos)) continue;
@@ -64,21 +63,19 @@ public abstract class RelaySplitterTileMixin extends AbstractSourceMachine {
                 continue;
             }
 
-            var cap = be.getCapability(ArsEngCapabilities.SOURCE_TILE, IAdvancedSourceTile.getDirTo(getBlockPos(), pos))
-                    .resolve();
+            var cap =
+                    be.getCapability(ArsEngCapabilities.SOURCE_TILE, IAdvancedSourceTile.getDirTo(getBlockPos(), pos));
+            cap.ifPresent(sourceTile -> {
+                var fromTile = sendSource ? this : sourceTile;
+                var toTile = sendSource ? sourceTile : this;
 
-            if (cap.isPresent()) {
-                var fromTile = sendSource ? this : cap.get();
-                var toTile = sendSource ? cap.get() : this;
-
-                if (transferSource(fromTile, toTile, ratePer) > 0) {
+                if (transferSource(fromTile, toTile, getTransferRate() / posList.size()) > 0) {
                     var fromPos = sendSource ? worldPosition : pos;
                     var toPos = sendSource ? pos : worldPosition;
                     createParticles(fromPos, toPos);
                 }
-            } else {
-                stale.add(pos);
-            }
+            });
+            cap.addListener(sourceTile -> stale.add(pos));
         }
 
         for (var pos : stale) {

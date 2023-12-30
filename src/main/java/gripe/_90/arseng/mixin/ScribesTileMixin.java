@@ -2,6 +2,7 @@ package gripe._90.arseng.mixin;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,18 +53,24 @@ public abstract class ScribesTileMixin extends ModdedTile {
             var be = level.getBlockEntity(pos);
 
             if (be != null) {
-                var centreCap = be.getCapability(Capabilities.STORAGE).resolve();
+                var hasExtracted = new AtomicBoolean(false);
 
-                if (centreCap.isPresent()) {
-                    arseng$extract(centreCap.get(), pos);
+                be.getCapability(Capabilities.STORAGE).ifPresent(storage -> {
+                    arseng$extract(storage, pos);
+                    hasExtracted.set(true);
+                });
+
+                if (hasExtracted.get()) {
                     return;
                 }
 
                 for (var side : Direction.values()) {
-                    var sidedCap = be.getCapability(Capabilities.STORAGE, side).resolve();
+                    be.getCapability(Capabilities.STORAGE, side).ifPresent(storage -> {
+                        arseng$extract(storage, pos);
+                        hasExtracted.set(true);
+                    });
 
-                    if (sidedCap.isPresent()) {
-                        arseng$extract(sidedCap.get(), pos);
+                    if (hasExtracted.get()) {
                         return;
                     }
                 }
