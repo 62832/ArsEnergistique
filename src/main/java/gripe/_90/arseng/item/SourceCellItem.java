@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
@@ -31,10 +32,12 @@ import gripe._90.arseng.me.cell.SourceCellHandler;
 
 public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
     private final StorageTier tier;
+    private final ItemLike housing;
 
-    public SourceCellItem(Properties properties, StorageTier tier) {
+    public SourceCellItem(Properties properties, StorageTier tier, ItemLike housing) {
         super(properties);
         this.tier = tier;
+        this.housing = housing;
     }
 
     public StorageTier getTier() {
@@ -89,7 +92,7 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
                         playerInv.placeItemBackInInventory(upgrade);
                     }
 
-                    playerInv.placeItemBackInInventory(ArsEngItems.SOURCE_CELL_HOUSING.stack());
+                    playerInv.placeItemBackInInventory(housing.asItem().getDefaultInstance());
 
                     return true;
                 } else {
