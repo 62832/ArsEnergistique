@@ -41,6 +41,9 @@ jobs:
 
           version: ${{ steps.build.outputs.MOD_VERSION }}
           game-versions: ${{ steps.build.outputs.MINECRAFT_VERSION }}
+          loaders: |
+            forge
+            neoforge
           dependencies: |
             ae2(required){curseforge:223794}{modrinth:XxWD5pD3}
             ars_nouveau(required){curseforge:401955}{modrinth:TKB6INcv}
