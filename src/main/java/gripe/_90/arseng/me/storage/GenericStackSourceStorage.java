@@ -87,6 +87,6 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
 
     @Override
     public boolean sourcelinksCanProvidePower() {
-        return true;
+        return false;
     }
 }
