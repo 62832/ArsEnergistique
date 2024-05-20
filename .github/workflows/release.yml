@@ -27,7 +27,7 @@ jobs:
         id: build
         env:
           ARSENG_VERSION: ${{ github.event.release.tag_name }}
-        run: ./gradlew releaseInfo build
+        run: ./gradlew build
       - name: Publish release files
         uses: Kir-Antipov/mc-publish@4db8bd126f74d5e143822181a2b1201308e2c796
         with:
@@ -39,8 +39,7 @@ jobs:
           modrinth-id: IJI3QuK8
           modrinth-token: ${{ secrets.MODRINTH_API_KEY }}
 
-          version: ${{ steps.build.outputs.MOD_VERSION }}
-          game-versions: ${{ steps.build.outputs.MINECRAFT_VERSION }}
+          game-versions: 1.20.1
           loaders: |
             forge
             neoforge

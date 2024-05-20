@@ -1,72 +1,24 @@
 plugins {
     eclipse
     idea
-    alias(libs.plugins.forge)
+    alias(libs.plugins.neogradle)
     alias(libs.plugins.mixin)
+    alias(libs.plugins.parchment)
     alias(libs.plugins.spotless)
 }
 
 val modId = "arseng"
 
-version = (System.getenv("ARSENG_VERSION") ?: "v0.0.0").substring(1)
+version = System.getenv("ARSENG_VERSION") ?: "0.0.0"
 group = "gripe.90"
 base.archivesName.set(modId)
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 
-sourceSets {
-    main {
-        resources.srcDir("src/generated/resources")
-    }
-
-    create("data") {
-        val main = main.get()
-        compileClasspath += main.compileClasspath + main.output
-        runtimeClasspath += main.runtimeClasspath + main.output
-    }
-}
-
-minecraft {
-    mappings("official", libs.versions.minecraft.get())
-
-    copyIdeResources.set(true)
-
-    runs {
-        configureEach {
-            workingDirectory(project.file("run"))
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "info")
-
-            mods {
-                create(modId) {
-                    source(sourceSets.main.get())
-                }
-            }
-        }
-
-        create("client")
-
-        create("server") {
-            args("--nogui")
-        }
-
-        create("data") {
-            args(
-                "--mod", modId,
-                "--all",
-                "--output", file("src/generated/resources/"),
-                "--existing", file("src/main/resources/"))
-
-            mods {
-                getByName(modId) {
-                    source(sourceSets.getByName("data"))
-                }
-            }
-        }
-    }
-}
-
 repositories {
+    mavenLocal()
+    mavenCentral()
+
     maven {
         name = "ModMaven (K4U-NL)"
         url = uri("https://modmaven.dev/")
@@ -97,11 +49,60 @@ repositories {
     maven {
         name = "GeckoLib"
         url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources.srcDir("src/generated/resources")
     }
 
-    maven {
-        name = "JitPack"
-        url = uri("https://jitpack.io")
+    create("data") {
+        val main = main.get()
+        compileClasspath += main.compileClasspath + main.output
+        runtimeClasspath += main.runtimeClasspath + main.output
+    }
+}
+
+minecraft {
+    mappings("parchment", "2023.09.03-1.20.1")
+    copyIdeResources.set(true)
+
+    runs {
+        configureEach {
+            workingDirectory(project.file("run"))
+            property("forge.logging.markers", "REGISTRIES")
+            property("forge.logging.console.level", "debug")
+
+            mods {
+                create(modId) {
+                    source(sourceSets.main.get())
+                }
+            }
+        }
+
+        create("client")
+
+        create("server") {
+            workingDirectory(file("run/server"))
+        }
+
+        create("data") {
+            args(
+                "--mod", modId,
+                "--all",
+                "--output", file("src/generated/resources/"),
+                "--existing", file("src/main/resources/"))
+
+            mods {
+                getByName(modId) {
+                    source(sourceSets.getByName("data"))
+                }
+            }
+        }
     }
 }
 
@@ -127,32 +128,14 @@ mixin {
 }
 
 tasks {
-    register("releaseInfo") {
-        doLast {
-            val output = System.getenv("GITHUB_OUTPUT")
-
-            if (!output.isNullOrEmpty()) {
-                val outputFile = File(output)
-                outputFile.appendText("MOD_VERSION=$version\n")
-                outputFile.appendText("MINECRAFT_VERSION=${libs.versions.minecraft.get()}\n")
-            }
-        }
-    }
-
     processResources {
         exclude("**/.cache")
 
-        val replaceProperties = mapOf(
-            "version" to project.version,
-            "fmlVersion" to "[${libs.versions.loader.get()},)",
-            "ae2Version" to "(,${libs.versions.ae2.get().substringBefore('.').toInt() + 1})",
-            "arsVersion" to "[${libs.versions.ars.get().substringBeforeLast('.')},)"
-        )
-
-        inputs.properties(replaceProperties)
+        val props = mapOf("version" to version)
+        inputs.properties(props)
 
         filesMatching("META-INF/mods.toml") {
-            expand(replaceProperties)
+            expand(props)
         }
     }
 
