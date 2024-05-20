@@ -45,15 +45,15 @@ public abstract class ConvertBuddingGoalMixin {
         }
     }
 
+    // spotless:off
     @Inject(
             method = "start",
-            at =
-                    @At(
-                            value = "FIELD",
-                            target =
-                                    "Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem;goalState:Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem$AmethystGolemGoalState;",
-                            remap = false),
+            at = @At(
+                    value = "FIELD",
+                    target = "Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem;goalState:Lcom/hollingsworth/arsnouveau/common/entity/AmethystGolem$AmethystGolemGoalState;",
+                    remap = false),
             remap = true)
+    // spotless:on
     private void targetCertus(CallbackInfo ci) {
         for (var pos : ((CertusGolem) golem).arseng$getCertusBlocks()) {
             if (golem.level().getBlockState(pos).getBlock() == AEBlocks.QUARTZ_BLOCK.block()) {
