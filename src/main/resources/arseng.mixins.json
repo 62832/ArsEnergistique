@@ -3,6 +3,7 @@
   "required": true,
   "package": "gripe._90.arseng.mixin",
   "refmap": "arseng.refmap.json",
+  "plugin": "gripe._90.arseng.mixin.Plugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AmethystGolemMixin",
@@ -11,7 +12,8 @@
     "RelaySplitterTileMixin",
     "RelayTileMixin",
     "ScribesTileMixin",
-    "SourceUtilMixin"
+    "SourceUtilMixin",
+    "aecapfix.ArsEngCapabilitiesMixin"
   ],
   "client": [],
   "injectors": {

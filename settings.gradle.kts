@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 
             version("ae2", "15.2.1")
             library("ae2", "appeng", "appliedenergistics2-forge").versionRef("ae2")
+            library("aecapfix", "curse.maven", "aecapfix-914685").version("5017517")
 
             version("ars", "4.6.0.99")
             library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$minecraftVersion").versionRef("ars")

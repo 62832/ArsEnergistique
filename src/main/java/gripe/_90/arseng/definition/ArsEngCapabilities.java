@@ -1,8 +1,6 @@
 package gripe._90.arseng.definition;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,29 +71,20 @@ public final class ArsEngCapabilities {
         }
 
         var genericInvWrapper = new ICapabilityProvider() {
-            private final Set<LazyOptional<ISourceTile>> sourceHandlers = new HashSet<>();
-
             @SuppressWarnings("UnstableApiUsage")
             @NotNull
             @Override
             public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if (cap == SOURCE_TILE) {
-                    var handler = be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
-                            .lazyMap(GenericStackSourceStorage::new);
-                    sourceHandlers.add(handler.cast());
-                    return handler.cast();
+                    return be.getCapability(Capabilities.GENERIC_INTERNAL_INV, side)
+                            .lazyMap(GenericStackSourceStorage::new)
+                            .cast();
                 }
 
                 return LazyOptional.empty();
             }
-
-            private void invalidate() {
-                sourceHandlers.forEach(LazyOptional::invalidate);
-                sourceHandlers.clear();
-            }
         };
 
         event.addCapability(ArsEnergistique.makeId("generic_inv_wrapper"), genericInvWrapper);
-        event.addListener(genericInvWrapper::invalidate);
     }
 }

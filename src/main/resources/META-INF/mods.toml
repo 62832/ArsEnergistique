@@ -23,6 +23,13 @@ side = "BOTH"
 [[dependencies]]
 modId = "ars_nouveau"
 mandatory = true
-versionRange = "[4.6,)"
+versionRange = "[4,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies]]
+modId = "aecapfix"
+mandatory = false
+versionRange = "[0.8,)"
+ordering = "AFTER"
+side = "SERVER"

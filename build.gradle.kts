@@ -117,6 +117,7 @@ dependencies {
     runtimeOnly(fg.deobf(libs.mixin.extras.get()))
     runtimeOnly(fg.deobf(libs.curios.get()))
     runtimeOnly(fg.deobf(libs.patchouli.get()))
+    implementation(fg.deobf(libs.aecapfix.get()))
 
     runtimeOnly(fg.deobf(libs.jei.get()))
     runtimeOnly(fg.deobf(libs.jade.get()))
