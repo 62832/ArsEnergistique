@@ -17,6 +17,7 @@ import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 
 import gripe._90.arseng.ArsEnergistique;
+import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.energy.SourceEnergyAdaptor;
 
@@ -25,6 +26,7 @@ public class SourceAcceptorPart extends AEBasePart implements IExternalPowerSink
     private static final IPartModel MODEL = new PartModel(ArsEnergistique.makeId("part/source_acceptor"));
 
     private final SourceEnergyAdaptor adapter = new SourceEnergyAdaptor(this, this);
+    private final LazyOptional<IAdvancedSourceTile> adaptorHolder = LazyOptional.of(() -> adapter);
 
     public SourceAcceptorPart(IPartItem<?> partItem) {
         super(partItem);
@@ -49,7 +51,7 @@ public class SourceAcceptorPart extends AEBasePart implements IExternalPowerSink
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability) {
-        return ArsEngCapabilities.SOURCE_TILE.orEmpty(capability, LazyOptional.of(() -> adapter));
+        return ArsEngCapabilities.SOURCE_TILE.orEmpty(capability, adaptorHolder);
     }
 
     @Override

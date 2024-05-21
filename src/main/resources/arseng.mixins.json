@@ -13,7 +13,8 @@
     "RelayTileMixin",
     "ScribesTileMixin",
     "SourceUtilMixin",
-    "aecapfix.ArsEngCapabilitiesMixin"
+    "aecapfix.ArsEngCapabilitiesMixin",
+    "aecapfix.SourceAcceptorPartMixin"
   ],
   "client": [],
   "injectors": {
