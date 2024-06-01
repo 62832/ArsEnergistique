@@ -24,10 +24,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
     @Override
     public int getSource() {
         var max = getMaxSource();
-        // shows up as full a lot sooner than it should, so that things stop sending unneeded power
-        // also, we use our own conversion so power units is AE
-        var earlyCap = sink.getExternalPowerDemand(PowerUnits.AE, Math.max(0, max - 1000 * AE_PER_SOURCE));
-        return (int) Math.min(max, max - (earlyCap / AE_PER_SOURCE) + 1000);
+        return (int) Math.min(max, max - (sink.getExternalPowerDemand(PowerUnits.AE, max) / AE_PER_SOURCE) + 1000);
     }
 
     @Override
