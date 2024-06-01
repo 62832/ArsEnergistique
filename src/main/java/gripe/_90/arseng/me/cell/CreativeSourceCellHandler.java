@@ -20,8 +20,9 @@ public class CreativeSourceCellHandler implements ICellHandler {
         return is != null && is.getItem() instanceof CreativeSourceCellItem;
     }
 
+    @Nullable
     @Override
-    public @Nullable StorageCell getCellInventory(ItemStack is, @Nullable ISaveProvider host) {
+    public StorageCell getCellInventory(ItemStack is, @Nullable ISaveProvider host) {
         return isCell(is) ? new CreativeSourceCellInventory(is) : null;
     }
 }

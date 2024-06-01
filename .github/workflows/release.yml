@@ -44,3 +44,4 @@ jobs:
           dependencies: |
             ae2(required){curseforge:223794}{modrinth:XxWD5pD3}
             ars_nouveau(required){curseforge:401955}{modrinth:TKB6INcv}
+            aecapfix(optional){curseforge:914685}{modrinth:LkfFGNnA}

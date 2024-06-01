@@ -2,7 +2,6 @@ package gripe._90.arseng;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +14,9 @@ import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.AEStackRendering;
 import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
 import appeng.parts.automation.StackWorldBehaviors;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
@@ -48,6 +50,13 @@ public class ArsEnergistique {
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
         StorageCells.addCellHandler(CreativeSourceCellHandler.INSTANCE);
 
+        ArsEngItems.getCells()
+                .forEach(cell -> Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.StorageCells.getTranslationKey()));
+        ArsEngItems.getPortables().forEach(cell -> {
+            Upgrades.add(AEItems.ENERGY_CARD, cell, 2, GuiText.PortableCells.getTranslationKey());
+            Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.PortableCells.getTranslationKey());
+        });
+
         bus.addListener(ArsEngCapabilities::register);
         MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, ArsEngCapabilities::attach);
 
@@ -55,7 +64,7 @@ public class ArsEnergistique {
         StackWorldBehaviors.registerExportStrategy(SourceKeyType.TYPE, SourceStorageExportStrategy::new);
         StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
 
-        ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, new SourceContainerItemStrategy());
+        ContainerItemStrategy.register(SourceKeyType.TYPE, SourceKey.class, SourceContainerItemStrategy.INSTANCE);
         GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceContainerItemStrategy.MAX_SOURCE);
 
         bus.addListener(ArsEngItems::initP2PAttunement);
@@ -66,7 +75,6 @@ public class ArsEnergistique {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static class Client {
         private static void init() {
             var bus = FMLJavaModLoadingContext.get().getModEventBus();

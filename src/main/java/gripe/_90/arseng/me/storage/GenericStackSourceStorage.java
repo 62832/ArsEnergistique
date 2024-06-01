@@ -93,6 +93,6 @@ public class GenericStackSourceStorage implements IAdvancedSourceTile {
 
     @Override
     public boolean sourcelinksCanProvidePower() {
-        return true;
+        return false;
     }
 }

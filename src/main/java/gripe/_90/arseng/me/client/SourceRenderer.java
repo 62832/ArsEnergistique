@@ -10,8 +10,6 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import appeng.api.client.IAEStackRenderHandler;
 import appeng.client.gui.style.Blitter;
@@ -19,13 +17,12 @@ import appeng.client.gui.style.Blitter;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
-@OnlyIn(Dist.CLIENT)
 public class SourceRenderer implements IAEStackRenderHandler<SourceKey> {
     public static final SourceRenderer INSTANCE = new SourceRenderer();
 
     private SourceRenderer() {}
 
-    public static final Material SOURCE =
+    private static final Material SOURCE =
             new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "blocks/mana_still"));
 
     @Override

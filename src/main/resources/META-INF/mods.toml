@@ -13,16 +13,23 @@ authors="90, dkmk100"
 description='''Bringing magic to the digital age.
 Adds digital source storage, P2P transport and various other cross-compatibility improvements to Ars Nouveau and AE2.'''
 
-[[dependencies.arseng]]
-    modId="ae2"
-    mandatory=true
-    versionRange = "${ae2Version}"
-    ordering="AFTER"
-    side="BOTH"
+[[dependencies]]
+modId="ae2"
+mandatory=true
+versionRange = "${ae2Version}"
+ordering="AFTER"
+side="BOTH"
 
-[[dependencies.arseng]]
-    modId="ars_nouveau"
-    mandatory=true
-    versionRange = "${arsVersion}"
-    ordering="AFTER"
-    side="BOTH"
+[[dependencies]]
+modId="ars_nouveau"
+mandatory=true
+versionRange = "${arsVersion}"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies]]
+modId = "aecapfix"
+mandatory = false
+versionRange = "[0.8,)"
+ordering = "AFTER"
+side = "SERVER"

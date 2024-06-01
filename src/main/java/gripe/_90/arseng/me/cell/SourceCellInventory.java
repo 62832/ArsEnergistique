@@ -13,6 +13,8 @@ import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.core.definitions.AEItems;
 
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
@@ -74,7 +76,11 @@ public class SourceCellInventory implements StorageCell {
         return cell.getIdleDrain();
     }
 
-    protected void saveChanges() {
+    public IUpgradeInventory getUpgrades() {
+        return cell.getUpgrades(stack);
+    }
+
+    private void saveChanges() {
         isPersisted = false;
 
         if (container != null) {
@@ -87,22 +93,18 @@ public class SourceCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount == 0 || !(what instanceof SourceKey) || sourceAmount == getMaxSource()) {
+        if (amount == 0 || !(what instanceof SourceKey)) {
             return 0;
         }
 
-        long remainingAmount = Math.max(0, getMaxSource() - sourceAmount);
-
-        if (amount > remainingAmount) {
-            amount = remainingAmount;
-        }
+        var inserted = Math.min(amount, Math.max(0, getMaxSource() - sourceAmount));
 
         if (mode == Actionable.MODULATE) {
-            sourceAmount += amount;
+            sourceAmount += inserted;
             saveChanges();
         }
 
-        return amount;
+        return getUpgrades().isInstalled(AEItems.VOID_CARD) ? amount : inserted;
     }
 
     @Override

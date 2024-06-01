@@ -48,7 +48,7 @@ public final class ArsEngBlocks {
     }
 
     public static final BlockDefinition<SourceAcceptorBlock> SOURCE_ACCEPTOR =
-            block("ME Source Acceptor", "source_acceptor", SourceAcceptorBlock::new);
+            block("ME Source Converter", "source_acceptor", SourceAcceptorBlock::new);
 
     public static final BlockEntityType<SourceAcceptorBlockEntity> SOURCE_ACCEPTOR_ENTITY = blockEntity(
             "source_acceptor", SourceAcceptorBlockEntity.class, SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
@@ -62,6 +62,7 @@ public final class ArsEngBlocks {
         return definition;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     private static <T extends AEBaseBlockEntity> BlockEntityType<T> blockEntity(
             String id,
             Class<T> entityClass,
