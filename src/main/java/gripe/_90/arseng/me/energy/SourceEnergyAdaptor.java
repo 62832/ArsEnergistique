@@ -1,5 +1,7 @@
 package gripe._90.arseng.me.energy;
 
+import com.google.common.primitives.Ints;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnits;
 import appeng.api.networking.security.IActionHost;
@@ -23,8 +25,8 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
 
     @Override
     public int getSource() {
-        var max = getMaxSource();
-        return (int) Math.min(max, max - (sink.getExternalPowerDemand(PowerUnits.AE, max) / AE_PER_SOURCE) + 1000);
+        return Ints.saturatedCast(getMaxSource()
+                - Math.round(sink.getExternalPowerDemand(PowerUnits.AE, getMaxSource()) / AE_PER_SOURCE));
     }
 
     @Override
