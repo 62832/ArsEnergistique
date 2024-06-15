@@ -1,5 +1,6 @@
 package gripe._90.arseng;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,6 +22,8 @@ import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.client.MESourceJarBlockEntityRenderer;
+import gripe._90.arseng.client.SourceRenderer;
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.definition.ArsEngConfig;
@@ -30,7 +33,6 @@ import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.me.cell.CreativeSourceCellHandler;
 import gripe._90.arseng.me.cell.SourceCellHandler;
-import gripe._90.arseng.me.client.SourceRenderer;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 import gripe._90.arseng.me.strategy.SourceContainerItemStrategy;
@@ -97,6 +99,8 @@ public class ArsEnergistique {
             ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));
             ArsEngItems.getPortables().forEach(portable -> StorageCellModels.registerModel(portable, driveCell));
             StorageCellModels.registerModel(ArsEngItems.CREATIVE_SOURCE_CELL, driveCell);
+
+            BlockEntityRenderers.register(ArsEngBlocks.ME_SOURCE_JAR_ENTITY, MESourceJarBlockEntityRenderer::new);
         }
     }
 }

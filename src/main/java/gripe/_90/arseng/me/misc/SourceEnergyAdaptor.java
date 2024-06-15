@@ -1,4 +1,4 @@
-package gripe._90.arseng.me.energy;
+package gripe._90.arseng.me.misc;
 
 import com.google.common.primitives.Ints;
 

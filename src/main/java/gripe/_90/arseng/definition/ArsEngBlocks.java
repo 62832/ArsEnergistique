@@ -7,21 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
-import appeng.block.AEBaseBlockItem;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.AEBaseBlockEntity;
 import appeng.core.definitions.BlockDefinition;
 
 import gripe._90.arseng.ArsEnergistique;
+import gripe._90.arseng.block.MESourceJarBlock;
 import gripe._90.arseng.block.SourceAcceptorBlock;
+import gripe._90.arseng.block.entity.MESourceJarBlockEntity;
 import gripe._90.arseng.block.entity.SourceAcceptorBlockEntity;
 
 public final class ArsEngBlocks {
@@ -48,30 +50,33 @@ public final class ArsEngBlocks {
         }
     }
 
+    public static final BlockDefinition<MESourceJarBlock> ME_SOURCE_JAR =
+            block("ME Source Jar", "me_source_jar", MESourceJarBlock::new);
+    public static final BlockEntityType<MESourceJarBlockEntity> ME_SOURCE_JAR_ENTITY =
+            blockEntity("me_source_jar", MESourceJarBlockEntity::new, ME_SOURCE_JAR);
+
     public static final BlockDefinition<SourceAcceptorBlock> SOURCE_ACCEPTOR =
             block("ME Source Converter", "source_acceptor", SourceAcceptorBlock::new);
-
-    public static final BlockEntityType<SourceAcceptorBlockEntity> SOURCE_ACCEPTOR_ENTITY = blockEntity(
-            "source_acceptor", SourceAcceptorBlockEntity.class, SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
+    public static final BlockEntityType<SourceAcceptorBlockEntity> SOURCE_ACCEPTOR_ENTITY = Util.make(() -> {
+        var type = blockEntity("source_acceptor", SourceAcceptorBlockEntity::new, SOURCE_ACCEPTOR);
+        SOURCE_ACCEPTOR.block().setBlockEntity(SourceAcceptorBlockEntity.class, type, null, null);
+        return type;
+    });
 
     private static <T extends Block> BlockDefinition<T> block(
             String englishName, String id, Supplier<T> blockSupplier) {
         var block = blockSupplier.get();
-        var item = new AEBaseBlockItem(block, new Item.Properties());
+        var item = new BlockItem(block, new Item.Properties());
         var definition = new BlockDefinition<>(englishName, ArsEnergistique.makeId(id), block, item);
         BLOCKS.add(definition);
         return definition;
     }
 
-    private static <T extends AEBaseBlockEntity> BlockEntityType<T> blockEntity(
-            String id,
-            Class<T> entityClass,
-            BlockEntityType.BlockEntitySupplier<T> supplier,
-            BlockDefinition<? extends AEBaseEntityBlock<T>> block) {
+    @SuppressWarnings("DataFlowIssue")
+    private static <T extends BlockEntity> BlockEntityType<T> blockEntity(
+            String id, BlockEntityType.BlockEntitySupplier<T> supplier, BlockDefinition<?> block) {
         var type = BlockEntityType.Builder.of(supplier, block.block()).build(null);
         BLOCK_ENTITIES.put(ArsEnergistique.makeId(id), type);
-        AEBaseBlockEntity.registerBlockEntityItem(type, block.asItem());
-        block.block().setBlockEntity(entityClass, type, null, null);
         return type;
     }
 }

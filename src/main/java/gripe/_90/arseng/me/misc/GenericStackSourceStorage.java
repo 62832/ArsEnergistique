@@ -1,4 +1,4 @@
-package gripe._90.arseng.me.storage;
+package gripe._90.arseng.me.misc;
 
 import com.google.common.primitives.Ints;
 
@@ -17,7 +17,7 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
 
     @Override
     public boolean canAcceptSource() {
-        return insert(1, Actionable.SIMULATE) != 0;
+        return insert(1, Actionable.SIMULATE) > 0;
     }
 
     @Override
@@ -61,23 +61,23 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
     }
 
     private int insert(int amount, Actionable mode) {
-        var inserted = 0;
+        var inserted = 0L;
 
         for (var i = 0; i < inv.size() && inserted < amount; ++i) {
-            inserted += Ints.saturatedCast(inv.insert(i, SourceKey.KEY, amount - inserted, mode));
+            inserted += inv.insert(i, SourceKey.KEY, amount - inserted, mode);
         }
 
-        return inserted;
+        return inserted > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) inserted;
     }
 
     private int extract(int amount, Actionable mode) {
-        var extracted = 0;
+        var extracted = 0L;
 
         for (var i = 0; i < inv.size() && extracted < amount; ++i) {
-            extracted += Ints.saturatedCast(inv.extract(i, SourceKey.KEY, amount - extracted, mode));
+            extracted += inv.extract(i, SourceKey.KEY, amount - extracted, mode);
         }
 
-        return extracted;
+        return extracted > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) extracted;
     }
 
     @Override

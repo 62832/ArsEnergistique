@@ -19,7 +19,7 @@ import appeng.blockentity.powersink.IExternalPowerSink;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngCapabilities;
-import gripe._90.arseng.me.energy.SourceEnergyAdaptor;
+import gripe._90.arseng.me.misc.SourceEnergyAdaptor;
 
 public class SourceAcceptorBlockEntity extends AENetworkBlockEntity implements IExternalPowerSink {
     private LazyOptional<IAdvancedSourceTile> sourceTileOptional;

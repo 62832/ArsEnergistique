@@ -25,7 +25,7 @@ import appeng.capabilities.Capabilities;
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.block.entity.SourceTileWrapper;
-import gripe._90.arseng.me.storage.GenericStackSourceStorage;
+import gripe._90.arseng.me.misc.GenericStackSourceStorage;
 
 public final class ArsEngCapabilities {
     private ArsEngCapabilities() {}

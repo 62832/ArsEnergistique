@@ -10,17 +10,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import appeng.api.stacks.GenericStack;
-import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.util.ConfigInventory;
 
 @Mixin(value = ConfigInventory.class, remap = false)
-public abstract class ConfigInventoryMixin extends GenericStackInv {
+public abstract class ConfigInventoryMixin {
     @Unique
     private GenericStack arseng$toStock;
-
-    public ConfigInventoryMixin(@Nullable Runnable listener, int size) {
-        super(listener, size);
-    }
 
     @Shadow
     @Nullable

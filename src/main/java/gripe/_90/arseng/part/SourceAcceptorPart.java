@@ -19,7 +19,7 @@ import appeng.parts.PartModel;
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngCapabilities;
-import gripe._90.arseng.me.energy.SourceEnergyAdaptor;
+import gripe._90.arseng.me.misc.SourceEnergyAdaptor;
 
 public class SourceAcceptorPart extends AEBasePart implements IExternalPowerSink {
     @PartModels

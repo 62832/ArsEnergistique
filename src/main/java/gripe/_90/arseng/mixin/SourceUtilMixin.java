@@ -75,7 +75,6 @@ public abstract class SourceUtilMixin {
         var nearby = BlockPos.findClosestMatch(pos, range, range, (p) -> {
             var be = world.getBlockEntity(p);
 
-            // le nested Optional has arrived
             return be != null
                     && be.getCapability(ArsEngCapabilities.SOURCE_TILE, IAdvancedSourceTile.getDirTo(pos, p))
                             .filter(sourceTile -> sourceTile.getSource() >= source && sourceTile.relayCanTakePower())

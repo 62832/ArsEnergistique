@@ -21,7 +21,7 @@ import appeng.capabilities.Capabilities;
 import gripe._90.aecapfix.misc.DirectionalCapabilityCache;
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngCapabilities;
-import gripe._90.arseng.me.storage.GenericStackSourceStorage;
+import gripe._90.arseng.me.misc.GenericStackSourceStorage;
 
 @Mixin(value = ArsEngCapabilities.class, remap = false)
 public abstract class ArsEngCapabilitiesMixin {
