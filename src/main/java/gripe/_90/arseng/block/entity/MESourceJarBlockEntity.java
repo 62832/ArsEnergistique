@@ -94,7 +94,6 @@ public class MESourceJarBlockEntity extends SourceJarTile implements IGridConnec
         }
 
         var oldSource = super.getSource();
-        var oldSourceCap = super.getMaxSource();
         var sourceCap = 0L;
 
         if (getMainNode().isActive()) {
@@ -106,7 +105,7 @@ public class MESourceJarBlockEntity extends SourceJarTile implements IGridConnec
             super.setSource(0);
         }
 
-        if (oldSource != super.getSource() || oldSourceCap != sourceCap) {
+        if (oldSource != super.getSource()) {
             setChanged();
         }
 

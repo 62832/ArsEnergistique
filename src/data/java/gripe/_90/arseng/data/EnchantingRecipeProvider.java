@@ -1,7 +1,5 @@
 package gripe._90.arseng.data;
 
-import java.nio.file.Path;
-
 import com.hollingsworth.arsnouveau.common.datagen.ApparatusRecipeProvider;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
@@ -9,9 +7,11 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
+import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
@@ -36,7 +36,12 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
                 .withPedestalItem(4, BlockRegistry.SOURCE_GEM_BLOCK)
                 .withPedestalItem(4, Items.GOLD_BLOCK)
                 .withSourceCost(10000)
-                .withId(ArsEngBlocks.SOURCE_ACCEPTOR.id())
+                .build());
+        addRecipe(builder()
+                .withResult(ArsEngBlocks.ME_SOURCE_JAR)
+                .withReagent(BlockRegistry.SOURCE_JAR)
+                .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                .withPedestalItem(Ingredient.of(ConventionTags.INTERFACE))
                 .build());
     }
 
@@ -48,12 +53,8 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
             saveStable(
                     pOutput,
                     recipe.asRecipe(),
-                    getRecipePath(output, recipe.getId().getPath()));
+                    output.resolve("data/arseng/recipes/" + recipe.getId().getPath() + ".json"));
         }
-    }
-
-    protected static Path getRecipePath(Path pathIn, String str) {
-        return pathIn.resolve("data/arseng/recipes/" + str + ".json");
     }
 
     @Override

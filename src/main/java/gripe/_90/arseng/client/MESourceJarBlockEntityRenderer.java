@@ -25,13 +25,13 @@ public class MESourceJarBlockEntityRenderer implements BlockEntityRenderer<MESou
             @NotNull MultiBufferSource buffers,
             int light,
             int overlay) {
-        var vertexConsumer = buffers.getBuffer(RenderType.translucentMovingBlock());
         var amount = (float) jar.getSource() / jar.getMaxSource();
 
         if (amount <= 0) {
             return;
         }
 
+        var vertexConsumer = buffers.getBuffer(RenderType.translucentMovingBlock());
         var fill = Mth.lerp(Mth.clamp(amount, 0, 1), 2 / 16F, 12 / 16F);
 
         var builder = new CubeBuilder();
