@@ -1,6 +1,7 @@
 package gripe._90.arseng.block;
 
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,24 +35,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import appeng.api.orientation.IOrientableBlock;
 import appeng.api.orientation.IOrientationStrategy;
 import appeng.api.orientation.OrientationStrategies;
+import appeng.api.orientation.RelativeSide;
 import appeng.hooks.WrenchHook;
 
 import gripe._90.arseng.block.entity.MESourceJarBlockEntity;
 
 @ParametersAreNonnullByDefault
 public class MESourceJarBlock extends Block implements EntityBlock, SimpleWaterloggedBlock, IOrientableBlock {
-    private static final VoxelShape SHAPE = Stream.of(
-                    Block.box(4, 13, 4, 12, 14, 12),
-                    Block.box(0, 0, 0, 16, 1, 16),
-                    Block.box(2, 1, 2, 14, 2, 14),
-                    Block.box(3, 2, 3, 13, 13, 13),
-                    Block.box(3, 14, 3, 13, 16, 13),
-                    Block.box(6, 1, 14, 10, 16, 16),
-                    Block.box(6, 14, 13, 10, 16, 16),
-                    Block.box(5, 5, 13, 11, 11, 16))
-            .reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR))
-            .get();
-
     public MESourceJarBlock() {
         super(Properties.of()
                 .strength(2.2f, 11.f)
@@ -91,7 +81,38 @@ public class MESourceJarBlock extends Block implements EntityBlock, SimpleWaterl
     @NotNull
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
+        var boxes = new ArrayList<VoxelShape>();
+        boxes.add(Block.box(4, 13, 4, 12, 14, 12));
+        boxes.add(Block.box(0, 0, 0, 16, 1, 16));
+        boxes.add(Block.box(2, 1, 2, 14, 2, 14));
+        boxes.add(Block.box(3, 2, 3, 13, 13, 13));
+        boxes.add(Block.box(3, 14, 3, 13, 16, 13));
+
+        var forward = getOrientation(state).getSide(RelativeSide.BACK);
+        boxes.addAll(
+                switch (forward) {
+                    case SOUTH -> List.of(
+                            Block.box(6, 1, 14, 10, 16, 16),
+                            Block.box(6, 14, 13, 10, 16, 16),
+                            Block.box(5, 5, 13, 11, 11, 16));
+                    case NORTH -> List.of(
+                            Block.box(6, 1, 0, 10, 16, 2),
+                            Block.box(6, 14, 0, 10, 16, 3),
+                            Block.box(5, 5, 0, 11, 11, 3));
+                    case EAST -> List.of(
+                            Block.box(14, 1, 6, 16, 16, 10),
+                            Block.box(13, 14, 6, 16, 16, 10),
+                            Block.box(13, 5, 5, 16, 11, 11));
+                    case WEST -> List.of(
+                            Block.box(0, 1, 6, 2, 16, 10),
+                            Block.box(0, 14, 6, 3, 16, 10),
+                            Block.box(0, 5, 5, 3, 11, 11));
+                    default -> List.of();
+                });
+
+        return boxes.stream()
+                .reduce((b1, b2) -> Shapes.join(b1, b2, BooleanOp.OR))
+                .get();
     }
 
     @Override
