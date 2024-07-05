@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import gripe._90.arseng.ArsEnergistique;
 
+@SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = ArsEnergistique.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ArsEngDataGenerators {
     @SubscribeEvent
@@ -30,6 +31,7 @@ public final class ArsEngDataGenerators {
 
         pack.addProvider(g -> new DocumentationProvider(event.getGenerator()));
         pack.addProvider(g -> new EnchantingRecipeProvider(event.getGenerator()));
+        pack.addProvider(g -> new GolemRecipeProvider(event.getGenerator()));
 
         var registries = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
         var blockTags = pack.addProvider(output -> new TagsProvider.Blocks(output, registries));
