@@ -29,7 +29,7 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
     private final StorageTier tier;
 
     public PortableSourceCellItem(Properties props, StorageTier tier) {
-        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props, 0xFFFFFF);
+        super(MEStorageMenu.PORTABLE_FLUID_CELL_TYPE, props, 0xb06fdd);
         this.tier = tier;
     }
 
@@ -84,9 +84,11 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
             var cellInv = StorageCells.getCellInventory(stack, null);
             var cellStatus = cellInv != null ? cellInv.getStatus() : CellState.EMPTY;
             return cellStatus.getStateColor() | 0xFF000000;
+        } else if (tintIndex == 2 && stack.getItem() instanceof PortableSourceCellItem sourceCell) {
+            return sourceCell.getColor(stack) | 0xFF000000;
+        } else {
+            // White
+            return 0xFFFFFFFF;
         }
-
-        // we're only concerned about the LED colour and don't care about dyeing these cells
-        return 0xFFFFFFFF;
     }
 }
