@@ -28,10 +28,29 @@ public class ArsEngClient {
 
     private static void initCellModels(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            var driveCell = ArsEnergistique.makeId("block/source_drive_cell");
-            ArsEngItems.getCells().forEach(cell -> StorageCellModels.registerModel(cell, driveCell));
-            ArsEngItems.getPortables().forEach(portable -> StorageCellModels.registerModel(portable, driveCell));
-            StorageCellModels.registerModel(ArsEngItems.CREATIVE_SOURCE_CELL, driveCell);
+            var prefix = "block/drive/cells/";
+            StorageCellModels.registerModel(
+                    ArsEngItems.SOURCE_CELL_1K, ArsEnergistique.makeId(prefix + "1k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.PORTABLE_SOURCE_CELL1K, ArsEnergistique.makeId(prefix + "1k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.SOURCE_CELL_4K, ArsEnergistique.makeId(prefix + "4k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.PORTABLE_SOURCE_CELL4K, ArsEnergistique.makeId(prefix + "4k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.SOURCE_CELL_16K, ArsEnergistique.makeId(prefix + "16k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.PORTABLE_SOURCE_CELL16K, ArsEnergistique.makeId(prefix + "16k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.SOURCE_CELL_64K, ArsEnergistique.makeId(prefix + "64k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.PORTABLE_SOURCE_CELL64K, ArsEnergistique.makeId(prefix + "64k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.SOURCE_CELL_256K, ArsEnergistique.makeId(prefix + "256k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.PORTABLE_SOURCE_CELL256K, ArsEnergistique.makeId(prefix + "256k_source_cell"));
+            StorageCellModels.registerModel(
+                    ArsEngItems.CREATIVE_SOURCE_CELL, ArsEnergistique.makeId(prefix + "creative_source_cell"));
         });
     }
 
