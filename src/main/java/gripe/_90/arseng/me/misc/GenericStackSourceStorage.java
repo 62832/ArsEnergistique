@@ -1,23 +1,53 @@
 package gripe._90.arseng.me.misc;
 
 import com.google.common.primitives.Ints;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+import appeng.api.AECapabilities;
 import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.config.Actionable;
 
-import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
-public record GenericStackSourceStorage(GenericInternalInventory inv) implements IAdvancedSourceTile {
+public record GenericStackSourceStorage(GenericInternalInventory inv) implements ISourceCap {
+    public static void registerCapability(RegisterCapabilitiesEvent event) {
+        for (var block : BuiltInRegistries.BLOCK) {
+            if (event.isBlockRegistered(AECapabilities.GENERIC_INTERNAL_INV, block)) {
+                event.registerBlock(
+                        CapabilityRegistry.SOURCE_CAPABILITY,
+                        (level, pos, state, be, context) -> {
+                            var genericInv =
+                                    level.getCapability(AECapabilities.GENERIC_INTERNAL_INV, pos, state, be, context);
+                            return genericInv != null ? new GenericStackSourceStorage(genericInv) : null;
+                        },
+                        block);
+            }
+        }
+    }
+
     @Override
-    public int getTransferRate() {
+    public int getMaxExtract() {
         return Integer.MAX_VALUE;
     }
 
     @Override
-    public boolean canAcceptSource() {
+    public int getMaxReceive() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public boolean canAcceptSource(int source) {
         return insert(1, Actionable.SIMULATE) > 0;
+    }
+
+    @Override
+    public boolean canProvideSource(int source) {
+        return extract(1, Actionable.SIMULATE) > 0;
     }
 
     @Override
@@ -26,7 +56,7 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
     }
 
     @Override
-    public int getMaxSource() {
+    public int getSourceCapacity() {
         var slots = 0;
 
         for (var i = 0; i < inv.size(); i++) {
@@ -41,23 +71,13 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
     }
 
     @Override
-    public void setMaxSource(int max) {
-        throw new UnsupportedOperationException();
+    public int receiveSource(int source, boolean simulate) {
+        return insert(source, Actionable.ofSimulate(simulate));
     }
 
     @Override
-    public int setSource(int source) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int addSource(int source) {
-        return insert(source, Actionable.MODULATE);
-    }
-
-    @Override
-    public int removeSource(int source) {
-        return extract(source, Actionable.MODULATE);
+    public int extractSource(int source, boolean simulate) {
+        return extract(source, Actionable.ofSimulate(simulate));
     }
 
     private int insert(int amount, Actionable mode) {
@@ -81,12 +101,12 @@ public record GenericStackSourceStorage(GenericInternalInventory inv) implements
     }
 
     @Override
-    public boolean relayCanTakePower() {
-        return true;
+    public void setMaxSource(int max) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean sourcelinksCanProvidePower() {
-        return false;
+    public void setSource(int source) {
+        throw new UnsupportedOperationException();
     }
 }

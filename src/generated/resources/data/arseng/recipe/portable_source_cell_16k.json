@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:chest"
+    },
+    {
+      "item": "ae2:cell_component_16k"
+    },
+    {
+      "item": "ae2:energy_cell"
+    },
+    {
+      "item": "arseng:source_cell_housing"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "arseng:portable_source_cell_16k"
+  }
+}

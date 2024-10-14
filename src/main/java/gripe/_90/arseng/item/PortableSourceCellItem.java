@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
 import appeng.api.storage.StorageCells;
 import appeng.api.storage.cells.CellState;
@@ -24,7 +22,6 @@ import appeng.items.tools.powered.AbstractPortableCell;
 import appeng.menu.me.common.MEStorageMenu;
 
 import gripe._90.arseng.ArsEnergistique;
-import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.cell.ISourceCellItem;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 
@@ -56,8 +53,9 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag advancedTooltips) {
-        super.appendHoverText(stack, level, lines, advancedTooltips);
+    public void appendHoverText(
+            ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag advancedTooltips) {
+        super.appendHoverText(stack, context, lines, advancedTooltips);
         SourceCellHandler.INSTANCE.addCellInformationToTooltip(stack, lines);
     }
 
@@ -77,10 +75,6 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
         return UpgradeInventories.forItem(is, 3, this::onUpgradesChanged);
     }
 
-    public static void initColours(RegisterColorHandlersEvent.Item event) {
-        ArsEngItems.getPortables().forEach(portable -> event.register(PortableSourceCellItem::getColor, portable));
-    }
-
     public static int getColor(ItemStack stack, int tintIndex) {
         if (tintIndex == 1 && stack.getItem() instanceof PortableSourceCellItem sourceCell) {
             if (sourceCell.getAECurrentPower(stack) <= 0) {
@@ -89,10 +83,10 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
 
             var cellInv = StorageCells.getCellInventory(stack, null);
             var cellStatus = cellInv != null ? cellInv.getStatus() : CellState.EMPTY;
-            return cellStatus.getStateColor();
+            return cellStatus.getStateColor() | 0xFF000000;
         }
 
         // we're only concerned about the LED colour and don't care about dyeing these cells
-        return 0xFFFFFF;
+        return 0xFFFFFFFF;
     }
 }

@@ -1,58 +1,21 @@
 plugins {
     eclipse
     idea
-    alias(libs.plugins.neogradle)
-    alias(libs.plugins.mixin)
-    alias(libs.plugins.parchment)
-    alias(libs.plugins.spotless)
+    id("net.neoforged.moddev")
+    id("com.diffplug.spotless")
 }
 
 val modId = "arseng"
 
+base.archivesName = modId
 version = System.getenv("ARSENG_VERSION") ?: "0.0.0"
 group = "gripe.90"
-base.archivesName.set(modId)
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-
-    maven {
-        name = "ModMaven (K4U-NL)"
-        url = uri("https://modmaven.dev/")
-        content {
-            includeGroup("appeng")
-            includeGroup("top.theillusivec4.curios")
-            includeGroup("mezz.jei")
-        }
-    }
-
-    maven {
-        name = "BlameJared"
-        url = uri("https://maven.blamejared.com")
-        content {
-            includeGroup("com.hollingsworth.ars_nouveau")
-            includeGroup("vazkii.patchouli")
-        }
-    }
-
-    maven {
-        name = "CurseMaven"
-        url = uri("https://cursemaven.com")
-        content {
-            includeGroup("curse.maven")
-        }
-    }
-
-    maven {
-        name = "GeckoLib"
-        url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
-        content {
-            includeGroup("software.bernie.geckolib")
-        }
-    }
+dependencies {
+    implementation(libs.ae2)
+    implementation(libs.ars)
 }
 
 sourceSets {
@@ -67,65 +30,49 @@ sourceSets {
     }
 }
 
-minecraft {
-    mappings("parchment", "2023.09.03-1.20.1")
-    copyIdeResources.set(true)
+neoForge {
+    version = libs.versions.neoforge.get()
+
+    parchment {
+        // minecraftVersion = libs.versions.minecraft.get()
+        minecraftVersion = "1.21"
+        mappingsVersion = libs.versions.parchment.get()
+    }
+
+    mods {
+        create(modId) {
+            sourceSet(sourceSets.main.get())
+            sourceSet(sourceSets.getByName("data"))
+        }
+    }
 
     runs {
         configureEach {
-            workingDirectory(project.file("run"))
-            property("forge.logging.markers", "REGISTRIES")
-            property("forge.logging.console.level", "debug")
-
-            mods {
-                create(modId) {
-                    source(sourceSets.main.get())
-                }
-            }
+            gameDirectory = file("run")
         }
 
-        create("client")
+        create("client") {
+            client()
+        }
 
         create("server") {
-            workingDirectory(file("run/server"))
+            server()
+            gameDirectory = file("run/server")
         }
 
         create("data") {
-            args(
+            data()
+            programArguments.addAll(
                 "--mod", modId,
                 "--all",
-                "--output", file("src/generated/resources/"),
-                "--existing", file("src/main/resources/"))
-
-            mods {
-                getByName(modId) {
-                    source(sourceSets.getByName("data"))
-                }
-            }
+                "--output", file("src/generated/resources/").absolutePath,
+                "--existing", file("src/main/resources/").absolutePath,
+                "--existing-mod", "ae2",
+                "--existing-mod", "ars_nouveau"
+            )
+            sourceSet = sourceSets.getByName("data")
         }
     }
-}
-
-dependencies {
-    minecraft(libs.forge)
-    annotationProcessor(variantOf(libs.mixin) { classifier("processor") })
-
-    implementation(fg.deobf(libs.ae2.get()))
-    implementation(fg.deobf(libs.ars.get()))
-
-    implementation(fg.deobf(libs.geckolib.get()))
-    runtimeOnly(fg.deobf(libs.mixin.extras.get()))
-    runtimeOnly(fg.deobf(libs.curios.get()))
-    runtimeOnly(fg.deobf(libs.patchouli.get()))
-    implementation(fg.deobf(libs.aecapfix.get()))
-
-    runtimeOnly(fg.deobf(libs.jei.get()))
-    runtimeOnly(fg.deobf(libs.jade.get()))
-}
-
-mixin {
-    add(sourceSets.main.get(), "$modId.refmap.json")
-    config("$modId.mixins.json")
 }
 
 tasks {
@@ -135,13 +82,9 @@ tasks {
         val props = mapOf("version" to version)
         inputs.properties(props)
 
-        filesMatching("META-INF/mods.toml") {
+        filesMatching("META-INF/neoforge.mods.toml") {
             expand(props)
         }
-    }
-
-    jar {
-        finalizedBy("reobfJar")
     }
 
     withType<JavaCompile> {

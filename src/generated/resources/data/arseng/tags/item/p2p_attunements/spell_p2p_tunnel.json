@@ -1,0 +1,13 @@
+{
+  "values": [
+    "ars_nouveau:novice_spell_book",
+    "ars_nouveau:apprentice_spell_book",
+    "ars_nouveau:archmage_spell_book",
+    "ars_nouveau:creative_spell_book",
+    "ars_nouveau:spell_prism",
+    "ars_nouveau:void_prism",
+    "ars_nouveau:spell_parchment",
+    "ars_nouveau:spell_bow",
+    "ars_nouveau:spell_crossbow"
+  ]
+}

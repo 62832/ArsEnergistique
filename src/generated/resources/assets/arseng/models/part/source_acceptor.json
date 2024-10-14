@@ -1,0 +1,9 @@
+{
+  "parent": "ae2:part/energy_acceptor",
+  "textures": {
+    "back": "arseng:part/source_acceptor_back",
+    "front": "arseng:block/source_acceptor",
+    "particle": "arseng:part/source_acceptor_back",
+    "sides": "arseng:part/source_acceptor_sides"
+  }
+}

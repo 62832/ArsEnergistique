@@ -1,7 +1,7 @@
 package gripe._90.arseng.data;
 
 import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlocks;

@@ -14,7 +14,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.data.BlockTagsProvider;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import appeng.api.features.P2PTunnelAttunement;
 import appeng.datagen.providers.tags.ConventionTags;

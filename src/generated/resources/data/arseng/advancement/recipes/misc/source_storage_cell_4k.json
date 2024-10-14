@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cell_component_4k": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ae2:cell_component_4k"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_source_cell_housing": {
+      "conditions": {
+        "items": [
+          {
+            "items": "arseng:source_cell_housing"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "arseng:source_storage_cell_4k"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_source_cell_housing",
+      "has_cell_component_4k"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "arseng:source_storage_cell_4k"
+    ]
+  }
+}

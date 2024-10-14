@@ -7,11 +7,9 @@ import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
-import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.definition.ArsEngBlocks;
 import gripe._90.arseng.definition.ArsEngItems;
@@ -31,18 +29,20 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
                 .withPedestalItem(4, Items.GOLD_INGOT)
                 .build());
         addRecipe(builder()
-                .withResult(ArsEngBlocks.SOURCE_ACCEPTOR)
+                .withResult(ArsEngBlocks.SOURCE_CONVERTER)
                 .withReagent(AEBlocks.ENERGY_ACCEPTOR)
                 .withPedestalItem(4, BlockRegistry.SOURCE_GEM_BLOCK)
                 .withPedestalItem(4, Items.GOLD_BLOCK)
                 .withSourceCost(10000)
                 .build());
+        /*
         addRecipe(builder()
                 .withResult(ArsEngBlocks.ME_SOURCE_JAR)
                 .withReagent(BlockRegistry.SOURCE_JAR)
                 .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
                 .withPedestalItem(Ingredient.of(ConventionTags.INTERFACE))
                 .build());
+         */
     }
 
     @Override
@@ -52,8 +52,8 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
         for (var recipe : recipes) {
             saveStable(
                     pOutput,
-                    recipe.asRecipe(),
-                    output.resolve("data/arseng/recipes/" + recipe.getId().getPath() + ".json"));
+                    recipe.serialize(),
+                    output.resolve("data/arseng/recipes/" + recipe.id().getPath() + ".json"));
         }
     }
 

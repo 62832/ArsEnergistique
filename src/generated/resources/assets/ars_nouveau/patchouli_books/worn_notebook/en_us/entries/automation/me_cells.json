@@ -1,0 +1,35 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "arseng:source_cell_housing",
+  "name": "item.arseng.source_cell_housing",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "arseng.page.source_cell_housing"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "arseng:source_cell_housing"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:source_storage_cell_1k"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:source_storage_cell_4k"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:source_storage_cell_16k"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:source_storage_cell_64k"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:source_storage_cell_256k"
+    }
+  ]
+}

@@ -2,12 +2,15 @@ package gripe._90.arseng.me.strategy;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.google.common.primitives.Ints;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.config.Actionable;
@@ -16,41 +19,35 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.core.localization.GuiText;
-import appeng.util.BlockApiCache;
 
-import gripe._90.arseng.block.entity.IAdvancedSourceTile;
-import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
-    private final BlockApiCache<IAdvancedSourceTile> apiCache;
-    private final Direction fromSide;
+    private final BlockCapabilityCache<ISourceCap, Direction> cache;
 
     public SourceExternalStorageStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
-        this.fromSide = fromSide;
+        cache = BlockCapabilityCache.create(CapabilityRegistry.SOURCE_CAPABILITY, level, fromPos, fromSide);
     }
 
     @Nullable
     @Override
     public MEStorage createWrapper(boolean extractableOnly, Runnable injectOrExtractCallback) {
-        var sourceTile = apiCache.find(fromSide);
+        var sourceTile = cache.getCapability();
         return sourceTile != null ? new Adaptor(sourceTile, injectOrExtractCallback) : null;
     }
 
-    private record Adaptor(ISourceTile sourceTile, Runnable injectOrExtractCallback) implements MEStorage {
+    private record Adaptor(ISourceCap sourceTile, Runnable injectOrExtractCallback) implements MEStorage {
         @Override
         public long insert(AEKey what, long amount, Actionable mode, IActionSource actionSource) {
             if (!(what instanceof SourceKey)) {
                 return 0;
             }
 
-            var inserted = (int) Math.min(amount, sourceTile.getMaxSource() - sourceTile.getSource());
+            var inserted = sourceTile.receiveSource(Ints.saturatedCast(amount), mode.isSimulate());
 
             if (inserted > 0 && mode == Actionable.MODULATE) {
-                sourceTile.addSource(inserted);
                 injectOrExtractCallback.run();
             }
 
@@ -63,10 +60,9 @@ public class SourceExternalStorageStrategy implements ExternalStorageStrategy {
                 return 0;
             }
 
-            var extracted = (int) Math.min(amount, sourceTile.getSource());
+            var extracted = sourceTile.extractSource(Ints.saturatedCast(amount), mode.isSimulate());
 
             if (extracted > 0 && mode == Actionable.MODULATE) {
-                sourceTile.removeSource(extracted);
                 injectOrExtractCallback.run();
             }
 

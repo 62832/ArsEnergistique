@@ -2,7 +2,6 @@ package gripe._90.arseng.me.cell;
 
 import java.util.Objects;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,12 +15,11 @@ import appeng.api.storage.cells.StorageCell;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.core.definitions.AEItems;
 
+import gripe._90.arseng.definition.ArsEngComponents;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceCellInventory implements StorageCell {
-    private static final String AMOUNT = "amount";
-
     private final ISourceCellItem cell;
     private final ItemStack stack;
     private final ISaveProvider container;
@@ -34,7 +32,7 @@ public class SourceCellInventory implements StorageCell {
         this.stack = stack;
         this.container = container;
 
-        sourceAmount = getTag().getLong(AMOUNT);
+        sourceAmount = stack.getOrDefault(ArsEngComponents.SOURCE_CELL_AMOUNT, 0L);
     }
 
     public long getTotalBytes() {
@@ -48,10 +46,6 @@ public class SourceCellInventory implements StorageCell {
 
     public long getMaxSource() {
         return cell.getTotalBytes() * SourceKeyType.TYPE.getAmountPerByte();
-    }
-
-    private CompoundTag getTag() {
-        return stack.getOrCreateTag();
     }
 
     @Override
@@ -131,9 +125,9 @@ public class SourceCellInventory implements StorageCell {
         }
 
         if (sourceAmount < 0) {
-            getTag().remove(AMOUNT);
+            stack.remove(ArsEngComponents.SOURCE_CELL_AMOUNT);
         } else {
-            getTag().putLong(AMOUNT, sourceAmount);
+            stack.set(ArsEngComponents.SOURCE_CELL_AMOUNT, sourceAmount);
         }
 
         isPersisted = true;

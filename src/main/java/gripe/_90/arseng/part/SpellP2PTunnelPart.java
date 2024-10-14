@@ -60,7 +60,7 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
 
                     if (!outputs.isEmpty()) {
                         Collections.shuffle(outputs);
-                        spellP2P.redirectSpell(event.getProjectile(), outputs.get(0));
+                        spellP2P.redirectSpell(event.getProjectile(), outputs.getFirst());
                         event.setCanceled(true);
                     }
                 }
@@ -79,7 +79,7 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
         spell.prismRedirect++;
 
         if (spell.prismRedirect >= 3 && getLevel() instanceof ServerLevel level) {
-            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC, level, pos, 10);
+            ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), level, pos, 10);
         }
 
         if (spell.spellResolver == null) {

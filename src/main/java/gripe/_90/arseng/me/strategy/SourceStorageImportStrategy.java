@@ -3,17 +3,18 @@ package gripe._90.arseng.me.strategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import appeng.api.behaviors.StackImportStrategy;
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
-import appeng.util.BlockApiCache;
 
-import gripe._90.arseng.block.entity.IAdvancedSourceTile;
-import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
@@ -21,12 +22,10 @@ import gripe._90.arseng.me.key.SourceKeyType;
 public class SourceStorageImportStrategy implements StackImportStrategy {
     private static final Logger LOGGER = LoggerFactory.getLogger(SourceStorageImportStrategy.class);
 
-    private final BlockApiCache<IAdvancedSourceTile> apiCache;
-    private final Direction fromSide;
+    private final BlockCapabilityCache<ISourceCap, Direction> cache;
 
     public SourceStorageImportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
-        this.fromSide = fromSide;
+        cache = BlockCapabilityCache.create(CapabilityRegistry.SOURCE_CAPABILITY, level, fromPos, fromSide);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
             return false;
         }
 
-        var sourceTile = apiCache.find(fromSide);
+        var sourceTile = cache.getCapability();
 
         if (sourceTile == null) {
             return false;
@@ -50,7 +49,7 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
         var amount = inv.insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
 
         if (amount > 0) {
-            sourceTile.removeSource((int) amount);
+            sourceTile.extractSource((int) amount, false);
         }
 
         var inserted = inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
@@ -60,7 +59,7 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
             var backFill = (int) Math.min(leftover, sourceTile.getMaxSource() - sourceTile.getSource());
 
             if (backFill > 0) {
-                sourceTile.addSource(backFill);
+                sourceTile.receiveSource(backFill, false);
             }
 
             if (leftover > backFill) {

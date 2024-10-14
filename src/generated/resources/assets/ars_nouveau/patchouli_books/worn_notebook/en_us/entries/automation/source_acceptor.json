@@ -1,0 +1,23 @@
+{
+  "category": "ars_nouveau:automation",
+  "icon": "arseng:source_acceptor",
+  "name": "block.arseng.source_acceptor",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "arseng.page.source_acceptor"
+    },
+    {
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "arseng:source_acceptor"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "arseng.page.source_acceptor_description"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "arseng:cable_source_acceptor"
+    }
+  ]
+}

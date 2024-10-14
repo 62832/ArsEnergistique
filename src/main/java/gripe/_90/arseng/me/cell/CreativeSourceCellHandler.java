@@ -1,7 +1,5 @@
 package gripe._90.arseng.me.cell;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.world.item.ItemStack;
 
 import appeng.api.storage.cells.ICellHandler;
@@ -21,7 +19,7 @@ public class CreativeSourceCellHandler implements ICellHandler {
     }
 
     @Override
-    public @Nullable StorageCell getCellInventory(ItemStack is, @Nullable ISaveProvider host) {
+    public StorageCell getCellInventory(ItemStack is, ISaveProvider host) {
         return isCell(is) ? new CreativeSourceCellInventory(is) : null;
     }
 }

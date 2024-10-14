@@ -43,11 +43,11 @@ public class DocumentationProvider extends PatchouliProvider {
     @Override
     public void addEntries() {
         var sourceAcceptorBuilder = buildBasicItem(
-                ArsEngBlocks.SOURCE_ACCEPTOR, AUTOMATION, new ApparatusPage(ArsEngBlocks.SOURCE_ACCEPTOR));
+                ArsEngBlocks.SOURCE_CONVERTER, AUTOMATION, new ApparatusPage(ArsEngBlocks.SOURCE_CONVERTER));
         sourceAcceptorBuilder.withPage(new TextPage(getLangPath("source_acceptor_description")));
         sourceAcceptorBuilder.withPage(new CraftingPage(ArsEngItems.SOURCE_ACCEPTOR_PART));
         addPage(new PatchouliPage(
-                sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_ACCEPTOR.asItem()))));
+                sourceAcceptorBuilder, getPath(AUTOMATION, getRegistryName(ArsEngBlocks.SOURCE_CONVERTER.asItem()))));
 
         var cellsBuilder = buildBasicItem(
                 ArsEngItems.SOURCE_CELL_HOUSING, AUTOMATION, new ApparatusPage(ArsEngItems.SOURCE_CELL_HOUSING));

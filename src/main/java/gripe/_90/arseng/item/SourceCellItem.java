@@ -2,6 +2,7 @@ package gripe._90.arseng.item;
 
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 
 import appeng.api.storage.StorageCells;
 import appeng.api.upgrades.IUpgradeInventory;
@@ -26,7 +26,6 @@ import appeng.items.AEBaseItem;
 import appeng.items.storage.BasicStorageCell;
 import appeng.items.storage.StorageTier;
 
-import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.me.cell.ISourceCellItem;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 
@@ -59,17 +58,18 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
         return UpgradeInventories.forItem(stack, 1);
     }
 
+    @ParametersAreNonnullByDefault
     @NotNull
     @Override
-    public InteractionResultHolder<ItemStack> use(
-            @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var inHand = player.getItemInHand(hand);
         disassemble(inHand, level, player);
         return new InteractionResultHolder<>(InteractionResult.sidedSuccess(level.isClientSide()), inHand);
     }
 
+    @NotNull
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+    public InteractionResult onItemUseFirst(@NotNull ItemStack stack, UseOnContext context) {
         return disassemble(stack, context.getLevel(), context.getPlayer())
                 ? InteractionResult.sidedSuccess(context.getLevel().isClientSide())
                 : InteractionResult.PASS;
@@ -104,9 +104,10 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
         return false;
     }
 
+    @ParametersAreNonnullByDefault
     @Override
     public void appendHoverText(
-            @NotNull ItemStack stack, Level level, @NotNull List<Component> lines, @NotNull TooltipFlag advTooltips) {
+            ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag advTooltips) {
         SourceCellHandler.INSTANCE.addCellInformationToTooltip(stack, lines);
     }
 
@@ -116,7 +117,7 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
         return SourceCellHandler.INSTANCE.getTooltipImage(stack);
     }
 
-    public static void initColours(RegisterColorHandlersEvent.Item event) {
-        ArsEngItems.getCells().forEach(cell -> event.register(BasicStorageCell::getColor, cell));
+    public static int getColor(ItemStack stack, int tintIndex) {
+        return BasicStorageCell.getColor(stack, tintIndex) | 0xFF000000;
     }
 }

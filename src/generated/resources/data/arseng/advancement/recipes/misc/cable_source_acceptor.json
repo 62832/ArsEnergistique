@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_source_acceptor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "arseng:source_acceptor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "arseng:cable_source_acceptor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_source_acceptor"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "arseng:cable_source_acceptor"
+    ]
+  }
+}

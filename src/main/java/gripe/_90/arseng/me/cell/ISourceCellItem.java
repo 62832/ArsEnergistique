@@ -11,11 +11,6 @@ public interface ISourceCellItem extends ICellWorkbenchItem {
     double getIdleDrain();
 
     @Override
-    default boolean isEditable(ItemStack is) {
-        return true;
-    }
-
-    @Override
     default FuzzyMode getFuzzyMode(ItemStack is) {
         return null;
     }

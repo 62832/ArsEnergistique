@@ -1,38 +1,59 @@
 package gripe._90.arseng.me.misc;
 
 import com.google.common.primitives.Ints;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
 
 import appeng.api.config.Actionable;
-import appeng.api.config.PowerUnits;
+import appeng.api.config.PowerUnit;
 import appeng.api.networking.security.IActionHost;
 import appeng.blockentity.powersink.IExternalPowerSink;
 
-import gripe._90.arseng.block.entity.IAdvancedSourceTile;
 import gripe._90.arseng.definition.ArsEngConfig;
 
-public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) implements IAdvancedSourceTile {
+public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) implements ISourceCap {
     private static final double AE_PER_SOURCE = ArsEngConfig.AE_PER_SOURCE.get();
 
     @Override
-    public int getTransferRate() {
+    public int getMaxReceive() {
         return getMaxSource();
     }
 
     @Override
-    public boolean canAcceptSource() {
-        return getSource() < getMaxSource();
+    public int getMaxExtract() {
+        return 0;
+    }
+
+    @Override
+    public boolean canAcceptSource(int source) {
+        return getSource() + source < getMaxSource();
+    }
+
+    @Override
+    public boolean canProvideSource(int source) {
+        return false;
     }
 
     @Override
     public int getSource() {
-        return Ints.saturatedCast(getMaxSource()
-                - Math.round(sink.getExternalPowerDemand(PowerUnits.AE, getMaxSource()) / AE_PER_SOURCE));
+        return Ints.saturatedCast(
+                getMaxSource() - Math.round(sink.getExternalPowerDemand(PowerUnit.AE, getMaxSource()) / AE_PER_SOURCE));
     }
 
     @Override
-    public int getMaxSource() {
+    public int getSourceCapacity() {
         var grid = host.getActionableNode();
         return grid != null ? (int) (grid.getGrid().getEnergyService().getMaxStoredPower() / AE_PER_SOURCE) : 0;
+    }
+
+    @Override
+    public int receiveSource(int source, boolean simulate) {
+        sink.injectExternalPower(PowerUnit.AE, source * AE_PER_SOURCE, Actionable.ofSimulate(simulate));
+        return Math.min(source + getSource(), getMaxSource());
+    }
+
+    @Override
+    public int extractSource(int source, boolean simulate) {
+        return 0;
     }
 
     @Override
@@ -41,28 +62,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
     }
 
     @Override
-    public int setSource(int source) {
+    public void setSource(int source) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public int addSource(int source) {
-        sink.injectExternalPower(PowerUnits.AE, source * AE_PER_SOURCE, Actionable.MODULATE);
-        return Math.min(source + getSource(), getMaxSource());
-    }
-
-    @Override
-    public int removeSource(int source) {
-        return 0;
-    }
-
-    @Override
-    public boolean relayCanTakePower() {
-        return false;
-    }
-
-    @Override
-    public boolean sourcelinksCanProvidePower() {
-        return true;
     }
 }

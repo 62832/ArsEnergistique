@@ -1,17 +1,17 @@
 package gripe._90.arseng.definition;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public final class ArsEngConfig {
     private ArsEngConfig() {}
 
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.DoubleValue AE_PER_SOURCE;
-    public static final ForgeConfigSpec.IntValue OUTPUT_P2P_BUFFER;
+    public static final ModConfigSpec.DoubleValue AE_PER_SOURCE;
+    public static final ModConfigSpec.IntValue OUTPUT_P2P_BUFFER;
 
     static {
-        var builder = new ForgeConfigSpec.Builder();
+        var builder = new ModConfigSpec.Builder();
 
         AE_PER_SOURCE = builder.comment("How much AE energy the Source Acceptor should produce per unit of source.")
                 .defineInRange("ae_per_source", 16, 0, Double.MAX_VALUE);

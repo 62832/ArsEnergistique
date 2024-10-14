@@ -1,38 +1,99 @@
 pluginManagement {
-    repositories {
-        maven { url = uri("https://maven.neoforged.net/") }
-        maven { url = uri("https://maven.parchmentmc.org") }
-        gradlePluginPortal()
+    plugins {
+        id("net.neoforged.moddev") version "1.0.14"
+        id("net.neoforged.moddev.repositories") version "1.0.14"
+        id("com.diffplug.spotless") version "6.25.0"
     }
 }
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            plugin("neogradle", "net.neoforged.gradle").version("6.0.21")
-            plugin("mixin", "org.spongepowered.mixin").version("0.7.+")
-            plugin("parchment", "org.parchmentmc.librarian.forgegradle").version("1.+")
-            plugin("spotless", "com.diffplug.spotless").version("6.22.0")
+plugins {
+    id("net.neoforged.moddev.repositories")
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
 
-            val minecraftVersion = "1.20.1"
+run {
+    @Suppress("UnstableApiUsage")
+    dependencyResolutionManagement {
+        repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+        rulesMode = RulesMode.PREFER_SETTINGS
 
-            library("forge", "net.neoforged", "forge").version("$minecraftVersion-47.1.54")
-            library("mixin", "org.spongepowered", "mixin").version("0.8.5")
+        repositories {
+            mavenCentral()
 
-            version("ae2", "15.2.1")
-            library("ae2", "appeng", "appliedenergistics2-forge").versionRef("ae2")
-            library("aecapfix", "curse.maven", "aecapfix-914685").version("5017517")
+            maven {
+                name = "ModMaven (K4U-NL)"
+                url = uri("https://modmaven.dev/")
+                content {
+                    includeGroup("appeng")
+                    includeGroup("mezz.jei")
+                }
+            }
 
-            version("ars", "4.12.1.209")
-            library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$minecraftVersion").versionRef("ars")
+            maven {
+                name = "BlameJared"
+                url = uri("https://maven.blamejared.com")
+                content {
+                    includeGroup("com.hollingsworth.ars_nouveau")
+                    includeGroup("vazkii.patchouli")
+                }
+            }
 
-            library("geckolib", "software.bernie.geckolib", "geckolib-forge-$minecraftVersion").version("4.2.1")
-            library("mixin-extras", "io.github.llamalad7", "mixinextras-forge").version("0.3.6")
-            library("curios", "top.theillusivec4.curios", "curios-forge").version("5.2.0-beta.3+$minecraftVersion")
-            library("patchouli", "vazkii.patchouli", "Patchouli").version("$minecraftVersion-81-FORGE")
+            maven {
+                name = "CurseMaven"
+                url = uri("https://cursemaven.com")
+                content {
+                    includeGroup("curse.maven")
+                }
+            }
 
-            library("jei", "mezz.jei", "jei-$minecraftVersion-forge").version("15.2.0.25")
-            library("jade", "curse.maven", "jade-324717").version("4681833")
+            maven {
+                name = "GeckoLib"
+                url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
+                content {
+                    includeGroup("software.bernie.geckolib")
+                }
+            }
+
+            maven {
+                name = "Illusive Soulworks"
+                url = uri("https://maven.theillusivec4.top/")
+                content {
+                    includeGroup("com.illusivesoulworks.caelus")
+                }
+            }
+
+            maven {
+                name = "Minecraft Forge"
+                url = uri("https://maven.minecraftforge.net/")
+                content {
+                    includeGroup("com.github.glitchfiend")
+                }
+            }
+
+            maven {
+                name = "OctoStudios"
+                url = uri("https://maven.octo-studios.com/releases")
+                content {
+                    includeGroup("top.theillusivec4.curios")
+                }
+            }
+        }
+
+        versionCatalogs {
+            create("libs") {
+                val mc = "1.21.1"
+                version("minecraft", mc)
+
+                val nf = mc.substringAfter('.')
+                version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.62")
+                version("parchment", "2024.07.28")
+
+                version("ae2", "19.0.23-beta")
+                library("ae2", "appeng", "appliedenergistics2").versionRef("ae2")
+
+                version("ars", "5.1.0.736")
+                library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-1.21.0").versionRef("ars")
+            }
         }
     }
 }

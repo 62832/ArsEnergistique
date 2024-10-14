@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
@@ -18,8 +19,8 @@ import appeng.core.definitions.BlockDefinition;
 import gripe._90.arseng.definition.ArsEngBlocks;
 
 public class BlockDropProvider extends BlockLootSubProvider {
-    protected BlockDropProvider() {
-        super(Set.of(), FeatureFlags.DEFAULT_FLAGS);
+    protected BlockDropProvider(HolderLookup.Provider registries) {
+        super(Set.of(), FeatureFlags.DEFAULT_FLAGS, registries);
     }
 
     @Override

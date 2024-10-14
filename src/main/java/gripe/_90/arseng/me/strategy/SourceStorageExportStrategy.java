@@ -1,28 +1,28 @@
 package gripe._90.arseng.me.strategy;
 
+import com.google.common.primitives.Ints;
+import com.hollingsworth.arsnouveau.api.source.ISourceCap;
+import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 
 import appeng.api.behaviors.StackExportStrategy;
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
-import appeng.util.BlockApiCache;
 
-import gripe._90.arseng.block.entity.IAdvancedSourceTile;
-import gripe._90.arseng.definition.ArsEngCapabilities;
 import gripe._90.arseng.me.key.SourceKey;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceStorageExportStrategy implements StackExportStrategy {
-    private final BlockApiCache<IAdvancedSourceTile> apiCache;
-    private final Direction fromSide;
+    private final BlockCapabilityCache<ISourceCap, Direction> cache;
 
     public SourceStorageExportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        apiCache = BlockApiCache.create(ArsEngCapabilities.SOURCE_TILE, level, fromPos);
-        this.fromSide = fromSide;
+        cache = BlockCapabilityCache.create(CapabilityRegistry.SOURCE_CAPABILITY, level, fromPos, fromSide);
     }
 
     @Override
@@ -31,10 +31,10 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
             return 0;
         }
 
-        var sourceTile = apiCache.find(fromSide);
+        var sourceTile = cache.getCapability();
 
         if (sourceTile != null) {
-            var insertable = (int) Math.min(amount, sourceTile.getMaxSource() - sourceTile.getSource());
+            var insertable = sourceTile.receiveSource(Ints.saturatedCast(amount), true);
             var extracted = (int) StorageHelper.poweredExtraction(
                     context.getEnergySource(),
                     context.getInternalStorage().getInventory(),
@@ -44,7 +44,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
                     Actionable.MODULATE);
 
             if (extracted > 0) {
-                sourceTile.addSource(extracted);
+                sourceTile.receiveSource(extracted, false);
             }
 
             return extracted;
@@ -59,18 +59,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
             return 0;
         }
 
-        var sourceTile = apiCache.find(fromSide);
-
-        if (sourceTile != null) {
-            var inserted = (int) Math.min(amount, sourceTile.getMaxSource() - sourceTile.getSource());
-
-            if (inserted > 0 && mode == Actionable.MODULATE) {
-                sourceTile.addSource(inserted);
-            }
-
-            return inserted;
-        }
-
-        return 0;
+        var sourceTile = cache.getCapability();
+        return sourceTile != null ? sourceTile.receiveSource(Ints.saturatedCast(amount), mode.isSimulate()) : 0;
     }
 }

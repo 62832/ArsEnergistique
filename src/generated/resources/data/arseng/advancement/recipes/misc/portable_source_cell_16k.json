@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_energy_cell": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ae2:energy_cell"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_source_cell_housing": {
+      "conditions": {
+        "items": [
+          {
+            "items": "arseng:source_cell_housing"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "arseng:portable_source_cell_16k"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_source_cell_housing",
+      "has_energy_cell"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "arseng:portable_source_cell_16k"
+    ]
+  }
+}

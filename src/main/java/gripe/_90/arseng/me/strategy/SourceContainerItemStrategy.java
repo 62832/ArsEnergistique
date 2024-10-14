@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.base.Preconditions;
 import com.hollingsworth.arsnouveau.common.block.CreativeSourceJar;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
+import com.hollingsworth.arsnouveau.common.items.data.BlockFillContents;
+import com.hollingsworth.arsnouveau.setup.registry.DataComponentRegistry;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,11 +18,11 @@ import appeng.api.config.Actionable;
 import appeng.api.stacks.GenericStack;
 
 import gripe._90.arseng.me.key.SourceKey;
+import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceContainerItemStrategy
         implements ContainerItemStrategy<SourceKey, SourceContainerItemStrategy.Context> {
-    public static final int MAX_SOURCE = 10000;
 
     public static final SourceContainerItemStrategy INSTANCE = new SourceContainerItemStrategy();
 
@@ -38,16 +40,7 @@ public class SourceContainerItemStrategy
 
     private int getSource(ItemStack sourceJar) {
         Preconditions.checkArgument(isSourceJar(sourceJar));
-
-        if (isCreativeSourceJar(sourceJar)) {
-            return MAX_SOURCE;
-        }
-        // fixes this creating a tag on the stack
-        else if (!sourceJar.hasTag()) {
-            return 0;
-        } else {
-            return sourceJar.getOrCreateTag().getCompound("BlockEntityTag").getInt("source");
-        }
+        return isCreativeSourceJar(sourceJar) ? SourceKeyType.MAX_SOURCE : BlockFillContents.get(sourceJar);
     }
 
     private void changeSource(int amount, ItemStack sourceJar) {
@@ -57,11 +50,9 @@ public class SourceContainerItemStrategy
             return;
         }
 
-        var beTag = sourceJar.getOrCreateTag().getCompound("BlockEntityTag");
-        beTag.putInt("source", Math.min(MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0)));
-        beTag.putIntArray("items", new int[0]);
-
-        sourceJar.getOrCreateTag().put("BlockEntityTag", beTag);
+        sourceJar.set(
+                DataComponentRegistry.BLOCK_FILL_CONTENTS,
+                new BlockFillContents(Math.min(SourceKeyType.MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0))));
     }
 
     @Nullable
@@ -106,7 +97,7 @@ public class SourceContainerItemStrategy
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
         var stackCopy = context.getStack().copy();
         stackCopy.setCount(1);
-        var inserted = (int) Math.min(amount, MAX_SOURCE - getSource(stackCopy));
+        var inserted = (int) Math.min(amount, SourceKeyType.MAX_SOURCE - getSource(stackCopy));
 
         if (inserted > 0 && mode == Actionable.MODULATE) {
             changeSource(inserted, stackCopy);

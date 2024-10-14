@@ -1,0 +1,28 @@
+{
+  "values": [
+    {
+      "id": "#c:gems/source",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/source",
+      "required": false
+    },
+    {
+      "id": "#c:logs/archwood",
+      "required": false
+    },
+    {
+      "id": "#ars_nouveau:an_decorative",
+      "required": false
+    },
+    {
+      "id": "#ars_nouveau:magic_saplings",
+      "required": false
+    },
+    {
+      "id": "#ars_nouveau:magic_plants",
+      "required": false
+    }
+  ]
+}

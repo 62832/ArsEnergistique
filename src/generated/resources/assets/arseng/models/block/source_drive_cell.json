@@ -1,0 +1,6 @@
+{
+  "parent": "ae2:block/drive/drive_cell",
+  "textures": {
+    "cell": "arseng:block/source_drive_cell"
+  }
+}

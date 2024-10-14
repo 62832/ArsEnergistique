@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.function.Function;
 
 import net.minecraft.Util;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import appeng.api.features.P2PTunnelAttunement;
 import appeng.api.parts.PartModels;
+import appeng.api.upgrades.Upgrades;
+import appeng.core.definitions.AEItems;
 import appeng.core.definitions.ItemDefinition;
+import appeng.core.localization.GuiText;
 import appeng.items.materials.MaterialItem;
 import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
@@ -24,23 +25,17 @@ import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.item.CreativeSourceCellItem;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
-import gripe._90.arseng.part.SourceAcceptorPart;
+import gripe._90.arseng.part.SourceConverterPart;
 import gripe._90.arseng.part.SourceP2PTunnelPart;
 import gripe._90.arseng.part.SpellP2PTunnelPart;
 
 public final class ArsEngItems {
-    private ArsEngItems() {}
+    public static final DeferredRegister.Items DR = DeferredRegister.createItems(ArsEnergistique.MODID);
 
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
 
     public static List<ItemDefinition<?>> getItems() {
         return Collections.unmodifiableList(ITEMS);
-    }
-
-    public static void register(RegisterEvent event) {
-        if (event.getRegistryKey().equals(Registries.ITEM)) {
-            ITEMS.forEach(i -> ForgeRegistries.ITEMS.register(i.id(), i.asItem()));
-        }
     }
 
     public static final ItemDefinition<MaterialItem> SOURCE_CELL_HOUSING =
@@ -79,13 +74,26 @@ public final class ArsEngItems {
                 p -> new PartItem<>(p, SpellP2PTunnelPart.class, SpellP2PTunnelPart::new));
     });
 
-    public static final ItemDefinition<PartItem<SourceAcceptorPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
-        PartModels.registerModels(PartModelsHelper.createModels(SourceAcceptorPart.class));
+    public static final ItemDefinition<PartItem<SourceConverterPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
+        PartModels.registerModels(PartModelsHelper.createModels(SourceConverterPart.class));
         return item(
                 "ME Source Acceptor",
                 "cable_source_acceptor",
-                p -> new PartItem<>(p, SourceAcceptorPart.class, SourceAcceptorPart::new));
+                p -> new PartItem<>(p, SourceConverterPart.class, SourceConverterPart::new));
     });
+
+    @SuppressWarnings("CodeBlock2Expr")
+    public static void initCellUpgrades(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            getCells().forEach(cell -> {
+                Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.StorageCells.getTranslationKey());
+            });
+            getPortables().forEach(cell -> {
+                Upgrades.add(AEItems.ENERGY_CARD, cell, 2, GuiText.PortableCells.getTranslationKey());
+                Upgrades.add(AEItems.VOID_CARD, cell, 1, GuiText.PortableCells.getTranslationKey());
+            });
+        });
+    }
 
     public static void initP2PAttunement(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
@@ -123,8 +131,7 @@ public final class ArsEngItems {
 
     public static <T extends Item> ItemDefinition<T> item(
             String englishName, String id, Function<Item.Properties, T> factory) {
-        var definition =
-                new ItemDefinition<>(englishName, ArsEnergistique.makeId(id), factory.apply(new Item.Properties()));
+        var definition = new ItemDefinition<>(englishName, DR.registerItem(id, factory));
         ITEMS.add(definition);
         return definition;
     }

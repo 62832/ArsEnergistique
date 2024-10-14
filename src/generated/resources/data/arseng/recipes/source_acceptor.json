@@ -1,0 +1,38 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:source_gem_block"
+    },
+    {
+      "item": "ars_nouveau:source_gem_block"
+    },
+    {
+      "item": "ars_nouveau:source_gem_block"
+    },
+    {
+      "item": "ars_nouveau:source_gem_block"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "minecraft:gold_block"
+    }
+  ],
+  "reagent": {
+    "item": "ae2:energy_acceptor"
+  },
+  "result": {
+    "count": 1,
+    "id": "arseng:source_acceptor"
+  },
+  "sourceCost": 10000
+}

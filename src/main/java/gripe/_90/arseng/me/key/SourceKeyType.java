@@ -2,11 +2,12 @@ package gripe._90.arseng.me.key;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
@@ -17,6 +18,7 @@ import gripe._90.arseng.ArsEnergistique;
 public class SourceKeyType extends AEKeyType {
     public static final Component SOURCE = Component.translatable("ars_nouveau.category.source");
     public static final AEKeyType TYPE = new SourceKeyType();
+    public static final int MAX_SOURCE = 10000;
 
     private SourceKeyType() {
         super(ArsEnergistique.makeId("source"), SourceKey.class, SOURCE);
@@ -28,15 +30,14 @@ public class SourceKeyType extends AEKeyType {
         }
     }
 
-    @Nullable
     @Override
-    public AEKey readFromPacket(FriendlyByteBuf friendlyByteBuf) {
-        return SourceKey.KEY;
+    public MapCodec<? extends AEKey> codec() {
+        return SourceKey.MAP_CODEC;
     }
 
     @Nullable
     @Override
-    public AEKey loadKeyFromTag(CompoundTag compoundTag) {
+    public AEKey readFromPacket(RegistryFriendlyByteBuf friendlyByteBuf) {
         return SourceKey.KEY;
     }
 

@@ -21,8 +21,8 @@ import gripe._90.arseng.me.key.SourceKeyType;
 
 public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
     public static final SourceRenderer INSTANCE = new SourceRenderer();
-    static final Material SOURCE =
-            new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation("ars_nouveau", "block/mana_still"));
+    static final Material SOURCE = new Material(
+            InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath("ars_nouveau", "block/mana_still"));
 
     private SourceRenderer() {}
 
@@ -61,34 +61,30 @@ public class SourceRenderer implements AEKeyRenderHandler<SourceKey> {
         var y1 = -scale / 2;
 
         var transform = poseStack.last().pose();
-        buffer.vertex(transform, x0, y1, 0)
-                .color(-1)
-                .uv(sprite.getU0(), sprite.getV1())
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(combinedLight)
-                .normal(0, 0, 1)
-                .endVertex();
-        buffer.vertex(transform, x1, y1, 0)
-                .color(-1)
-                .uv(sprite.getU1(), sprite.getV1())
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(combinedLight)
-                .normal(0, 0, 1)
-                .endVertex();
-        buffer.vertex(transform, x1, y0, 0)
-                .color(-1)
-                .uv(sprite.getU1(), sprite.getV0())
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(combinedLight)
-                .normal(0, 0, 1)
-                .endVertex();
-        buffer.vertex(transform, x0, y0, 0)
-                .color(-1)
-                .uv(sprite.getU0(), sprite.getV0())
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(combinedLight)
-                .normal(0, 0, 1)
-                .endVertex();
+        buffer.addVertex(transform, x0, y1, 0)
+                .setColor(-1)
+                .setUv(sprite.getU0(), sprite.getV1())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
+        buffer.addVertex(transform, x1, y1, 0)
+                .setColor(-1)
+                .setUv(sprite.getU1(), sprite.getV1())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
+        buffer.addVertex(transform, x1, y0, 0)
+                .setColor(-1)
+                .setUv(sprite.getU1(), sprite.getV0())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
+        buffer.addVertex(transform, x0, y0, 0)
+                .setColor(-1)
+                .setUv(sprite.getU0(), sprite.getV0())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
 
         poseStack.popPose();
     }
