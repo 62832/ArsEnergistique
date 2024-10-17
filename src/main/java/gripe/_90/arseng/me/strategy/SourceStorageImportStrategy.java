@@ -56,7 +56,7 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
 
         if (inserted < amount) {
             var leftover = amount - inserted;
-            var backFill = (int) Math.min(leftover, sourceTile.getMaxSource() - sourceTile.getSource());
+            var backFill = (int) Math.min(leftover, sourceTile.getSourceCapacity() - sourceTile.getSource());
 
             if (backFill > 0) {
                 sourceTile.receiveSource(backFill, false);

@@ -15,7 +15,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
 
     @Override
     public int getMaxReceive() {
-        return getMaxSource();
+        return getSourceCapacity();
     }
 
     @Override
@@ -25,7 +25,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
 
     @Override
     public boolean canAcceptSource(int source) {
-        return getSource() + source < getMaxSource();
+        return getSource() + source < getSourceCapacity();
     }
 
     @Override
@@ -35,8 +35,8 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
 
     @Override
     public int getSource() {
-        return Ints.saturatedCast(
-                getMaxSource() - Math.round(sink.getExternalPowerDemand(PowerUnit.AE, getMaxSource()) / AE_PER_SOURCE));
+        return Ints.saturatedCast(getSourceCapacity()
+                - Math.round(sink.getExternalPowerDemand(PowerUnit.AE, getSourceCapacity()) / AE_PER_SOURCE));
     }
 
     @Override
@@ -48,7 +48,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
     @Override
     public int receiveSource(int source, boolean simulate) {
         sink.injectExternalPower(PowerUnit.AE, source * AE_PER_SOURCE, Actionable.ofSimulate(simulate));
-        return Math.min(source + getSource(), getMaxSource());
+        return Math.min(source + getSource(), getSourceCapacity());
     }
 
     @Override

@@ -62,7 +62,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
     private class InputHandler implements ISourceCap {
         @Override
         public int getMaxReceive() {
-            return getMaxSource();
+            return getSourceCapacity();
         }
 
         @Override
@@ -181,7 +181,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
 
         private int getLocalMaxSource() {
             try (var guard = getAdjacentCapability()) {
-                return MAX_BUFFER + guard.get().getMaxSource();
+                return MAX_BUFFER + guard.get().getSourceCapacity();
             }
         }
 
@@ -218,7 +218,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
         @Override
         public int getSourceCapacity() {
             try (var input = getInputCapability()) {
-                return input.get().getMaxSource() + MAX_BUFFER;
+                return input.get().getSourceCapacity() + MAX_BUFFER;
             }
         }
 

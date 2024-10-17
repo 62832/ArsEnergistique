@@ -34,11 +34,6 @@ public class SourceConverterBlockEntity extends AENetworkedBlockEntity implement
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-    }
-
-    @Override
     public AECableType getCableConnectionType(Direction dir) {
         return AECableType.COVERED;
     }
@@ -57,12 +52,12 @@ public class SourceConverterBlockEntity extends AENetworkedBlockEntity implement
     public final double getExternalPowerDemand(PowerUnit externalUnit, double maxPowerRequired) {
         return PowerUnit.AE.convertTo(
                 externalUnit,
-                Math.max(0.0, this.getFunnelPowerDemand(externalUnit.convertTo(PowerUnit.AE, maxPowerRequired))));
+                Math.max(0.0, getFunnelPowerDemand(externalUnit.convertTo(PowerUnit.AE, maxPowerRequired))));
     }
 
     @Override
     public final double injectExternalPower(PowerUnit input, double amt, Actionable mode) {
-        return PowerUnit.AE.convertTo(input, this.funnelPowerIntoStorage(input.convertTo(PowerUnit.AE, amt), mode));
+        return PowerUnit.AE.convertTo(input, funnelPowerIntoStorage(input.convertTo(PowerUnit.AE, amt), mode));
     }
 
     @Override
