@@ -14,15 +14,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Generate data
-        run: ./gradlew downloadAssets runData
       - name: Build release files
         id: build
         env:
@@ -39,11 +37,10 @@ jobs:
           modrinth-id: IJI3QuK8
           modrinth-token: ${{ secrets.MODRINTH_API_KEY }}
 
-          game-versions: 1.20.1
-          loaders: |
-            forge
-            neoforge
+          game-versions: |
+            1.21
+            1.21.1
+          loaders: neoforge
           dependencies: |
             ae2(required){curseforge:223794}{modrinth:XxWD5pD3}
             ars_nouveau(required){curseforge:401955}{modrinth:TKB6INcv}
-            aecapfix(optional){curseforge:914685}{modrinth:LkfFGNnA}
