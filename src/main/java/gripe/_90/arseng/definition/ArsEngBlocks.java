@@ -13,6 +13,7 @@ import appeng.core.definitions.BlockDefinition;
 import appeng.core.definitions.ItemDefinition;
 
 import gripe._90.arseng.ArsEnergistique;
+import gripe._90.arseng.block.MESourceJarBlock;
 import gripe._90.arseng.block.SourceConverterBlock;
 
 public final class ArsEngBlocks {
@@ -24,9 +25,8 @@ public final class ArsEngBlocks {
         return Collections.unmodifiableList(BLOCKS);
     }
 
-    // public static final BlockDefinition<MESourceJarBlock> ME_SOURCE_JAR =
-    //        block("ME Source Jar", "me_source_jar", MESourceJarBlock::new);
-
+    public static final BlockDefinition<MESourceJarBlock> ME_SOURCE_JAR =
+            block("ME Source Jar", "me_source_jar", MESourceJarBlock::new);
     public static final BlockDefinition<SourceConverterBlock> SOURCE_CONVERTER =
             block("ME Source Converter", "source_acceptor", SourceConverterBlock::new);
 

@@ -2,8 +2,6 @@ package gripe._90.arseng.me.key;
 
 import java.util.List;
 
-import com.mojang.serialization.MapCodec;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +16,8 @@ import appeng.api.stacks.AEKeyType;
 
 public class SourceKey extends AEKey {
     public static final SourceKey KEY = new SourceKey();
-    static final MapCodec<SourceKey> MAP_CODEC = MapCodec.unit(KEY);
+    public static final int MAX_SOURCE = 10000;
+
     private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("ars_nouveau", "source");
 
     private SourceKey() {}

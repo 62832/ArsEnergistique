@@ -25,7 +25,7 @@ public class MESourceJarBlockEntityRenderer implements BlockEntityRenderer<MESou
             @NotNull MultiBufferSource buffers,
             int light,
             int overlay) {
-        var amount = (float) jar.getSource() / jar.getMaxSource();
+        var amount = (float) jar.getSource() / jar.getSourceCapacity();
 
         if (amount <= 0) {
             return;

@@ -19,11 +19,9 @@ class BlockStateModelProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         simpleBlockWithItem(ArsEngBlocks.SOURCE_CONVERTER.block(), cubeAll(ArsEngBlocks.SOURCE_CONVERTER.block()));
 
-        /*
         var sourceJarModel = models().getExistingFile(ArsEngBlocks.ME_SOURCE_JAR.id());
         horizontalBlock(ArsEngBlocks.ME_SOURCE_JAR.block(), sourceJarModel);
         simpleBlockItem(ArsEngBlocks.ME_SOURCE_JAR.block(), sourceJarModel);
-         */
 
         var sourceCell = "block/source_drive_cell";
         models().getBuilder(sourceCell)

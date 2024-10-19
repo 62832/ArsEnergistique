@@ -18,7 +18,6 @@ import appeng.api.config.Actionable;
 import appeng.api.stacks.GenericStack;
 
 import gripe._90.arseng.me.key.SourceKey;
-import gripe._90.arseng.me.key.SourceKeyType;
 
 @SuppressWarnings("UnstableApiUsage")
 public class SourceContainerItemStrategy
@@ -40,7 +39,7 @@ public class SourceContainerItemStrategy
 
     private int getSource(ItemStack sourceJar) {
         Preconditions.checkArgument(isSourceJar(sourceJar));
-        return isCreativeSourceJar(sourceJar) ? SourceKeyType.MAX_SOURCE : BlockFillContents.get(sourceJar);
+        return isCreativeSourceJar(sourceJar) ? SourceKey.MAX_SOURCE : BlockFillContents.get(sourceJar);
     }
 
     private void changeSource(int amount, ItemStack sourceJar) {
@@ -52,7 +51,7 @@ public class SourceContainerItemStrategy
 
         sourceJar.set(
                 DataComponentRegistry.BLOCK_FILL_CONTENTS,
-                new BlockFillContents(Math.min(SourceKeyType.MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0))));
+                new BlockFillContents(Math.min(SourceKey.MAX_SOURCE, Math.max(getSource(sourceJar) + amount, 0))));
     }
 
     @Nullable
@@ -97,7 +96,7 @@ public class SourceContainerItemStrategy
     public long insert(Context context, SourceKey what, long amount, Actionable mode) {
         var stackCopy = context.getStack().copy();
         stackCopy.setCount(1);
-        var inserted = (int) Math.min(amount, SourceKeyType.MAX_SOURCE - getSource(stackCopy));
+        var inserted = (int) Math.min(amount, SourceKey.MAX_SOURCE - getSource(stackCopy));
 
         if (inserted > 0 && mode == Actionable.MODULATE) {
             changeSource(inserted, stackCopy);

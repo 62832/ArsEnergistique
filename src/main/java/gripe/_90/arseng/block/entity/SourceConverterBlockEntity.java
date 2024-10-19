@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
+import appeng.api.AECapabilities;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -22,14 +23,16 @@ public class SourceConverterBlockEntity extends AENetworkedBlockEntity implement
     private final SourceEnergyAdaptor adaptor = new SourceEnergyAdaptor(this, this);
 
     public SourceConverterBlockEntity(BlockPos pos, BlockState state) {
-        super(ArsEngBlockEntities.SOURCE_CONVERTER_ENTITY.get(), pos, state);
+        super(ArsEngBlockEntities.SOURCE_CONVERTER.get(), pos, state);
         getMainNode().setIdlePowerUsage(0);
     }
 
     public static void registerCapability(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
+                AECapabilities.IN_WORLD_GRID_NODE_HOST, ArsEngBlockEntities.SOURCE_CONVERTER.get(), (be, ctx) -> be);
+        event.registerBlockEntity(
                 CapabilityRegistry.SOURCE_CAPABILITY,
-                ArsEngBlockEntities.SOURCE_CONVERTER_ENTITY.get(),
+                ArsEngBlockEntities.SOURCE_CONVERTER.get(),
                 (be, ctx) -> be.adaptor);
     }
 

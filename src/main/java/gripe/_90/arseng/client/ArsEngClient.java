@@ -4,12 +4,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import appeng.api.client.AEKeyRendering;
 import appeng.api.client.StorageCellModels;
 
 import gripe._90.arseng.ArsEnergistique;
+import gripe._90.arseng.definition.ArsEngBlockEntities;
 import gripe._90.arseng.definition.ArsEngItems;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
@@ -23,7 +25,7 @@ public class ArsEngClient {
         AEKeyRendering.register(SourceKeyType.TYPE, SourceKey.class, SourceRenderer.INSTANCE);
         modEventBus.addListener(ArsEngClient::initItemColours);
         modEventBus.addListener(ArsEngClient::initCellModels);
-        // modEventBus.addListener(ArsEngClient::initBlockEntityRenderer);
+        modEventBus.addListener(ArsEngClient::initBlockEntityRenderer);
     }
 
     private static void initCellModels(FMLClientSetupEvent event) {
@@ -54,12 +56,9 @@ public class ArsEngClient {
         });
     }
 
-    /*
     private static void initBlockEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(
-                ArsEngBlockEntities.ME_SOURCE_JAR_ENTITY.get(), MESourceJarBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ArsEngBlockEntities.ME_SOURCE_JAR.get(), MESourceJarBlockEntityRenderer::new);
     }
-     */
 
     private static void initItemColours(RegisterColorHandlersEvent.Item event) {
         ArsEngItems.getCells().forEach(cell -> event.register(SourceCellItem::getColor, cell));

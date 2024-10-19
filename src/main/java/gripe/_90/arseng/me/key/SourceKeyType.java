@@ -18,7 +18,7 @@ import gripe._90.arseng.ArsEnergistique;
 public class SourceKeyType extends AEKeyType {
     public static final Component SOURCE = Component.translatable("ars_nouveau.category.source");
     public static final AEKeyType TYPE = new SourceKeyType();
-    public static final int MAX_SOURCE = 10000;
+    private static final MapCodec<SourceKey> MAP_CODEC = MapCodec.unit(SourceKey.KEY);
 
     private SourceKeyType() {
         super(ArsEnergistique.makeId("source"), SourceKey.class, SOURCE);
@@ -32,7 +32,7 @@ public class SourceKeyType extends AEKeyType {
 
     @Override
     public MapCodec<? extends AEKey> codec() {
-        return SourceKey.MAP_CODEC;
+        return MAP_CODEC;
     }
 
     @Nullable

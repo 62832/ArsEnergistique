@@ -12,6 +12,7 @@ import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.storage.StorageCells;
 import appeng.parts.automation.StackWorldBehaviors;
 
+import gripe._90.arseng.block.entity.MESourceJarBlockEntity;
 import gripe._90.arseng.block.entity.SourceConverterBlockEntity;
 import gripe._90.arseng.definition.ArsEngBlockEntities;
 import gripe._90.arseng.definition.ArsEngBlocks;
@@ -59,9 +60,10 @@ public class ArsEnergistique {
         StackWorldBehaviors.registerExternalStorageStrategy(SourceKeyType.TYPE, SourceExternalStorageStrategy::new);
 
         ContainerItemStrategies.register(SourceKeyType.TYPE, SourceKey.class, SourceContainerItemStrategy.INSTANCE);
-        GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceKeyType.MAX_SOURCE);
+        GenericSlotCapacities.register(SourceKeyType.TYPE, (long) SourceKey.MAX_SOURCE);
 
         modEventBus.addListener(GenericStackSourceStorage::registerCapability);
+        modEventBus.addListener(MESourceJarBlockEntity::registerCapability);
         modEventBus.addListener(SourceConverterBlockEntity::registerCapability);
         modEventBus.addListener(SourceConverterPart::registerCapability);
 
