@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ClientTickingBlockEntity;
 import appeng.blockentity.ServerTickingBlockEntity;
 import appeng.core.definitions.BlockDefinition;
 
@@ -37,12 +38,18 @@ public final class ArsEngBlockEntities {
         return DR.register(id, () -> {
             var type = BlockEntityType.Builder.of(supplier, block.block()).build(null);
 
+            BlockEntityTicker<T> clientTicker = null;
             BlockEntityTicker<T> serverTicker = null;
+
+            if (ClientTickingBlockEntity.class.isAssignableFrom(entityClass)) {
+                clientTicker = ((level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick());
+            }
+
             if (ServerTickingBlockEntity.class.isAssignableFrom(entityClass)) {
                 serverTicker = (level, pos, state, entity) -> ((ServerTickingBlockEntity) entity).serverTick();
             }
 
-            block.block().setBlockEntity(entityClass, type, null, serverTicker);
+            block.block().setBlockEntity(entityClass, type, clientTicker, serverTicker);
             AEBaseBlockEntity.registerBlockEntityItem(type, block.asItem());
             return type;
         });
