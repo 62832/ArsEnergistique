@@ -1,5 +1,6 @@
 package gripe._90.arseng.client;
 
+import net.minecraft.util.FastColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -9,12 +10,12 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import appeng.api.client.AEKeyRendering;
 import appeng.api.client.StorageCellModels;
+import appeng.items.storage.BasicStorageCell;
+import appeng.items.tools.powered.PortableCellItem;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlockEntities;
 import gripe._90.arseng.definition.ArsEngItems;
-import gripe._90.arseng.item.PortableSourceCellItem;
-import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
 
@@ -61,7 +62,15 @@ public class ArsEngClient {
     }
 
     private static void initItemColours(RegisterColorHandlersEvent.Item event) {
-        ArsEngItems.getCells().forEach(cell -> event.register(SourceCellItem::getColor, cell));
-        ArsEngItems.getPortables().forEach(portable -> event.register(PortableSourceCellItem::getColor, portable));
+        for (var cell : ArsEngItems.getCells()) {
+            event.register(
+                    (stack, tintIndex) -> FastColor.ARGB32.opaque(BasicStorageCell.getColor(stack, tintIndex)), cell);
+        }
+
+        for (var portable : ArsEngItems.getPortables()) {
+            event.register(
+                    (stack, tintIndex) -> FastColor.ARGB32.opaque(PortableCellItem.getColor(stack, tintIndex)),
+                    portable);
+        }
     }
 }

@@ -42,7 +42,7 @@ public final class ArsEngBlockEntities {
             BlockEntityTicker<T> serverTicker = null;
 
             if (ClientTickingBlockEntity.class.isAssignableFrom(entityClass)) {
-                clientTicker = ((level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick());
+                clientTicker = (level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick();
             }
 
             if (ServerTickingBlockEntity.class.isAssignableFrom(entityClass)) {

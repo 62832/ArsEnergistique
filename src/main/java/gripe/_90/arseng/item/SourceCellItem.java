@@ -23,7 +23,6 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
-import appeng.items.storage.BasicStorageCell;
 import appeng.items.storage.StorageTier;
 
 import gripe._90.arseng.me.cell.ISourceCellItem;
@@ -115,9 +114,5 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
     @Override
     public Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
         return SourceCellHandler.INSTANCE.getTooltipImage(stack);
-    }
-
-    public static int getColor(ItemStack stack, int tintIndex) {
-        return BasicStorageCell.getColor(stack, tintIndex) | 0xFF000000;
     }
 }

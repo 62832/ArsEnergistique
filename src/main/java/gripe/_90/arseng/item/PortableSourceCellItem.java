@@ -12,8 +12,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-import appeng.api.storage.StorageCells;
-import appeng.api.storage.cells.CellState;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.upgrades.Upgrades;
@@ -73,22 +71,5 @@ public class PortableSourceCellItem extends AbstractPortableCell implements ISou
     @Override
     public IUpgradeInventory getUpgrades(ItemStack is) {
         return UpgradeInventories.forItem(is, 3, this::onUpgradesChanged);
-    }
-
-    public static int getColor(ItemStack stack, int tintIndex) {
-        if (tintIndex == 1 && stack.getItem() instanceof PortableSourceCellItem sourceCell) {
-            if (sourceCell.getAECurrentPower(stack) <= 0) {
-                return CellState.ABSENT.getStateColor();
-            }
-
-            var cellInv = StorageCells.getCellInventory(stack, null);
-            var cellStatus = cellInv != null ? cellInv.getStatus() : CellState.EMPTY;
-            return cellStatus.getStateColor() | 0xFF000000;
-        } else if (tintIndex == 2 && stack.getItem() instanceof PortableSourceCellItem sourceCell) {
-            return sourceCell.getColor(stack) | 0xFF000000;
-        } else {
-            // White
-            return 0xFFFFFFFF;
-        }
     }
 }
