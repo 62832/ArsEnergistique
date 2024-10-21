@@ -2,10 +2,7 @@
   "minVersion": "0.8.5",
   "required": true,
   "package": "gripe._90.arseng.mixin",
-  "refmap": "arseng.refmap.json",
-  "compatibilityLevel": "JAVA_17",
   "mixins": ["ConfigInventoryMixin"],
-  "client": [],
   "injectors": {
     "defaultRequire": 1
   }

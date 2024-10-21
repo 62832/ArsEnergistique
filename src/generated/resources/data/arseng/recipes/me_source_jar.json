@@ -1,0 +1,20 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "keepNbtOfReagent": false,
+  "pedestalItems": [
+    {
+      "item": "ars_nouveau:manipulation_essence"
+    },
+    {
+      "tag": "ae2:interface"
+    }
+  ],
+  "reagent": {
+    "item": "ars_nouveau:source_jar"
+  },
+  "result": {
+    "count": 1,
+    "id": "arseng:me_source_jar"
+  },
+  "sourceCost": 0
+}

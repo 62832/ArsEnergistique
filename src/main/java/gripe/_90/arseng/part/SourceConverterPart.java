@@ -31,8 +31,7 @@ public class SourceConverterPart extends AEBasePart implements IExternalPowerSin
     }
 
     public static void registerCapability(RegisterPartCapabilitiesEvent event) {
-        event.register(
-                CapabilityRegistry.SOURCE_CAPABILITY, (part, context) -> part.adaptor, SourceConverterPart.class);
+        event.register(CapabilityRegistry.SOURCE_CAPABILITY, (part, ctx) -> part.adaptor, SourceConverterPart.class);
     }
 
     @Override
