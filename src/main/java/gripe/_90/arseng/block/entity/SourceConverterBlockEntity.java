@@ -53,9 +53,8 @@ public class SourceConverterBlockEntity extends AENetworkedBlockEntity implement
 
     @Override
     public final double getExternalPowerDemand(PowerUnit externalUnit, double maxPowerRequired) {
-        return PowerUnit.AE.convertTo(
-                externalUnit,
-                Math.max(0.0, getFunnelPowerDemand(externalUnit.convertTo(PowerUnit.AE, maxPowerRequired))));
+        var demand = getFunnelPowerDemand(externalUnit.convertTo(PowerUnit.AE, maxPowerRequired));
+        return PowerUnit.AE.convertTo(externalUnit, Math.max(0.0, demand));
     }
 
     @Override

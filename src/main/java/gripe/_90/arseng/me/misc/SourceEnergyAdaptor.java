@@ -25,7 +25,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
 
     @Override
     public boolean canAcceptSource(int source) {
-        return getSource() + source < getSourceCapacity();
+        return receiveSource(source, true) > 0;
     }
 
     @Override
@@ -48,7 +48,7 @@ public record SourceEnergyAdaptor(IExternalPowerSink sink, IActionHost host) imp
     @Override
     public int receiveSource(int source, boolean simulate) {
         sink.injectExternalPower(PowerUnit.AE, source * AE_PER_SOURCE, Actionable.ofSimulate(simulate));
-        return Math.min(source + getSource(), getSourceCapacity());
+        return Math.min(source, getSourceCapacity() - getSource());
     }
 
     @Override
