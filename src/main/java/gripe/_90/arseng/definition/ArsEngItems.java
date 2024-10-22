@@ -77,7 +77,7 @@ public final class ArsEngItems {
     public static final ItemDefinition<PartItem<SourceConverterPart>> SOURCE_ACCEPTOR_PART = Util.make(() -> {
         PartModels.registerModels(PartModelsHelper.createModels(SourceConverterPart.class));
         return item(
-                "ME Source Acceptor",
+                "ME Source Converter",
                 "cable_source_acceptor",
                 p -> new PartItem<>(p, SourceConverterPart.class, SourceConverterPart::new));
     });
