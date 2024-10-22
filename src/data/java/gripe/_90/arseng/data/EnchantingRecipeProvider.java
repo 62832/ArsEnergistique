@@ -53,7 +53,7 @@ public class EnchantingRecipeProvider extends ApparatusRecipeProvider {
             saveStable(
                     pOutput,
                     recipe.serialize(),
-                    output.resolve("data/arseng/recipes/" + recipe.id().getPath() + ".json"));
+                    output.resolve("data/arseng/recipe/" + recipe.id().getPath() + ".json"));
         }
     }
 
