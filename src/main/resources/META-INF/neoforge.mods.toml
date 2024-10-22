@@ -23,4 +23,4 @@ versionRange = "[19,)"
 
 [[dependencies]]
 modId = "ars_nouveau"
-versionRange = "[5,)"
+versionRange = "[5.2,)"

@@ -37,9 +37,7 @@ jobs:
           modrinth-id: IJI3QuK8
           modrinth-token: ${{ secrets.MODRINTH_API_KEY }}
 
-          game-versions: |
-            1.21
-            1.21.1
+          game-versions: 1.21.1
           loaders: neoforge
           dependencies: |
             ae2(required){curseforge:223794}{modrinth:XxWD5pD3}

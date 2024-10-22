@@ -91,8 +91,8 @@ run {
                 version("ae2", "19.0.23-beta")
                 library("ae2", "appeng", "appliedenergistics2").versionRef("ae2")
 
-                version("ars", "5.1.0.736")
-                library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-1.21.0").versionRef("ars")
+                version("ars", "5.2.1.757")
+                library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$mc").versionRef("ars")
             }
         }
     }
