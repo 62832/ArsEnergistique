@@ -2,7 +2,7 @@
   "minVersion": "0.8.5",
   "required": true,
   "package": "gripe._90.arseng.mixin",
-  "mixins": ["ConfigInventoryMixin"],
+  "mixins": ["ConfigInventoryMixin", "ScribesTileMixin"],
   "injectors": {
     "defaultRequire": 1
   }
