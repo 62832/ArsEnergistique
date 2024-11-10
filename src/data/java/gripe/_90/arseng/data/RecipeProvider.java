@@ -4,13 +4,22 @@ import java.util.concurrent.CompletableFuture;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.hollingsworth.arsnouveau.common.crafting.recipes.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.common.datagen.ApparatusRecipeBuilder;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.registry.ItemsRegistry;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlocks;
@@ -55,5 +64,37 @@ class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                 .requires(ArsEngItems.SOURCE_ACCEPTOR_PART)
                 .unlockedBy("has_source_acceptor", has(ArsEngBlocks.SOURCE_CONVERTER))
                 .save(output, ArsEnergistique.makeId("source_acceptor_from_part"));
+
+        enchanting(
+                ApparatusRecipeBuilder.builder()
+                        .withResult(ArsEngItems.SOURCE_CELL_HOUSING)
+                        .withReagent(AEItems.ITEM_CELL_HOUSING)
+                        .withPedestalItem(2, ItemsRegistry.MANIPULATION_ESSENCE)
+                        .withPedestalItem(2, ItemsRegistry.SOURCE_GEM)
+                        .withPedestalItem(4, Items.GOLD_INGOT)
+                        .build(),
+                output);
+        enchanting(
+                ApparatusRecipeBuilder.builder()
+                        .withResult(ArsEngBlocks.SOURCE_CONVERTER)
+                        .withReagent(AEBlocks.ENERGY_ACCEPTOR)
+                        .withPedestalItem(4, BlockRegistry.SOURCE_GEM_BLOCK)
+                        .withPedestalItem(4, Items.GOLD_BLOCK)
+                        .withSourceCost(10000)
+                        .build(),
+                output);
+        enchanting(
+                ApparatusRecipeBuilder.builder()
+                        .withResult(ArsEngBlocks.ME_SOURCE_JAR)
+                        .withReagent(BlockRegistry.SOURCE_JAR)
+                        .withPedestalItem(ItemsRegistry.MANIPULATION_ESSENCE)
+                        .withPedestalItem(Ingredient.of(ConventionTags.INTERFACE))
+                        .build(),
+                output);
+    }
+
+    private void enchanting(
+            ApparatusRecipeBuilder.RecipeWrapper<EnchantingApparatusRecipe> recipe, RecipeOutput output) {
+        output.accept(ArsEnergistique.makeId(recipe.id().getPath()), recipe.recipe(), null);
     }
 }
