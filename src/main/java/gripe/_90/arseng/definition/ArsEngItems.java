@@ -119,7 +119,7 @@ public final class ArsEngItems {
         return item(
                 tier.namePrefix() + " ME Source Storage Cell",
                 "source_storage_cell_" + tier.namePrefix(),
-                p -> new SourceCellItem(p.stacksTo(1), tier, SOURCE_CELL_HOUSING));
+                p -> new SourceCellItem(p.stacksTo(1), tier));
     }
 
     private static ItemDefinition<PortableSourceCellItem> portable(StorageTier tier) {

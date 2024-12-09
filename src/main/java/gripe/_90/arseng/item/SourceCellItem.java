@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
 import appeng.api.storage.StorageCells;
@@ -24,18 +23,17 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.core.localization.PlayerMessages;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageTier;
+import appeng.recipes.game.StorageCellDisassemblyRecipe;
 
 import gripe._90.arseng.me.cell.ISourceCellItem;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 
 public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
     private final StorageTier tier;
-    private final ItemLike housing;
 
-    public SourceCellItem(Properties properties, StorageTier tier, ItemLike housing) {
+    public SourceCellItem(Properties properties, StorageTier tier) {
         super(properties);
         this.tier = tier;
-        this.housing = housing;
     }
 
     public StorageTier getTier() {
@@ -76,7 +74,15 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
 
     private boolean disassemble(ItemStack stack, Level level, Player player) {
         if (player != null && player.isShiftKeyDown()) {
-            if (level.isClientSide()) return false;
+            if (level.isClientSide()) {
+                return false;
+            }
+
+            var disassembledStacks = StorageCellDisassemblyRecipe.getDisassemblyResult(level, stack.getItem());
+
+            if (disassembledStacks.isEmpty()) {
+                return false;
+            }
 
             var playerInv = player.getInventory();
             var cellInv = StorageCells.getCellInventory(stack, null);
@@ -84,14 +90,14 @@ public class SourceCellItem extends AEBaseItem implements ISourceCellItem {
             if (cellInv != null && playerInv.getSelected() == stack) {
                 if (cellInv.getAvailableStacks().isEmpty()) {
                     playerInv.setItem(playerInv.selected, ItemStack.EMPTY);
-                    playerInv.placeItemBackInInventory(
-                            tier.componentSupplier().get().getDefaultInstance());
 
                     for (var upgrade : getUpgrades(stack)) {
                         playerInv.placeItemBackInInventory(upgrade);
                     }
 
-                    playerInv.placeItemBackInInventory(housing.asItem().getDefaultInstance());
+                    for (var disassembled : disassembledStacks) {
+                        playerInv.placeItemBackInInventory(disassembled);
+                    }
 
                     return true;
                 } else {

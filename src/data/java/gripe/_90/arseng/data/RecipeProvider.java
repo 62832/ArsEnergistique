@@ -1,5 +1,6 @@
 package gripe._90.arseng.data;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.tags.ConventionTags;
+import appeng.recipes.game.StorageCellDisassemblyRecipe;
 
 import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.definition.ArsEngBlocks;
@@ -43,17 +45,35 @@ class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                     .unlockedBy("has_source_cell_housing", has(ArsEngItems.SOURCE_CELL_HOUSING))
                     .unlockedBy("has_cell_component_" + prefix, has(component))
                     .save(output, cell.id());
+            output.accept(
+                    cell.id().withSuffix("_disassembly"),
+                    new StorageCellDisassemblyRecipe(
+                            cell.asItem(),
+                            List.of(component.getDefaultInstance(), ArsEngItems.SOURCE_CELL_HOUSING.stack())),
+                    null);
         }
 
         for (var portable : ArsEngItems.getPortables()) {
+            var component = portable.asItem().getTier().componentSupplier().get();
+
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, portable)
                     .requires(AEBlocks.ME_CHEST)
-                    .requires(portable.asItem().getTier().componentSupplier().get())
+                    .requires(component)
                     .requires(AEBlocks.ENERGY_CELL)
                     .requires(ArsEngItems.SOURCE_CELL_HOUSING)
                     .unlockedBy("has_source_cell_housing", has(ArsEngItems.SOURCE_CELL_HOUSING))
                     .unlockedBy("has_energy_cell", has(AEBlocks.ENERGY_CELL))
                     .save(output, portable.id());
+            output.accept(
+                    portable.id().withSuffix("_disassembly"),
+                    new StorageCellDisassemblyRecipe(
+                            portable.asItem(),
+                            List.of(
+                                    component.getDefaultInstance(),
+                                    ArsEngItems.SOURCE_CELL_HOUSING.stack(),
+                                    AEBlocks.ME_CHEST.stack(),
+                                    AEBlocks.ENERGY_CELL.stack())),
+                    null);
         }
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ArsEngItems.SOURCE_ACCEPTOR_PART)

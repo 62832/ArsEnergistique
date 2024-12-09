@@ -1,0 +1,14 @@
+{
+  "type": "ae2:storage_cell_disassembly",
+  "cell": "arseng:source_storage_cell_256k",
+  "cell_disassembly_items": [
+    {
+      "count": 1,
+      "id": "ae2:cell_component_256k"
+    },
+    {
+      "count": 1,
+      "id": "arseng:source_cell_housing"
+    }
+  ]
+}
