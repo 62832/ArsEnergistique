@@ -1,5 +1,6 @@
 package gripe._90.arseng.block;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -91,7 +92,8 @@ public class MESourceJarBlock extends AEBaseEntityBlock<MESourceJarBlockEntity> 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
+        return Objects.requireNonNull(super.getStateForPlacement(context))
+                .setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
     }
 
     @NotNull
