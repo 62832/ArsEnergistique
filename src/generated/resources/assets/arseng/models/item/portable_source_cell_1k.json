@@ -3,7 +3,7 @@
   "textures": {
     "layer0": "arseng:item/portable_source_cell_housing",
     "layer1": "ae2:item/portable_cell_led",
-    "layer2": "arseng:item/portable_cell_screen",
-    "layer3": "arseng:item/portable_source_cell_1k"
+    "layer2": "ae2:item/portable_cell_screen",
+    "layer3": "ae2:item/portable_cell_side_1k"
   }
 }

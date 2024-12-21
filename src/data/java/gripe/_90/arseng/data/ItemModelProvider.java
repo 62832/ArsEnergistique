@@ -62,8 +62,8 @@ class ItemModelProvider extends net.neoforged.neoforge.client.model.generators.I
                         "layer0",
                         ArsEnergistique.makeId("item/portable_source_cell_housing"))
                 .texture("layer1", AppEng.makeId("item/portable_cell_led"))
-                .texture("layer2", ArsEnergistique.makeId("item/portable_cell_screen"))
-                .texture("layer3", ArsEnergistique.makeId("item/portable_source_cell" + tierSuffix));
+                .texture("layer2", AppEng.makeId("item/portable_cell_screen"))
+                .texture("layer3", AppEng.makeId("item/portable_cell_side" + tierSuffix));
     }
 
     private void driveCell(String cell, int offset) {
