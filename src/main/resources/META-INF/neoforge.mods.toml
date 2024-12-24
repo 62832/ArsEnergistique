@@ -4,6 +4,7 @@ loaderVersion = "[1,)"
 authors = "90, dkmk100"
 license = "LGPLv3.0"
 
+updateJSONURL = "https://mod-manifest.jarva.dev/manifest/curseforge/905641/neoforge"
 issueTrackerURL = "https://github.com/62832/ArsEnergique/issues"
 displayURL = "https://github.com/62832/ArsEnergique"
 
