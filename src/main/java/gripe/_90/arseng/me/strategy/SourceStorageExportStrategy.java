@@ -43,7 +43,7 @@ public class SourceStorageExportStrategy implements StackExportStrategy {
                     context.getActionSource(),
                     Actionable.MODULATE);
 
-            if (extracted > 0) {
+            if (extracted > 0 && sourceTile.canAcceptSource(extracted)) {
                 sourceTile.receiveSource(extracted, false);
             }
 

@@ -46,29 +46,28 @@ public class SourceStorageImportStrategy implements StackImportStrategy {
         var inv = context.getInternalStorage().getInventory();
 
         // Check how much source we can actually insert
-        var amount = inv.insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
+        var amount = (int) inv.insert(SourceKey.KEY, rawAmount, Actionable.SIMULATE, context.getActionSource());
 
-        if (amount > 0) {
-            sourceTile.extractSource((int) amount, false);
-        }
+        if (amount > 0 && sourceTile.canProvideSource(amount)) {
+            sourceTile.extractSource(amount, false);
+            var inserted = inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
 
-        var inserted = inv.insert(SourceKey.KEY, amount, Actionable.MODULATE, context.getActionSource());
+            if (inserted < amount) {
+                var leftover = amount - inserted;
+                var backFill = (int) Math.min(leftover, sourceTile.getSourceCapacity() - sourceTile.getSource());
 
-        if (inserted < amount) {
-            var leftover = amount - inserted;
-            var backFill = (int) Math.min(leftover, sourceTile.getSourceCapacity() - sourceTile.getSource());
+                if (backFill > 0) {
+                    sourceTile.receiveSource(backFill, false);
+                }
 
-            if (backFill > 0) {
-                sourceTile.receiveSource(backFill, false);
+                if (leftover > backFill) {
+                    LOGGER.error("Storage import issue, voided {} source.", leftover - backFill);
+                }
             }
 
-            if (leftover > backFill) {
-                LOGGER.error("Storage import issue, voided {} source.", leftover - backFill);
-            }
+            var opsUsed = Math.max(1, inserted / SourceKeyType.TYPE.getAmountPerOperation());
+            context.reduceOperationsRemaining(opsUsed);
         }
-
-        var opsUsed = Math.max(1, inserted / SourceKeyType.TYPE.getAmountPerOperation());
-        context.reduceOperationsRemaining(opsUsed);
 
         return amount > 0;
     }
