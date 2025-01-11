@@ -1,0 +1,20 @@
+{
+  "block.arseng.me_source_jar": "ME Kaynak Kavanozu",
+  "block.arseng.source_acceptor": "ME Kaynak Dönüştürücü",
+  "item.arseng.cable_source_acceptor": "ME Kaynak Dönüştürücü",
+  "item.arseng.creative_source_cell": "Yaratıcı Mod ME Kaynak Hücresi",
+  "item.arseng.portable_source_cell_16k": "16k Taşınabilir Kaynak Hücresi",
+  "item.arseng.portable_source_cell_1k": "1k Taşınabilir Kaynak Hücresi",
+  "item.arseng.portable_source_cell_256k": "256k Taşınabilir Kaynak Hücresi",
+  "item.arseng.portable_source_cell_4k": "4k Taşınabilir Kaynak Hücresi",
+  "item.arseng.portable_source_cell_64k": "64k Taşınabilir Kaynak Hücresi",
+  "item.arseng.source_cell_housing": "ME Kaynak Hücresi Gövdesi",
+  "item.arseng.source_p2p_tunnel": "ME Kaynak P2P Tüneli",
+  "item.arseng.source_storage_cell_16k": "16k ME Kaynak Depolama Hücresi",
+  "item.arseng.source_storage_cell_1k": "1k ME Kaynak Depolama Hücresi",
+  "item.arseng.source_storage_cell_256k": "256k ME Kaynak Depolama Hücresi",
+  "item.arseng.source_storage_cell_4k": "4k ME Kaynak Depolama Hücresi",
+  "item.arseng.source_storage_cell_64k": "64k ME Kaynak Depolama Hücresi",
+  "item.arseng.spell_p2p_tunnel": "ME Büyü P2P Tüneli",
+  "itemGroup.arseng": "Ars Énergistique"
+}
