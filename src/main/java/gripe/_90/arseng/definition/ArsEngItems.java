@@ -22,7 +22,6 @@ import appeng.items.parts.PartModelsHelper;
 import appeng.items.storage.StorageTier;
 
 import gripe._90.arseng.ArsEnergistique;
-import gripe._90.arseng.item.CreativeSourceCellItem;
 import gripe._90.arseng.item.PortableSourceCellItem;
 import gripe._90.arseng.item.SourceCellItem;
 import gripe._90.arseng.part.SourceConverterPart;
@@ -54,9 +53,6 @@ public final class ArsEngItems {
     public static final ItemDefinition<PortableSourceCellItem> PORTABLE_SOURCE_CELL64K = portable(StorageTier.SIZE_64K);
     public static final ItemDefinition<PortableSourceCellItem> PORTABLE_SOURCE_CELL256K = portable(StorageTier.SIZE_256K);
     // spotless:on
-
-    public static final ItemDefinition<CreativeSourceCellItem> CREATIVE_SOURCE_CELL =
-            item("Creative ME Source Cell", "creative_source_cell", CreativeSourceCellItem::new);
 
     public static final ItemDefinition<PartItem<SourceP2PTunnelPart>> SOURCE_P2P_TUNNEL = Util.make(() -> {
         PartModels.registerModels(PartModelsHelper.createModels(SourceP2PTunnelPart.class));

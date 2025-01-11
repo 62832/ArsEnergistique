@@ -52,8 +52,6 @@ public class ArsEngClient {
                     ArsEngItems.SOURCE_CELL_256K, ArsEnergistique.makeId(prefix + "256k_source_cell"));
             StorageCellModels.registerModel(
                     ArsEngItems.PORTABLE_SOURCE_CELL256K, ArsEnergistique.makeId(prefix + "256k_source_cell"));
-            StorageCellModels.registerModel(
-                    ArsEngItems.CREATIVE_SOURCE_CELL, ArsEnergistique.makeId(prefix + "creative_source_cell"));
         });
     }
 

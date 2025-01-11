@@ -19,7 +19,6 @@ class ItemModelProvider extends net.neoforged.neoforge.client.model.generators.I
     @Override
     protected void registerModels() {
         flatSingleLayer(ArsEngItems.SOURCE_CELL_HOUSING);
-        flatSingleLayer(ArsEngItems.CREATIVE_SOURCE_CELL);
 
         ArsEngItems.getCells()
                 .forEach(cell -> flatSingleLayer(cell).texture("layer1", AppEng.makeId("item/storage_cell_led")));
@@ -44,7 +43,6 @@ class ItemModelProvider extends net.neoforged.neoforge.client.model.generators.I
         driveCell("16k_source_cell", 4);
         driveCell("64k_source_cell", 6);
         driveCell("256k_source_cell", 8);
-        driveCell("creative_source_cell", 12);
     }
 
     private ItemModelBuilder flatSingleLayer(ItemDefinition<?> item) {

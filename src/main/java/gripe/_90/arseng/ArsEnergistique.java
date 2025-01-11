@@ -20,7 +20,6 @@ import gripe._90.arseng.definition.ArsEngComponents;
 import gripe._90.arseng.definition.ArsEngConfig;
 import gripe._90.arseng.definition.ArsEngCreativeTab;
 import gripe._90.arseng.definition.ArsEngItems;
-import gripe._90.arseng.me.cell.CreativeSourceCellHandler;
 import gripe._90.arseng.me.cell.SourceCellHandler;
 import gripe._90.arseng.me.key.SourceKey;
 import gripe._90.arseng.me.key.SourceKeyType;
@@ -52,7 +51,6 @@ public class ArsEnergistique {
 
         modEventBus.addListener(SourceKeyType::register);
         StorageCells.addCellHandler(SourceCellHandler.INSTANCE);
-        StorageCells.addCellHandler(CreativeSourceCellHandler.INSTANCE);
         modEventBus.addListener(ArsEngItems::initCellUpgrades);
 
         StackWorldBehaviors.registerImportStrategy(SourceKeyType.TYPE, SourceStorageImportStrategy::new);
