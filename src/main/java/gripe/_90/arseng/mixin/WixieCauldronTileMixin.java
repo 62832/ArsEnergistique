@@ -18,10 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
-import appeng.api.inventories.InternalInventory;
 import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
 import appeng.helpers.patternprovider.PatternContainer;
 
 @Mixin(value = WixieCauldronTile.class, remap = false)
@@ -30,27 +27,28 @@ public abstract class WixieCauldronTileMixin extends SummoningTile {
         super(type, pos, state);
     }
 
+    // spotless:off
     @ModifyExpressionValue(
             method = "rotateCraft",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"),
-            remap = false)
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getBlockEntity(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
+    // spotless:on
     private BlockEntity checkBlockEntity(BlockEntity be, @Local List<ItemStack> craftables) {
-        if (!(be instanceof PatternContainer networked)) return be;
+        if (!(be instanceof PatternContainer patternContainer)) {
+            return be;
+        }
 
-        InternalInventory inv = networked.getTerminalPatternInventory();
-        for (ItemStack stack : inv) {
-            if (!PatternDetailsHelper.isEncodedPattern(stack)) continue;
+        for (var stack : patternContainer.getTerminalPatternInventory()) {
+            if (!PatternDetailsHelper.isEncodedPattern(stack)) {
+                continue;
+            }
 
-            IPatternDetails details = PatternDetailsHelper.decodePattern(stack, be.getLevel());
-            if (details == null) continue;
-            for (GenericStack output : details.getOutputs()) {
-                AEKey key = output.what();
-                if (key instanceof AEItemKey itemKey) {
-                    craftables.add(itemKey.toStack(Math.toIntExact(output.amount())));
+            if (PatternDetailsHelper.decodePattern(stack, be.getLevel()) instanceof IPatternDetails details) {
+                for (var output : details.getOutputs()) {
+                    if (output.what() instanceof AEItemKey itemKey) {
+                        craftables.add(itemKey.toStack(Math.toIntExact(output.amount())));
+                    }
                 }
             }
         }
