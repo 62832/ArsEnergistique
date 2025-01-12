@@ -88,7 +88,7 @@ run {
                 version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.62")
                 version("parchment", "2024.07.28")
 
-                version("ae2", "19.0.25")
+                version("ae2", "19.1.2-beta")
                 library("ae2", "appeng", "appliedenergistics2").versionRef("ae2")
 
                 version("ars", "5.3.6.851")

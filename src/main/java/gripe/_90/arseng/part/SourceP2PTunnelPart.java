@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.setup.registry.CapabilityRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 
-import appeng.api.config.PowerUnit;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.items.parts.PartModels;
@@ -121,7 +120,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
             }
 
             if (!simulate) {
-                queueTunnelDrain(PowerUnit.AE, source / 100D);
+                deductTransportCost(source, SourceKeyType.TYPE);
             }
 
             var forEach = source / outputs.size();
@@ -251,7 +250,7 @@ public class SourceP2PTunnelPart extends CapabilityP2PTunnelPart<SourceP2PTunnel
                 var result = input.get().extractSource(source, simulate);
 
                 if (!simulate) {
-                    queueTunnelDrain(PowerUnit.AE, (double) result / SourceKeyType.TYPE.getAmountPerOperation());
+                    deductTransportCost(result, SourceKeyType.TYPE);
                 }
 
                 return result;
