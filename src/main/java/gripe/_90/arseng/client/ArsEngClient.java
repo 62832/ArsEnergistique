@@ -4,7 +4,7 @@ import net.minecraft.util.FastColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
@@ -29,7 +29,9 @@ public class ArsEngClient {
         modEventBus.addListener(ArsEngClient::initBlockEntityRenderer);
     }
 
-    private static void initCellModels(FMLClientSetupEvent event) {
+    private static void initCellModels(FMLCommonSetupEvent event) {
+        // Has to be done in common setup, otherwise textures are broken when first entering a world until one forces a
+        // resource pack reload.
         event.enqueueWork(() -> {
             var prefix = "block/drive/cells/";
             StorageCellModels.registerModel(
