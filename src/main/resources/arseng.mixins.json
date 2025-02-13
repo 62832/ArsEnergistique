@@ -2,12 +2,7 @@
   "minVersion": "0.8.5",
   "required": true,
   "package": "gripe._90.arseng.mixin",
-  "mixins": [
-    "ConfigInventoryMixin",
-    "EffectNameMixin",
-    "ScribesTileMixin",
-    "WixieCauldronTileMixin"
-  ],
+  "mixins": ["EffectNameMixin", "ScribesTileMixin", "WixieCauldronTileMixin"],
   "injectors": {
     "defaultRequire": 1
   }

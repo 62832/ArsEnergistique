@@ -18,13 +18,10 @@ run {
         rulesMode = RulesMode.PREFER_SETTINGS
 
         repositories {
-            mavenCentral()
-
             maven {
                 name = "ModMaven (K4U-NL)"
                 url = uri("https://modmaven.dev/")
                 content {
-                    includeGroup("appeng")
                     includeGroup("mezz.jei")
                 }
             }
@@ -34,6 +31,7 @@ run {
                 url = uri("https://maven.blamejared.com")
                 content {
                     includeGroup("com.hollingsworth.ars_nouveau")
+                    includeGroup("com.hollingsworth.nuggets")
                     includeGroup("vazkii.patchouli")
                 }
             }
@@ -85,13 +83,13 @@ run {
                 version("minecraft", mc)
 
                 val nf = mc.substringAfter('.')
-                version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.62")
-                version("parchment", "2024.07.28")
+                version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.113")
+                version("parchment", "2024.11.17")
 
-                version("ae2", "19.1.2-beta")
-                library("ae2", "appeng", "appliedenergistics2").versionRef("ae2")
+                version("ae2", "19.2.2-beta")
+                library("ae2", "org.appliedenergistics", "appliedenergistics2").versionRef("ae2")
 
-                version("ars", "5.3.6.851")
+                version("ars", "5.4.2.938")
                 library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$mc").versionRef("ars")
             }
         }
