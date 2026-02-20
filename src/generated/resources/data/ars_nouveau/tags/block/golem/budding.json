@@ -1,8 +1,8 @@
 {
   "values": [
-    {
-      "id": "#c:budding_blocks",
-      "required": false
-    }
+    "ae2:flawless_budding_quartz",
+    "ae2:flawed_budding_quartz",
+    "ae2:chipped_budding_quartz",
+    "ae2:damaged_budding_quartz"
   ]
 }
