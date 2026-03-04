@@ -75,6 +75,13 @@ run {
                     includeGroup("top.theillusivec4.curios")
                 }
             }
+            maven {
+                name = "TerraformersMC" // For EMI
+                url = uri("https://maven.terraformersmc.com/")
+                content {
+                    includeGroup("dev.emi")
+                }
+            }
         }
 
         versionCatalogs {
@@ -97,6 +104,9 @@ run {
 
                 version("ae2jei", "5748513")
                 library("ae2jei", "curse.maven", "ae2-jei-integration-1074338").versionRef("ae2jei")
+
+                version("emi", "1.1.22+$mc")
+                library("emi", "dev.emi", "emi-neoforge").versionRef("emi")
             }
         }
     }

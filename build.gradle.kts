@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.ars)
     implementation(libs.jei)
     implementation(libs.ae2jei)
+    implementation("dev.emi:emi-neoforge:${libs.emi.get().version}:api")
+    implementation(libs.emi)
 }
 
 sourceSets {
