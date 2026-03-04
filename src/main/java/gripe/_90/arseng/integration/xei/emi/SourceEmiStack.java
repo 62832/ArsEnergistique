@@ -4,6 +4,7 @@ import appeng.client.gui.style.Blitter;
 import dev.emi.emi.api.render.EmiRender;
 import dev.emi.emi.api.render.EmiTooltipComponents;
 import dev.emi.emi.api.stack.EmiStack;
+import gripe._90.arseng.ArsEnergistique;
 import gripe._90.arseng.integration.xei.SourceStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -87,7 +88,10 @@ public class SourceEmiStack extends EmiStack {
         .map(EmiTooltipComponents::of)
         .collect(Collectors.toList());
     if (amount > 1) {
-      tooltips.add(EmiTooltipComponents.of(Component.literal(new DecimalFormat("#,###").format(amount)).withStyle(ChatFormatting.GRAY)));
+      tooltips.add(EmiTooltipComponents.of(
+          Component.translatable(ArsEnergistique.MODID + ".xei.source.tooltip",
+              new DecimalFormat("#,###").format(amount))
+              .withStyle(ChatFormatting.GRAY)));
     }
 
     EmiTooltipComponents.appendModName(tooltips, getId().getNamespace());
@@ -97,6 +101,6 @@ public class SourceEmiStack extends EmiStack {
 
   @Override
   public Component getName() {
-    return Component.literal("Source");
+    return Component.translatable(ArsEnergistique.MODID + ".xei.source.name");
   }
 }

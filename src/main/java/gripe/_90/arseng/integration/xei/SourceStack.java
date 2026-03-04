@@ -3,6 +3,7 @@ package gripe._90.arseng.integration.xei;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import gripe._90.arseng.ArsEnergistique;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -45,7 +46,7 @@ public class SourceStack {
   }
 
   public Component getName() {
-    return Component.literal("Source");
+    return Component.translatable(ArsEnergistique.MODID + ".xei.source.name");
   }
 
   /**
@@ -66,7 +67,7 @@ public class SourceStack {
   public List<Component> getTooltips() {
     var tooltips = getTooltip();
     if (!isEmpty())
-      tooltips.add(Component.translatable("%s Source", new DecimalFormat("#,###").format(amount)));
+      tooltips.add(Component.translatable(ArsEnergistique.MODID + ".xei.source.tooltip", new DecimalFormat("#,###").format(amount)));
     return tooltips;
   }
 

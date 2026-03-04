@@ -1,4 +1,6 @@
 {
+  "arseng.xei.source.name": "Source",
+  "arseng.xei.source.tooltip": "%s Source",
   "block.arseng.me_source_jar": "ME Source Jar",
   "block.arseng.source_acceptor": "ME Source Converter",
   "item.arseng.cable_source_acceptor": "ME Source Converter",

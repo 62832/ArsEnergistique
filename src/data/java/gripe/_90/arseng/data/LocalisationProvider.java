@@ -17,5 +17,7 @@ class LocalisationProvider extends LanguageProvider {
         ArsEngItems.getItems().forEach(i -> add(i.asItem(), i.getEnglishName()));
         ArsEngBlocks.getBlocks().forEach(b -> add(b.block(), b.getEnglishName()));
         add("itemGroup." + ArsEnergistique.MODID, "Ars Énergistique");
+        add(ArsEnergistique.MODID + ".xei.source.name", "Source");
+        add(ArsEnergistique.MODID + ".xei.source.tooltip", "%s Source");
     }
 }
