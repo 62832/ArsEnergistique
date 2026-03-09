@@ -75,6 +75,13 @@ run {
                     includeGroup("top.theillusivec4.curios")
                 }
             }
+            maven {
+                name = "TerraformersMC" // For EMI
+                url = uri("https://maven.terraformersmc.com/")
+                content {
+                    includeGroup("dev.emi")
+                }
+            }
         }
 
         versionCatalogs {
@@ -86,11 +93,20 @@ run {
                 version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.113")
                 version("parchment", "2024.11.17")
 
-                version("ae2", "19.2.2-beta")
+                version("ae2", "19.2.10")
                 library("ae2", "org.appliedenergistics", "appliedenergistics2").versionRef("ae2")
 
                 version("ars", "5.4.2.938")
                 library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$mc").versionRef("ars")
+
+                version("jei", "19.25.0.322")
+                library("jei", "mezz.jei", "jei-$mc-neoforge").versionRef("jei")
+
+                version("ae2jei", "5748513")
+                library("ae2jei", "curse.maven", "ae2-jei-integration-1074338").versionRef("ae2jei")
+
+                version("emi", "1.1.22+$mc")
+                library("emi", "dev.emi", "emi-neoforge").versionRef("emi")
             }
         }
     }
