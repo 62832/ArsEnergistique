@@ -1,8 +1,5 @@
 {
   "values": [
-    {
-      "id": "#c:clusters",
-      "required": false
-    }
+    "ae2:quartz_cluster"
   ]
 }
