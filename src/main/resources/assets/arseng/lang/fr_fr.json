@@ -1,0 +1,19 @@
+{
+  "block.arseng.me_source_jar": "Bocal de source ME",
+  "block.arseng.source_acceptor": "Convertisseur de source ME",
+  "item.arseng.cable_source_acceptor": "Convertisseur de source ME",
+  "item.arseng.portable_source_cell_16k": "Cellule de source portable 16k",
+  "item.arseng.portable_source_cell_1k": "Cellule de source portable 1k",
+  "item.arseng.portable_source_cell_256k": "Cellule de source portable 256k",
+  "item.arseng.portable_source_cell_4k": "Cellule de source portable 4k",
+  "item.arseng.portable_source_cell_64k": "Cellule de source portable 64k",
+  "item.arseng.source_cell_housing": "Boîtier de cellule de source ME",
+  "item.arseng.source_p2p_tunnel": "Tunnel P2P de source ME",
+  "item.arseng.source_storage_cell_16k": "Cellule de stockage de source ME 16k",
+  "item.arseng.source_storage_cell_1k": "Cellule de stockage de source ME 1k",
+  "item.arseng.source_storage_cell_256k": "Cellule de stockage de source ME 256k",
+  "item.arseng.source_storage_cell_4k": "Cellule de stockage de source ME 4k",
+  "item.arseng.source_storage_cell_64k": "Cellule de stockage de source ME 64k",
+  "item.arseng.spell_p2p_tunnel": "Tunnel P2P de sort ME",
+  "itemGroup.arseng": "Ars Énergistique"
+}
