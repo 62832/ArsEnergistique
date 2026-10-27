@@ -34,6 +34,7 @@ run {
                 url = uri("https://maven.blamejared.com")
                 content {
                     includeGroup("com.hollingsworth.ars_nouveau")
+                    includeGroup("com.hollingsworth.nuggets")
                     includeGroup("vazkii.patchouli")
                 }
             }
@@ -59,6 +60,7 @@ run {
                 url = uri("https://maven.theillusivec4.top/")
                 content {
                     includeGroup("com.illusivesoulworks.caelus")
+                    includeGroup("top.theillusivec4.curios")
                 }
             }
 
@@ -67,14 +69,6 @@ run {
                 url = uri("https://maven.minecraftforge.net/")
                 content {
                     includeGroup("com.github.glitchfiend")
-                }
-            }
-
-            maven {
-                name = "OctoStudios"
-                url = uri("https://maven.octo-studios.com/releases")
-                content {
-                    includeGroup("top.theillusivec4.curios")
                 }
             }
         }
@@ -91,8 +85,11 @@ run {
                 version("ae2", "19.1.2-beta")
                 library("ae2", "appeng", "appliedenergistics2").versionRef("ae2")
 
-                version("ars", "5.3.6.851")
+                version("ars", "5.13.3.1425")
                 library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$mc").versionRef("ars")
+
+                version("geckolib", "4.6.6")
+                library("geckolib", "software.bernie.geckolib", "geckolib-neoforge-$mc").versionRef("geckolib")
             }
         }
     }

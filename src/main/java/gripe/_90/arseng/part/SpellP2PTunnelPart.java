@@ -82,13 +82,13 @@ public class SpellP2PTunnelPart extends P2PTunnelPart<SpellP2PTunnelPart> {
             ANCriteriaTriggers.rewardNearbyPlayers(ANCriteriaTriggers.PRISMATIC.get(), level, pos, 10);
         }
 
-        if (spell.spellResolver == null) {
+        if (spell.resolver() == null) {
             spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
 
-        var acceleration = spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE);
-        var deceleration = spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE);
+        var acceleration = spell.resolver().spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE);
+        var deceleration = spell.resolver().spell.getBuffsAtIndex(0, null, AugmentDecelerate.INSTANCE);
         var velocity = Math.max(0.1, 0.5 + 0.1 * Math.min(2, acceleration - deceleration * 0.5));
 
         spell.shoot(dir.getStepX(), dir.getStepY(), dir.getStepZ(), (float) velocity, 0);
