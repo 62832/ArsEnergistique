@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 
 import appeng.api.features.P2PTunnelAttunement;
+import appeng.core.definitions.AEBlocks;
 import appeng.datagen.providers.tags.ConventionTags;
 
 import gripe._90.arseng.ArsEnergistique;
@@ -69,8 +70,13 @@ abstract class TagsProvider {
             ArsEngBlocks.getBlocks()
                     .forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.block()));
 
-            tag(BlockTagProvider.BUDDING_BLOCKS).addOptionalTag(ConventionTags.BUDDING_BLOCKS_BLOCKS.location());
-            tag(BlockTagProvider.CLUSTER_BLOCKS).addOptionalTag(ConventionTags.CLUSTERS_BLOCKS.location());
+            tag(BlockTagProvider.BUDDING_BLOCKS)
+                    .add(
+                            AEBlocks.FLAWLESS_BUDDING_QUARTZ.block(),
+                            AEBlocks.FLAWED_BUDDING_QUARTZ.block(),
+                            AEBlocks.CHIPPED_BUDDING_QUARTZ.block(),
+                            AEBlocks.DAMAGED_BUDDING_QUARTZ.block());
+            tag(BlockTagProvider.CLUSTER_BLOCKS).add(AEBlocks.QUARTZ_CLUSTER.block());
         }
     }
 }

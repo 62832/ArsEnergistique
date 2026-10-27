@@ -18,10 +18,10 @@ Adds digital source storage, P2P transport and various other cross-compatibility
 [[mixins]]
 config = "arseng.mixins.json"
 
-[[dependencies]]
+[[dependencies.arseng]]
 modId = "ae2"
 versionRange = "[19,)"
 
-[[dependencies]]
+[[dependencies.arseng]]
 modId = "ars_nouveau"
 versionRange = "[5.2,)"
