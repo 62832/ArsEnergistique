@@ -25,10 +25,12 @@ public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource so
         // `stack` was already checked to be non-empty
         assert key != null;
 
-        var node = logic.getActionableNode();
-        if (node != null && node.isPowered()) {
-            var inserted = StorageHelper.poweredInsert(node.getGrid().getEnergyService(), logic.getInventory(), key, stack.getCount(), source, Actionable.ofSimulate(simulate));
-            stack.shrink((int) inserted);
+        if (logic.getConfig().isEmpty()) {
+            var node = logic.getActionableNode();
+            if (node != null && node.isPowered()) {
+                var inserted = StorageHelper.poweredInsert(node.getGrid().getEnergyService(), logic.getInventory(), key, stack.getCount(), source, Actionable.ofSimulate(simulate));
+                stack.shrink((int) inserted);
+            }
         }
 
         if (!stack.isEmpty()) {
