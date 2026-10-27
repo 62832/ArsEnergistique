@@ -1,7 +1,7 @@
 package gripe._90.arseng.mixin;
 
 import appeng.api.networking.security.IActionSource;
-import appeng.blockentity.misc.InterfaceBlockEntity;
+import appeng.helpers.InterfaceLogicHost;
 import com.hollingsworth.arsnouveau.api.util.InvUtil;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -24,8 +24,8 @@ public class InvUtilMixin {
                 blockEntity = instance.getBlockEntity(pos);
             }
 
-            if (blockEntity instanceof InterfaceBlockEntity interfaceBe) {
-                return new DirectInterfaceMapInventory(interfaceBe.getInterfaceLogic(), IActionSource.empty());
+            if (blockEntity instanceof InterfaceLogicHost host) {
+                return new DirectInterfaceMapInventory(host.getInterfaceLogic(), IActionSource.empty());
             }
         }
 
