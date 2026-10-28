@@ -57,6 +57,7 @@ run {
                 url = uri("https://maven.theillusivec4.top/")
                 content {
                     includeGroup("com.illusivesoulworks.caelus")
+                    includeGroup("top.theillusivec4.curios")
                 }
             }
 
@@ -67,14 +68,6 @@ run {
                     includeGroup("com.github.glitchfiend")
                 }
             }
-
-            maven {
-                name = "OctoStudios"
-                url = uri("https://maven.octo-studios.com/releases")
-                content {
-                    includeGroup("top.theillusivec4.curios")
-                }
-            }
         }
 
         versionCatalogs {
@@ -83,14 +76,17 @@ run {
                 version("minecraft", mc)
 
                 val nf = mc.substringAfter('.')
-                version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.113")
+                version("neoforge", "${nf + (if (!nf.contains('.')) ".0" else "")}.265")
                 version("parchment", "2024.11.17")
 
                 version("ae2", "19.2.2-beta")
                 library("ae2", "org.appliedenergistics", "appliedenergistics2").versionRef("ae2")
 
-                version("ars", "5.4.2.938")
+                version("ars", "5.13.3.1425")
                 library("ars", "com.hollingsworth.ars_nouveau", "ars_nouveau-$mc").versionRef("ars")
+
+                version("geckolib", "4.6.6")
+                library("geckolib", "software.bernie.geckolib", "geckolib-neoforge-$mc").versionRef("geckolib")
             }
         }
     }
