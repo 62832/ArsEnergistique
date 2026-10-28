@@ -22,8 +22,9 @@ public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource so
         }
 
         var key = AEItemKey.of(stack);
-        // `stack` was already checked to be non-empty
-        assert key != null;
+        if (key == null) {
+            throw new IllegalStateException("Failed to convert non-empty stack to AEItemKey");
+        }
 
         if (logic.getConfig().isEmpty()) {
             var node = logic.getActionableNode();
