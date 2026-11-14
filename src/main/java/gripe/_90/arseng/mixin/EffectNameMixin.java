@@ -43,19 +43,21 @@ public class EffectNameMixin {
             @Local(argsOnly = true) BlockHitResult result) {
         var be = original.call(instance, pos);
         var player = shooter instanceof Player playerEntity ? playerEntity : null;
-        var components = DataComponentMap.builder()
-                .set(AEComponents.EXPORTED_CUSTOM_NAME, name)
-                .build();
+        var builder = DataComponentMap.builder();
 
         if (be instanceof CableBusBlockEntity cableBus) {
             var part = cableBus.getPart(result.getDirection().getOpposite());
 
             if (part != null) {
+                part.exportSettings(SettingsFrom.MEMORY_CARD, builder);
+                var components = builder.set(AEComponents.EXPORTED_CUSTOM_NAME, name).build();
                 part.importSettings(SettingsFrom.MEMORY_CARD, components, player);
             }
 
             ci.cancel();
         } else if (be instanceof AEBaseBlockEntity aeBE) {
+            aeBE.exportSettings(SettingsFrom.MEMORY_CARD, builder, player);
+            var components = builder.set(AEComponents.EXPORTED_CUSTOM_NAME, name).build();
             aeBE.importSettings(SettingsFrom.MEMORY_CARD, components, player);
             ci.cancel();
         }
