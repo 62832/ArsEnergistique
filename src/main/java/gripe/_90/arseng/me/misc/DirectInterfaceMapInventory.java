@@ -1,20 +1,24 @@
 package gripe._90.arseng.me.misc;
 
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.NotNull;
+
+import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.IItemHandler;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.StorageHelper;
 import appeng.helpers.InterfaceLogic;
-import com.hollingsworth.arsnouveau.api.item.inv.IMapInventory;
-import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Predicate;
-
-public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource source) implements IItemHandler, IMapInventory {
+public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource source)
+        implements IItemHandler, IMapInventory {
     @Override
     public ItemStack insertStack(ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) {
@@ -29,7 +33,13 @@ public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource so
         if (logic.getConfig().isEmpty()) {
             var node = logic.getActionableNode();
             if (node != null && node.isPowered()) {
-                var inserted = StorageHelper.poweredInsert(node.getGrid().getEnergyService(), logic.getInventory(), key, stack.getCount(), source, Actionable.ofSimulate(simulate));
+                var inserted = StorageHelper.poweredInsert(
+                        node.getGrid().getEnergyService(),
+                        logic.getInventory(),
+                        key,
+                        stack.getCount(),
+                        source,
+                        Actionable.ofSimulate(simulate));
                 stack.shrink((int) inserted);
             }
         }
@@ -49,22 +59,26 @@ public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource so
 
     @Override
     public ItemStack extractByItem(Item item, int count, boolean simulate, Predicate<ItemStack> filter) {
-         for (var stack : logic.getInventory().getAvailableStacks()) {
-             if (stack.getKey() instanceof AEItemKey itemKey && itemKey.is(item) && filter.test(itemKey.getReadOnlyStack())) {
-                 var toExtract = Math.min(count, (int) stack.getLongValue());
-                 if (!simulate) {
-                     logic.getInventory().extract(itemKey, toExtract, Actionable.MODULATE, source);
-                 }
-                 return itemKey.toStack(toExtract);
-             }
-         }
+        for (var stack : logic.getInventory().getAvailableStacks()) {
+            if (stack.getKey() instanceof AEItemKey itemKey
+                    && itemKey.is(item)
+                    && filter.test(itemKey.getReadOnlyStack())) {
+                var toExtract = Math.min(count, (int) stack.getLongValue());
+                if (!simulate) {
+                    logic.getInventory().extract(itemKey, toExtract, Actionable.MODULATE, source);
+                }
+                return itemKey.toStack(toExtract);
+            }
+        }
 
         return ItemStack.EMPTY;
     }
 
     @Override
     public ItemScroll.SortPref getInsertionPreference(ItemStack stack) {
-        return logic.getInventory().isPreferredStorageFor(AEItemKey.of(stack), source) ? ItemScroll.SortPref.HIGHEST : ItemScroll.SortPref.LOW;
+        return logic.getInventory().isPreferredStorageFor(AEItemKey.of(stack), source)
+                ? ItemScroll.SortPref.HIGHEST
+                : ItemScroll.SortPref.LOW;
     }
 
     @Override
@@ -87,7 +101,8 @@ public record DirectInterfaceMapInventory(InterfaceLogic logic, IActionSource so
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        var inserted = logic.getStorage().insert(slot, AEItemKey.of(stack), stack.getCount(), Actionable.ofSimulate(simulate));
+        var inserted =
+                logic.getStorage().insert(slot, AEItemKey.of(stack), stack.getCount(), Actionable.ofSimulate(simulate));
         stack.shrink((int) inserted);
         return stack;
     }
