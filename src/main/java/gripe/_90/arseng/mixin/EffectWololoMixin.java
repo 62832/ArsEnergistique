@@ -24,14 +24,14 @@ import appeng.api.util.AEColor;
 
 @Mixin(EffectWololo.class)
 public class EffectWololoMixin {
+    // spotless:off
     @Inject(
             method = "onResolveBlock",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"),
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"),
             cancellable = true)
+    // spotless:on
     private void colorParts(
             BlockHitResult rayTraceResult,
             Level world,
